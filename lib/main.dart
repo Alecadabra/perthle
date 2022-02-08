@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
       title: 'Perthgang Wordle',
       theme: ThemeData(
         primarySwatch: Colors.green,
+        fontFamily: 'Poppins',
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
