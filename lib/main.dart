@@ -1,6 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:wordle_clone/model/letter_state.dart';
+import 'package:wordle_clone/model/tile_match_state.dart';
+import 'package:wordle_clone/widget/tile.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -43,45 +45,10 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                stream: FirebaseFirestore.instance
-                    .collection("/test")
-                    .doc("drPdWAAixcVT03n1AdPn")
-                    .snapshots(),
-                builder: (
-                  context,
-                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
-                      snapshot,
-                ) {
-                  if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
-                  } else {
-                    final num = snapshot.data!.data()!["num"];
-
-                    return Text(
-                      '$num',
-                      style: Theme.of(context).textTheme.headline4,
-                    );
-                  }
-                }),
-          ],
+        child: Tile(
+          match: TileMatchState.match,
+          letter: LetterState('A'),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => setState(() {
-          FirebaseFirestore.instance
-              .collection("/test")
-              .doc("drPdWAAixcVT03n1AdPn")
-              .set({"num": 15});
-        }),
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
