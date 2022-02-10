@@ -1,7 +1,8 @@
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/model/tile_match_state.dart';
-import 'package:wordle_clone/widget/keyboard_button.dart';
+import 'package:wordle_clone/widget/authenticator.dart';
 import 'package:wordle_clone/widget/tile.dart';
 
 class WordlePage extends StatefulWidget {
@@ -14,168 +15,32 @@ class WordlePage extends StatefulWidget {
 }
 
 class _WordlePageState extends State<WordlePage> {
-  static const double _maxKeyboardWidth = 600;
-
   late final int width = widget.word.length;
-
-  int currRow = 0;
-
-  late List<List<LetterState?>> boardLetters = List.filled(
-    6,
-    List.filled(width, LetterState('Q')),
-  );
-
-  late List<List<TileMatchState>> boardMatches = List.filled(
-    6,
-    List.filled(width, TileMatchState.blank),
-  );
-
-  Map<LetterState, TileMatchState> keys = {
-    for (String chars in 'QWERTYUIOPASDFGHJKLZXCVBNM'.characters)
-      LetterState(chars): TileMatchState.blank,
-  };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NeumorphicAppBar(
-        title: const Text('Perthgang Wordle'),
-        centerTitle: true,
+      appBar: AppBar(
+        title: StreamBuilder<User?>(
+            stream: Authenticator.of(context).userStream,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const CircularProgressIndicator();
+              }
+              return Text('Current user: ${snapshot.data}');
+            }),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Board
-          Container(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (var i = 0; i < 6; i++)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      for (var j = 0; j < width; j++)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Tile(
-                            match: boardMatches[i][j],
-                            letter: boardLetters[i][j],
-                          ),
-                        ),
-                    ],
-                  ),
-              ],
-            ),
-          ),
-
-          // Keyboard
-          Container(
-            width: _maxKeyboardWidth,
-            child: Column(
-              children: [
-                Flex(
-                  direction: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const Flexible(
-                      child: SizedBox.shrink(),
-                      flex: 10,
-                    ),
-                    for (LetterState letter
-                        in 'QWERTYUIOP'.characters.map((e) => LetterState(e)))
-                      KeyboardButton(
-                        letter: letter,
-                        tileMatch: keys[letter]!,
-                      ),
-                    const Flexible(
-                      child: SizedBox.shrink(),
-                      flex: 10,
-                    ),
-                  ],
-                ),
-                Flex(
-                  direction: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Flexible(
-                      child: SizedBox.shrink(),
-                      flex: 10,
-                    ),
-                    for (LetterState letter
-                        in 'ASDFGHJKL'.characters.map((e) => LetterState(e)))
-                      KeyboardButton(
-                        letter: letter,
-                        tileMatch: TileMatchState.match,
-                      ),
-                    const Flexible(
-                      child: SizedBox.shrink(),
-                      flex: 10,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: NeumorphicButton(
-                        padding: const EdgeInsets.all(2.5),
-                        child: Container(
-                          child: Icon(Icons.keyboard_return_outlined),
-                          alignment: Alignment.center,
-                          constraints:
-                              BoxConstraints.tightFor(width: 60, height: 100),
-                        ),
-                        style: NeumorphicStyle(
-                          border: NeumorphicBorder(),
-                          disableDepth: true,
-                          depth: 1,
-                        ),
-                        onPressed: () {},
-                      ),
-                    ),
-                    for (LetterState letter
-                        in 'ZXCVBNM'.characters.map((e) => LetterState(e)))
-                      KeyboardButton(
-                        letter: letter,
-                        tileMatch: TileMatchState.wrong,
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: NeumorphicButton(
-                        padding: const EdgeInsets.all(2.5),
-                        child: Container(
-                          child: Icon(Icons.backspace_outlined),
-                          alignment: Alignment.center,
-                          constraints:
-                              BoxConstraints.tightFor(width: 55.5, height: 100),
-                        ),
-                        style: NeumorphicStyle(
-                          border: NeumorphicBorder(),
-                          disableDepth: true,
-                          depth: 1,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            boardMatches = boardMatches
-                                .map((e) =>
-                                    e.map((e) => TileMatchState.match).toList())
-                                .toList();
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          )
-        ],
+      body: Center(
+        child: Tile(
+          match: TileMatchState.match,
+          letter: LetterState('W'),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
+        onPressed: () async {
+          await Authenticator.of(context).toggleLogin();
+        },
       ),
     );
   }

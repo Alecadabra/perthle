@@ -1,4 +1,4 @@
-import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter/material.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/model/tile_match_state.dart';
 
@@ -8,50 +8,61 @@ class Tile extends StatelessWidget {
   final TileMatchState match;
   final LetterState? letter;
 
-  static const double _depth = 2;
-
-  NeumorphicStyle get _style {
+  Color get _matchColor {
     switch (match) {
       case TileMatchState.blank:
-        return const NeumorphicStyle(
-          depth: _depth,
-        );
+        return Colors.white;
       case TileMatchState.wrong:
-        return const NeumorphicStyle(
-          color: Color(0xFF797979),
-          depth: -_depth,
-        );
+        return const Color(0xff5a5a5a);
       case TileMatchState.miss:
-        return NeumorphicStyle(
-          depth: -_depth,
-          color: Colors.orange.shade400,
-        );
+        return Colors.yellow.shade800;
       case TileMatchState.match:
-        return const NeumorphicStyle(
-          color: Colors.green,
-          depth: -_depth,
+        return Colors.green;
+    }
+  }
+
+  Color get _textColor {
+    switch (match) {
+      case TileMatchState.blank:
+        return Colors.grey.shade800;
+      default:
+        return Colors.white;
+    }
+  }
+
+  BoxBorder? get _boxBorder {
+    switch (match) {
+      case TileMatchState.blank:
+        return Border.all(
+          color: Colors.grey.shade800,
+          width: 2,
         );
+      default:
+        return null;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Neumorphic(
-      child: Container(
-        child: Text(
-          letter?.toString() ?? '',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline4?.copyWith(
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Poppins',
-                color: NeumorphicTheme.baseColor(context),
-              ),
-        ),
-        alignment: Alignment.center,
-        constraints: BoxConstraints.tightFor(width: 50, height: 50),
+    return Container(
+      child: letter == null
+          ? null
+          : Text(
+              letter!.toString(),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4
+                  ?.copyWith(color: _textColor, fontWeight: FontWeight.w500),
+            ),
+      alignment: Alignment.center,
+      padding: EdgeInsets.only(top: 5, bottom: 6),
+      constraints: BoxConstraints.tightFor(width: 60, height: 60),
+      decoration: BoxDecoration(
+        color: _matchColor,
+        border: _boxBorder,
       ),
-      style: _style,
-      // padding: EdgeInsets.only(top: 5, bottom: 6),
     );
   }
 }

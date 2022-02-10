@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 class LetterState {
   LetterState(this._letter)
       : assert(_letter.length == 1),
@@ -7,12 +9,4 @@ class LetterState {
 
   @override
   String toString() => _letter;
-
-  @override
-  int get hashCode => _letter.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    return other is LetterState && other._letter == _letter;
-  }
 }
