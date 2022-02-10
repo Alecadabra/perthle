@@ -17,22 +17,26 @@ class KeyboardButton extends StatelessWidget {
       case TileMatchState.blank:
         return const NeumorphicStyle(
           border: NeumorphicBorder(),
-          depth: 1,
+          disableDepth: true,
+          depth: 0,
         );
       case TileMatchState.wrong:
         return const NeumorphicStyle(
           color: Color(0xFF797979),
-          depth: 1,
+          disableDepth: true,
+          depth: 0,
         );
       case TileMatchState.miss:
         return NeumorphicStyle(
           color: Colors.orange.shade400,
-          depth: 1,
+          disableDepth: true,
+          depth: 0,
         );
       case TileMatchState.match:
         return const NeumorphicStyle(
           color: Colors.green,
-          depth: 1,
+          disableDepth: true,
+          depth: 0,
         );
     }
   }
@@ -49,9 +53,9 @@ class KeyboardButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(3.0),
+      padding: const EdgeInsets.all(2.0),
       child: NeumorphicButton(
-        padding: const EdgeInsets.all(2.5),
+        padding: const EdgeInsets.all(1.5),
         child: Container(
           child: Text(
             letter.toString(),

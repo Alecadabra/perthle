@@ -20,7 +20,7 @@ class _WordlePageState extends State<WordlePage> {
 
   late List<List<LetterState?>> boardLetters = List.filled(
     6,
-    List.filled(width, null),
+    List.filled(width, LetterState('Q')),
   );
 
   late List<List<TileMatchState>> boardMatches = List.filled(
@@ -68,115 +68,92 @@ class _WordlePageState extends State<WordlePage> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: NeumorphicButton(
-              padding: const EdgeInsets.all(2.5),
-              child: Container(
-                child: Icon(Icons.backspace_outlined),
-                alignment: Alignment.center,
-                constraints: BoxConstraints.tightFor(width: 55.5, height: 100),
-              ),
-              style: NeumorphicStyle(
-                border: NeumorphicBorder(),
-                depth: 1,
-              ),
-              onPressed: () {},
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: NeumorphicButton(
-              padding: const EdgeInsets.all(2.5),
-              child: Container(
-                child: Icon(Icons.backspace_outlined),
-                alignment: Alignment.center,
-                constraints: BoxConstraints.tightFor(width: 55.5, height: 100),
-              ),
-              style: NeumorphicStyle(
-                border: NeumorphicBorder(),
-                depth: 1,
-              ),
-              onPressed: () {},
-            ),
-          ),
 
           // Keyboard
-          // Container(
-          //   child: Column(
-          //     children: [
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           for (LetterState letter
-          //               in 'QWERTYUIOP'.characters.map((e) => LetterState(e)))
-          //             KeyboardButton(
-          //               letter: letter,
-          //               tileMatch: keys[letter]!,
-          //             ),
-          //         ],
-          //       ),
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           for (LetterState letter
-          //               in 'ASDFGHJKL'.characters.map((e) => LetterState(e)))
-          //             KeyboardButton(
-          //               letter: letter,
-          //               tileMatch: TileMatchState.match,
-          //             ),
-          //         ],
-          //       ),
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Padding(
-          //             padding: const EdgeInsets.all(3.0),
-          //             child: NeumorphicButton(
-          //               padding: const EdgeInsets.all(2.5),
-          //               child: Container(
-          //                 child: Icon(Icons.keyboard_return_outlined),
-          //                 alignment: Alignment.center,
-          //                 constraints:
-          //                     BoxConstraints.tightFor(width: 60, height: 100),
-          //               ),
-          //               style: NeumorphicStyle(
-          //                 border: NeumorphicBorder(),
-          //                 depth: 1,
-          //               ),
-          //               onPressed: () {},
-          //             ),
-          //           ),
-          //           for (LetterState letter
-          //               in 'ZXCVBNM'.characters.map((e) => LetterState(e)))
-          //             KeyboardButton(
-          //               letter: letter,
-          //               tileMatch: TileMatchState.wrong,
-          //             ),
-          //           Padding(
-          //             padding: const EdgeInsets.all(3.0),
-          //             child: NeumorphicButton(
-          //               padding: const EdgeInsets.all(2.5),
-          //               child: Container(
-          //                 child: Icon(Icons.backspace_outlined),
-          //                 alignment: Alignment.center,
-          //                 constraints:
-          //                     BoxConstraints.tightFor(width: 55.5, height: 100),
-          //               ),
-          //               style: NeumorphicStyle(
-          //                 border: NeumorphicBorder(),
-          //                 depth: 1,
-          //               ),
-          //               onPressed: () {},
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //       const SizedBox(height: 20),
-          //     ],
-          //   ),
-          // )
+          Container(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (LetterState letter
+                        in 'QWERTYUIOP'.characters.map((e) => LetterState(e)))
+                      KeyboardButton(
+                        letter: letter,
+                        tileMatch: keys[letter]!,
+                      ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (LetterState letter
+                        in 'ASDFGHJKL'.characters.map((e) => LetterState(e)))
+                      KeyboardButton(
+                        letter: letter,
+                        tileMatch: TileMatchState.match,
+                      ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: NeumorphicButton(
+                        padding: const EdgeInsets.all(2.5),
+                        child: Container(
+                          child: Icon(Icons.keyboard_return_outlined),
+                          alignment: Alignment.center,
+                          constraints:
+                              BoxConstraints.tightFor(width: 60, height: 100),
+                        ),
+                        style: NeumorphicStyle(
+                          border: NeumorphicBorder(),
+                          disableDepth: true,
+                          depth: 1,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ),
+                    for (LetterState letter
+                        in 'ZXCVBNM'.characters.map((e) => LetterState(e)))
+                      KeyboardButton(
+                        letter: letter,
+                        tileMatch: TileMatchState.wrong,
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: NeumorphicButton(
+                        padding: const EdgeInsets.all(2.5),
+                        child: Container(
+                          child: Icon(Icons.backspace_outlined),
+                          alignment: Alignment.center,
+                          constraints:
+                              BoxConstraints.tightFor(width: 55.5, height: 100),
+                        ),
+                        style: NeumorphicStyle(
+                          border: NeumorphicBorder(),
+                          disableDepth: true,
+                          depth: 1,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            boardMatches = boardMatches
+                                .map((e) =>
+                                    e.map((e) => TileMatchState.match).toList())
+                                .toList();
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          )
         ],
       ),
     );
