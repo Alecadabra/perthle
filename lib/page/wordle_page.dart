@@ -2,6 +2,8 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/model/tile_match_state.dart';
 import 'package:wordle_clone/widget/keyboard_button.dart';
+import 'package:wordle_clone/widget/keyboard_letter_button.dart';
+import 'package:wordle_clone/widget/keyboard_util_button.dart';
 import 'package:wordle_clone/widget/tile.dart';
 
 class WordlePage extends StatefulWidget {
@@ -14,7 +16,7 @@ class WordlePage extends StatefulWidget {
 }
 
 class _WordlePageState extends State<WordlePage> {
-  static const double _maxKeyboardWidth = 600;
+  static const double _maxKeyboardWidth = 700;
 
   late final int width = widget.word.length;
 
@@ -74,104 +76,95 @@ class _WordlePageState extends State<WordlePage> {
           // Keyboard
           Container(
             width: _maxKeyboardWidth,
+            padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                Flex(
-                  direction: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Flexible(
-                      child: SizedBox.shrink(),
-                      flex: 10,
-                    ),
+                    const Spacer(),
                     for (LetterState letter
                         in 'QWERTYUIOP'.characters.map((e) => LetterState(e)))
-                      KeyboardButton(
-                        letter: letter,
-                        tileMatch: keys[letter]!,
+                      Expanded(
+                        flex: 10,
+                        child: Row(
+                          children: [
+                            KeyboardLetterButton(
+                              letter: letter,
+                              tileMatch: keys[letter]!,
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
                       ),
-                    const Flexible(
-                      child: SizedBox.shrink(),
-                      flex: 10,
-                    ),
                   ],
                 ),
-                Flex(
-                  direction: Axis.horizontal,
+                const SizedBox(height: 5),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    const Flexible(
-                      child: SizedBox.shrink(),
-                      flex: 10,
-                    ),
+                    const Spacer(flex: 5),
                     for (LetterState letter
                         in 'ASDFGHJKL'.characters.map((e) => LetterState(e)))
-                      KeyboardButton(
-                        letter: letter,
-                        tileMatch: TileMatchState.match,
+                      Expanded(
+                        flex: 10,
+                        child: Row(
+                          children: [
+                            KeyboardLetterButton(
+                              letter: letter,
+                              tileMatch: TileMatchState.match,
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
                       ),
-                    const Flexible(
-                      child: SizedBox.shrink(),
-                      flex: 10,
-                    ),
+                    const Spacer(flex: 4),
                   ],
                 ),
+                const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: NeumorphicButton(
-                        padding: const EdgeInsets.all(2.5),
-                        child: Container(
-                          child: Icon(Icons.keyboard_return_outlined),
-                          alignment: Alignment.center,
-                          constraints:
-                              BoxConstraints.tightFor(width: 60, height: 100),
-                        ),
-                        style: NeumorphicStyle(
-                          border: NeumorphicBorder(),
-                          disableDepth: true,
-                          depth: 1,
-                        ),
-                        onPressed: () {},
-                      ),
+                    KeyboardUtilButton(
+                      child: const Icon(Icons.keyboard_return_outlined),
+                      onPressed: () {
+                        setState(() {
+                          boardMatches = boardMatches
+                              .map((e) =>
+                                  e.map((e) => TileMatchState.blank).toList())
+                              .toList();
+                        });
+                      },
                     ),
+                    const Spacer(),
                     for (LetterState letter
                         in 'ZXCVBNM'.characters.map((e) => LetterState(e)))
-                      KeyboardButton(
-                        letter: letter,
-                        tileMatch: TileMatchState.wrong,
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: NeumorphicButton(
-                        padding: const EdgeInsets.all(2.5),
-                        child: Container(
-                          child: Icon(Icons.backspace_outlined),
-                          alignment: Alignment.center,
-                          constraints:
-                              BoxConstraints.tightFor(width: 55.5, height: 100),
+                      Expanded(
+                        flex: 7,
+                        child: Row(
+                          children: [
+                            KeyboardLetterButton(
+                              letter: letter,
+                              tileMatch: TileMatchState.wrong,
+                            ),
+                            const Spacer(),
+                          ],
                         ),
-                        style: NeumorphicStyle(
-                          border: NeumorphicBorder(),
-                          disableDepth: true,
-                          depth: 1,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            boardMatches = boardMatches
-                                .map((e) =>
-                                    e.map((e) => TileMatchState.match).toList())
-                                .toList();
-                          });
-                        },
                       ),
+                    KeyboardUtilButton(
+                      child: const Icon(Icons.backspace_outlined),
+                      onPressed: () {
+                        setState(() {
+                          boardMatches = boardMatches
+                              .map((e) =>
+                                  e.map((e) => TileMatchState.match).toList())
+                              .toList();
+                        });
+                      },
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
               ],
             ),
           )
