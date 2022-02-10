@@ -14,6 +14,8 @@ class WordlePage extends StatefulWidget {
 }
 
 class _WordlePageState extends State<WordlePage> {
+  static const double _maxKeyboardWidth = 600;
+
   late final int width = widget.word.length;
 
   int currRow = 0;
@@ -71,32 +73,51 @@ class _WordlePageState extends State<WordlePage> {
 
           // Keyboard
           Container(
+            width: _maxKeyboardWidth,
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    const Flexible(
+                      child: SizedBox.shrink(),
+                      flex: 10,
+                    ),
                     for (LetterState letter
                         in 'QWERTYUIOP'.characters.map((e) => LetterState(e)))
                       KeyboardButton(
                         letter: letter,
                         tileMatch: keys[letter]!,
                       ),
+                    const Flexible(
+                      child: SizedBox.shrink(),
+                      flex: 10,
+                    ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    const Flexible(
+                      child: SizedBox.shrink(),
+                      flex: 10,
+                    ),
                     for (LetterState letter
                         in 'ASDFGHJKL'.characters.map((e) => LetterState(e)))
                       KeyboardButton(
                         letter: letter,
                         tileMatch: TileMatchState.match,
                       ),
+                    const Flexible(
+                      child: SizedBox.shrink(),
+                      flex: 10,
+                    ),
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(

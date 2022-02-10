@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/model/tile_match_state.dart';
@@ -41,6 +42,19 @@ class KeyboardButton extends StatelessWidget {
     }
   }
 
+  Color? get _color {
+    switch (tileMatch) {
+      case TileMatchState.blank:
+        return null;
+      case TileMatchState.wrong:
+        return Color(0xFF797979);
+      case TileMatchState.miss:
+        return Colors.orange.shade400;
+      case TileMatchState.match:
+        return Colors.green;
+    }
+  }
+
   Color _textColor(BuildContext context) {
     switch (tileMatch) {
       case TileMatchState.blank:
@@ -50,13 +64,27 @@ class KeyboardButton extends StatelessWidget {
     }
   }
 
+  ButtonStyle buttonStyle(BuildContext context) {
+    return ButtonStyle(
+        // padding: MaterialStateProperty.all(
+        //   EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        // ),
+        // minimumSize: MaterialStateProperty.all(Size(40, 50)),
+        // maximumSize: MaterialStateProperty.all(Size(50, 50)),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: NeumorphicButton(
-        padding: const EdgeInsets.all(1.5),
+    return Expanded(
+      flex: 20,
+      child: ElevatedButton(
+        onPressed: () {},
         child: Container(
+          color: Colors.black,
+          height: 40,
+          margin: const EdgeInsets.all(4.0),
+          // padding: const EdgeInsets.all(1.5),
           child: Text(
             letter.toString(),
             style: Theme.of(context).textTheme.bodyLarge!.copyWith(
@@ -65,10 +93,8 @@ class KeyboardButton extends StatelessWidget {
                 ),
           ),
           alignment: Alignment.center,
-          constraints: BoxConstraints.tightFor(width: 35, height: 50),
+          // constraints: BoxConstraints.tightFor(width: 35, height: 50),
         ),
-        style: _style,
-        onPressed: () {},
       ),
     );
   }
