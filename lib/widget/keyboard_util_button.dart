@@ -15,9 +15,10 @@ class KeyboardUtilButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return KeyboardButton(
+      flex: 15,
       child: Center(child: child),
       style: ButtonStyle(
-        minimumSize: MaterialStateProperty.all(const Size(40, 140)),
+        minimumSize: MaterialStateProperty.all(const Size(100, 100)),
         alignment: Alignment.center,
       ),
       onPressed: onPressed,

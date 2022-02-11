@@ -48,7 +48,12 @@ class Tile extends StatelessWidget {
               ),
         ),
         alignment: Alignment.center,
-        constraints: BoxConstraints.tightFor(width: 50, height: 50),
+        constraints: const BoxConstraints(
+          maxHeight: 70,
+          maxWidth: 70,
+          minHeight: 40,
+          minWidth: 40,
+        ),
       ),
       style: _style,
       // padding: EdgeInsets.only(top: 5, bottom: 6),

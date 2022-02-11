@@ -16,7 +16,8 @@ class WordlePage extends StatefulWidget {
 }
 
 class _WordlePageState extends State<WordlePage> {
-  static const double _maxKeyboardWidth = 700;
+  static const double _maxKeyboardWidth = 600;
+  static const double _maxKeyboardHeight = 270;
 
   late final int width = widget.word.length;
 
@@ -40,134 +41,139 @@ class _WordlePageState extends State<WordlePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: NeumorphicAppBar(
-        title: const Text('Perthgang Wordle'),
-        centerTitle: true,
-      ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Board
-          Container(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (var i = 0; i < 6; i++)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      for (var j = 0; j < width; j++)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Tile(
-                            match: boardMatches[i][j],
-                            letter: boardLetters[i][j],
-                          ),
-                        ),
-                    ],
+          Expanded(
+            flex: 2,
+            child: NeumorphicAppBar(
+              textStyle: Theme.of(context).textTheme.headline5!.apply(
+                    fontFamily: 'Poppins',
+                    fontWeightDelta: 1,
                   ),
-              ],
+              title: const FittedBox(
+                child: Text('Perthgang Wordle'),
+              ),
+              centerTitle: true,
             ),
           ),
 
-          // Keyboard
-          Container(
-            width: _maxKeyboardWidth,
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Spacer(),
-                    for (LetterState letter
-                        in 'QWERTYUIOP'.characters.map((e) => LetterState(e)))
-                      Expanded(
-                        flex: 10,
-                        child: Row(
-                          children: [
-                            KeyboardLetterButton(
-                              letter: letter,
-                              tileMatch: keys[letter]!,
+          // Board
+          Expanded(
+            flex: 12,
+            child: AspectRatio(
+              aspectRatio: width / 6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 0; i < 6; i++)
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (var j = 0; j < width; j++)
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Tile(
+                                  match: boardMatches[i][j],
+                                  letter: boardLetters[i][j],
+                                ),
+                              ),
                             ),
-                            const Spacer(),
-                          ],
-                        ),
+                        ],
                       ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Spacer(flex: 5),
-                    for (LetterState letter
-                        in 'ASDFGHJKL'.characters.map((e) => LetterState(e)))
-                      Expanded(
-                        flex: 10,
-                        child: Row(
-                          children: [
-                            KeyboardLetterButton(
-                              letter: letter,
-                              tileMatch: TileMatchState.match,
-                            ),
-                            const Spacer(),
-                          ],
-                        ),
-                      ),
-                    const Spacer(flex: 4),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    KeyboardUtilButton(
-                      child: const Icon(Icons.keyboard_return_outlined),
-                      onPressed: () {
-                        setState(() {
-                          boardMatches = boardMatches
-                              .map((e) =>
-                                  e.map((e) => TileMatchState.blank).toList())
-                              .toList();
-                        });
-                      },
                     ),
-                    const Spacer(),
-                    for (LetterState letter
-                        in 'ZXCVBNM'.characters.map((e) => LetterState(e)))
-                      Expanded(
-                        flex: 7,
-                        child: Row(
-                          children: [
-                            KeyboardLetterButton(
-                              letter: letter,
-                              tileMatch: TileMatchState.wrong,
-                            ),
-                            const Spacer(),
-                          ],
-                        ),
-                      ),
-                    KeyboardUtilButton(
-                      child: const Icon(Icons.backspace_outlined),
-                      onPressed: () {
-                        setState(() {
-                          boardMatches = boardMatches
-                              .map((e) =>
-                                  e.map((e) => TileMatchState.match).toList())
-                              .toList();
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
-          )
+          ),
+
+          const Spacer(flex: 2),
+
+          // Keyboard
+          Expanded(
+            flex: 8,
+            child: Container(
+              width: _maxKeyboardWidth,
+              height: _maxKeyboardHeight,
+              padding: const EdgeInsets.symmetric(horizontal: 3),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (String letter in 'QWERTYUIOP'.characters)
+                          KeyboardLetterButton(
+                            letter: LetterState(letter),
+                            tileMatch: keys[LetterState(letter)]!,
+                          ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Spacer(flex: 5),
+                        for (String letter in 'ASDFGHJKL'.characters)
+                          KeyboardLetterButton(
+                            letter: LetterState(letter),
+                            tileMatch: TileMatchState.match,
+                          ),
+                        const Spacer(flex: 5),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        KeyboardUtilButton(
+                          child: const Icon(Icons.keyboard_return_outlined),
+                          onPressed: () {
+                            setState(() {
+                              boardMatches = boardMatches
+                                  .map((e) => e
+                                      .map((e) => TileMatchState.blank)
+                                      .toList())
+                                  .toList();
+                            });
+                          },
+                        ),
+                        for (String letter in 'ZXCVBNM'.characters)
+                          KeyboardLetterButton(
+                            letter: LetterState(letter),
+                            tileMatch: TileMatchState.wrong,
+                          ),
+                        KeyboardUtilButton(
+                          child: const Icon(Icons.backspace_outlined),
+                          onPressed: () {
+                            setState(() {
+                              boardMatches = boardMatches
+                                  .map((e) => e
+                                      .map((e) => TileMatchState.match)
+                                      .toList())
+                                  .toList();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const Spacer(),
         ],
       ),
     );
