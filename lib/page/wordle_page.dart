@@ -70,8 +70,22 @@ class _WordlePageState extends State<WordlePage> {
                       fontFamily: 'Poppins',
                       fontWeightDelta: 1,
                     ),
-                title: const FittedBox(
-                  child: Text('Perthgang Wordle'),
+                title: FittedBox(
+                  child: NeumorphicText(
+                    'Perthle',
+                    duration: const Duration(milliseconds: 400),
+                    style: NeumorphicStyle(
+                      border: NeumorphicBorder(),
+                      depth: 1,
+                      intensity: 20,
+                      lightSource: _lightSource,
+                    ),
+                    textStyle: NeumorphicTextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 35,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
                 ),
                 centerTitle: true,
               ),
@@ -117,12 +131,12 @@ class _WordlePageState extends State<WordlePage> {
             // Keyboard / Stats switcher
             Expanded(
               flex: 8,
-              child: AnimatedSwitcher(
-                duration: const Duration(seconds: 5),
-                child: Container(
-                  width: _maxKeyboardWidth,
-                  height: _maxKeyboardHeight,
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
+              child: Container(
+                width: _maxKeyboardWidth,
+                height: _maxKeyboardHeight,
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
                   child: wordle.completion == WordleCompletionState.playing
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -140,7 +154,8 @@ class _WordlePageState extends State<WordlePage> {
                                       tileMatch: wordle.keyboard[letter],
                                       onPressed: wordle.canType
                                           ? () => setState(
-                                              () => wordle.type(letter))
+                                                () => wordle.type(letter),
+                                              )
                                           : null,
                                     ),
                                 ],
@@ -159,7 +174,8 @@ class _WordlePageState extends State<WordlePage> {
                                       tileMatch: wordle.keyboard[letter],
                                       onPressed: wordle.canType
                                           ? () => setState(
-                                              () => wordle.type(letter))
+                                                () => wordle.type(letter),
+                                              )
                                           : null,
                                     ),
                                   const Spacer(flex: 5),
@@ -188,7 +204,8 @@ class _WordlePageState extends State<WordlePage> {
                                       tileMatch: wordle.keyboard[letter],
                                       onPressed: wordle.canType
                                           ? () => setState(
-                                              () => wordle.type(letter))
+                                                () => wordle.type(letter),
+                                              )
                                           : null,
                                     ),
                                   KeyboardIconButton(

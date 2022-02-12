@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Authenticator(
       child: NeumorphicApp(
-        title: 'Perthgang Wordle',
+        title: 'Perthle',
         theme: NeumorphicThemeData(
           textTheme: const TextTheme().apply(fontFamily: 'Poppins'),
         ),
