@@ -5,17 +5,16 @@ import 'package:wordle_clone/model/board_state.dart';
 import 'package:wordle_clone/model/keyboard_state.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/model/tile_match_state.dart';
-import 'package:wordle_clone/model/wordle_message_state.dart';
+import 'package:wordle_clone/model/wordle_completion_state.dart';
 
 class WordleController {
-  WordleController({
-    required this.word,
-    required this.onMessage,
-  });
+  WordleController({required this.word});
 
   final String word;
   Characters get wordChars => word.characters;
-  final void Function(WordleMessageState) onMessage;
+
+  WordleCompletionState completion = WordleCompletionState.playing;
+  bool get inProgress => completion == WordleCompletionState.playing;
 
   final KeyboardState keyboard = KeyboardState();
   late final BoardState board = BoardState(width: word.length);
@@ -25,7 +24,7 @@ class WordleController {
   int get _width => board.width;
   int get _height => board.height;
 
-  bool get canType => currCol < _width && currRow < _height;
+  bool get canType => currCol < _width && currRow < _height && inProgress;
 
   void type(LetterState letter) {
     if (canType) {
@@ -34,7 +33,7 @@ class WordleController {
     }
   }
 
-  bool get canBackspace => currCol != 0;
+  bool get canBackspace => currCol != 0 && inProgress;
 
   void backspace() {
     if (canBackspace) {
@@ -43,7 +42,7 @@ class WordleController {
     }
   }
 
-  bool get canEnter => currCol >= _width;
+  bool get canEnter => currCol >= _width && inProgress;
 
   void enter() {
     if (canEnter) {
@@ -77,12 +76,14 @@ class WordleController {
       // Move to next row
       currRow += 1;
       currCol = 0;
+
       // Check end of game condition
-      if (currRow == _height ||
-          board.matches[currRow - 1].every(
-            (match) => match == TileMatchState.match,
-          )) {
-        onMessage(WordleMessageState.gameCompleted);
+      if (board.matches[currRow - 1].every(
+        (match) => match == TileMatchState.match,
+      )) {
+        completion = WordleCompletionState.won;
+      } else if (currRow == _height) {
+        completion = WordleCompletionState.lost;
       }
     }
   }
