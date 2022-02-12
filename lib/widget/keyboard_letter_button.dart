@@ -17,31 +17,55 @@ class KeyboardLetterButton extends StatelessWidget {
   final int flex;
   final void Function()? onPressed;
 
-  Color? get _color {
+  Color? _color(BuildContext context) {
+    Color base;
+
     switch (tileMatch) {
       case TileMatchState.blank:
-        return null;
+        base = NeumorphicTheme.baseColor(context);
+        break;
       case TileMatchState.wrong:
-        return const Color(0xFF797979);
+        base = NeumorphicTheme.disabledColor(context);
+        break;
       case TileMatchState.miss:
-        return Colors.orange.shade400;
+        base = Colors.orange.shade300;
+        break;
       case TileMatchState.match:
-        return Colors.green;
+        base = Colors.green.shade400;
+        break;
     }
+
+    if (tileMatch != TileMatchState.blank && onPressed == null) {
+      base = base.withAlpha(0xaa);
+    }
+
+    return base;
   }
 
   Color _textColor(BuildContext context) {
-    switch (tileMatch) {
-      case TileMatchState.blank:
-        return NeumorphicTheme.defaultTextColor(context);
-      default:
-        return Colors.white;
+    Color base;
+
+    if (tileMatch == TileMatchState.blank) {
+      base = NeumorphicTheme.defaultTextColor(context);
+    } else {
+      base = NeumorphicTheme.baseColor(context);
     }
+
+    if (tileMatch == TileMatchState.blank && onPressed == null) {
+      base = base.withAlpha(0x77);
+    }
+
+    return base;
   }
 
   ButtonStyle _buttonStyle(BuildContext context) {
     return ButtonStyle(
       minimumSize: MaterialStateProperty.all(const Size(100, 80)),
+      backgroundColor: MaterialStateProperty.all(_color(context)),
+      elevation: MaterialStateProperty.all(0),
+      // overlayColor: MaterialStateProperty.all(
+      //   NeumorphicTheme.accentColor(context),
+      // ),
     );
   }
 
@@ -54,6 +78,7 @@ class KeyboardLetterButton extends StatelessWidget {
         style: Theme.of(context).textTheme.headline6!.apply(
               color: _textColor(context),
               fontFamily: 'Poppins',
+              fontWeightDelta: -1,
             ),
         textAlign: TextAlign.center,
       ),

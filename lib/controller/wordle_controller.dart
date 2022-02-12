@@ -25,30 +25,31 @@ class WordleController {
   int get _width => board.width;
   int get _height => board.height;
 
+  bool get canType => _currCol < _width && _currRow < _height;
+
   void type(LetterState letter) {
-    if (0 <= _currCol && _currCol < _width) {
+    if (canType) {
       board.letters[_currRow][_currCol] = letter;
-      _currCol = min(_currCol + 1, _width - 1);
-    } else {
-      onMessage(WordleMessageState.noSpaceToType);
+      _currCol += 1;
     }
   }
 
+  bool get canBackspace => _currCol != 0;
+
   void backspace() {
-    if (_currCol == 0) {
-      onMessage(WordleMessageState.nothingToBackspace);
-    } else {
+    if (canBackspace) {
       _currCol -= 1;
       board.letters[_currRow][_currCol] = null;
     }
   }
 
+  bool get canEnter => _currCol >= _width;
+
   void enter() {
-    if (_currCol != _width - 1) {
-      onMessage(WordleMessageState.notEnoughLetters);
-    } else if (1 + 1 != 2 /* TODO Check if it's not a word */) {
-      onMessage(WordleMessageState.noSuchWord);
-    } else {
+    if (canEnter) {
+      /* TODO Check if it's not a word */
+      // onMessage(WordleMessageState.noSuchWord);
+
       // Reveal row results logic
       for (int i = 0; i < _width; i++) {
         LetterState letter = board.letters[_currRow][i]!;
@@ -64,18 +65,24 @@ class WordleController {
           match = TileMatchState.miss;
         } else {
           // No match! (Grey)
-          match = TileMatchState.miss;
+          match = TileMatchState.wrong;
         }
         board.matches[_currRow][i] = match;
-        keyboard[letter] = match;
+        if (keyboard[letter].precedence < match.precedence) {
+          // Only update keyboard letters of higher precedence
+          keyboard[letter] = match;
+        }
       }
 
       // Move to next row
-      if (_currRow == _height - 1) {
+      _currRow += 1;
+      _currCol = 0;
+      // Check end of game condition
+      if (_currRow == _height ||
+          board.matches[_currRow - 1].every(
+            (match) => match == TileMatchState.match,
+          )) {
         onMessage(WordleMessageState.gameCompleted);
-      } else {
-        _currRow += 1;
-        _currCol = 0;
       }
     }
   }

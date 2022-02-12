@@ -1,11 +1,9 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:wordle_clone/controller/wordle_controller.dart';
 import 'package:wordle_clone/model/letter_state.dart';
-import 'package:wordle_clone/model/tile_match_state.dart';
 import 'package:wordle_clone/model/wordle_message_state.dart';
-import 'package:wordle_clone/widget/keyboard_button.dart';
 import 'package:wordle_clone/widget/keyboard_letter_button.dart';
-import 'package:wordle_clone/widget/keyboard_util_button.dart';
+import 'package:wordle_clone/widget/keyboard_icon_button.dart';
 import 'package:wordle_clone/widget/tile.dart';
 
 class WordlePage extends StatefulWidget {
@@ -24,10 +22,9 @@ class _WordlePageState extends State<WordlePage> {
   late final WordleController wordle = WordleController(
     word: widget.word,
     onMessage: (WordleMessageState message) {
-      throw Exception(message.toString());
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text(message.toString())),
-      // );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message.toString())),
+      );
     },
   );
 
@@ -107,8 +104,9 @@ class _WordlePageState extends State<WordlePage> {
                           KeyboardLetterButton(
                             letter: letter,
                             tileMatch: wordle.keyboard[letter],
-                            onPressed: () =>
-                                setState(() => wordle.type(letter)),
+                            onPressed: wordle.canType
+                                ? () => setState(() => wordle.type(letter))
+                                : null,
                           ),
                       ],
                     ),
@@ -123,8 +121,9 @@ class _WordlePageState extends State<WordlePage> {
                           KeyboardLetterButton(
                             letter: letter,
                             tileMatch: wordle.keyboard[letter],
-                            onPressed: () =>
-                                setState(() => wordle.type(letter)),
+                            onPressed: wordle.canType
+                                ? () => setState(() => wordle.type(letter))
+                                : null,
                           ),
                         const Spacer(flex: 5),
                       ],
@@ -135,20 +134,25 @@ class _WordlePageState extends State<WordlePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        KeyboardUtilButton(
-                          child: const Icon(Icons.keyboard_return_outlined),
-                          onPressed: () => setState(() => wordle.enter()),
+                        KeyboardIconButton(
+                          icon: const Icon(Icons.keyboard_return_outlined),
+                          onPressed: wordle.canEnter
+                              ? () => setState(() => wordle.enter())
+                              : null,
                         ),
                         for (LetterState letter in 'ZXCVBNM'.letters)
                           KeyboardLetterButton(
                             letter: letter,
                             tileMatch: wordle.keyboard[letter],
-                            onPressed: () =>
-                                setState(() => wordle.type(letter)),
+                            onPressed: wordle.canType
+                                ? () => setState(() => wordle.type(letter))
+                                : null,
                           ),
-                        KeyboardUtilButton(
-                          child: const Icon(Icons.backspace_outlined),
-                          onPressed: () => setState(() => wordle.backspace()),
+                        KeyboardIconButton(
+                          icon: const Icon(Icons.backspace_outlined),
+                          onPressed: wordle.canBackspace
+                              ? () => setState(() => wordle.backspace())
+                              : null,
                         ),
                       ],
                     ),

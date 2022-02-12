@@ -25,7 +25,7 @@ class KeyboardButton extends StatelessWidget {
         children: [
           Padding(
             padding: margin,
-            child: ElevatedButton(
+            child: OutlinedButton(
               style: style,
               onPressed: onPressed,
               child: IgnorePointer(

@@ -11,13 +11,17 @@ class BoardState {
   final int width;
   final int height;
 
-  late final List<List<LetterState?>> letters = List.filled(
-    height,
-    List.filled(width, null),
-  );
+  late final List<List<LetterState?>> letters = [
+    for (int i = 0; i < height; i++)
+      [
+        for (int j = 0; j < width; j++) null,
+      ],
+  ];
 
-  late final List<List<TileMatchState>> matches = List.filled(
-    height,
-    List.filled(width, TileMatchState.blank),
-  );
+  late final List<List<TileMatchState>> matches = [
+    for (int i = 0; i < height; i++)
+      [
+        for (int j = 0; j < width; j++) TileMatchState.blank,
+      ],
+  ];
 }

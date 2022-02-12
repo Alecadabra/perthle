@@ -14,3 +14,18 @@ enum TileMatchState {
   /// guessed in a correct position.
   match,
 }
+
+extension TileMatchStatePrecedence on TileMatchState {
+  int get precedence {
+    switch (this) {
+      case TileMatchState.blank:
+        return 0;
+      case TileMatchState.wrong:
+        return 1;
+      case TileMatchState.miss:
+        return 2;
+      case TileMatchState.match:
+        return 3;
+    }
+  }
+}

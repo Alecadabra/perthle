@@ -9,48 +9,59 @@ class Tile extends StatelessWidget {
   final LetterState? letter;
 
   static const double _depth = 2;
+  static const double _intensity = 70;
 
-  NeumorphicStyle get _style {
+  NeumorphicStyle _style(BuildContext context) {
     switch (match) {
       case TileMatchState.blank:
         return const NeumorphicStyle(
-          intensity: 50,
+          intensity: _intensity,
           depth: _depth,
         );
       case TileMatchState.wrong:
-        return const NeumorphicStyle(
-          color: Color(0xFF797979),
-          intensity: 50,
+        return NeumorphicStyle(
+          color: NeumorphicTheme.disabledColor(context),
+          intensity: _intensity,
           depth: -_depth,
         );
       case TileMatchState.miss:
         return NeumorphicStyle(
-          intensity: 50,
+          intensity: _intensity,
           depth: -_depth,
-          color: Colors.orange.shade400,
+          color: Colors.orange.shade300,
         );
       case TileMatchState.match:
-        return const NeumorphicStyle(
-          color: Colors.green,
-          intensity: 50,
+        return NeumorphicStyle(
+          color: Colors.green.shade400,
+          intensity: _intensity,
           depth: -_depth,
         );
+    }
+  }
+
+  Color textColor(BuildContext context) {
+    if (match != TileMatchState.blank) {
+      return NeumorphicTheme.baseColor(context);
+    } else {
+      return NeumorphicTheme.defaultTextColor(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Neumorphic(
-      style: _style,
+      style: _style(context),
       child: Container(
-        child: Text(
-          letter?.toString() ?? '',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headline4?.copyWith(
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Poppins',
-                color: NeumorphicTheme.baseColor(context),
-              ),
+        child: FittedBox(
+          child: Text(
+            letter?.toString() ?? ' ',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.headline4?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Poppins',
+                  color: textColor(context),
+                ),
+          ),
         ),
         alignment: Alignment.center,
         constraints: const BoxConstraints(
