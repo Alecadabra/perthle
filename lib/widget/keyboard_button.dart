@@ -7,7 +7,7 @@ class KeyboardButton extends StatelessWidget {
     this.style,
     this.onPressed,
     this.flex = 10,
-    this.margin = const EdgeInsets.all(4),
+    this.margin = const EdgeInsets.all(2),
   }) : super(key: key);
 
   final Widget child;

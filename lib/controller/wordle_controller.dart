@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/widgets.dart';
 import 'package:wordle_clone/model/board_state.dart';
 import 'package:wordle_clone/model/keyboard_state.dart';

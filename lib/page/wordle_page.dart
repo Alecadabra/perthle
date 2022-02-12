@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:wordle_clone/controller/wordle_controller.dart';
 import 'package:wordle_clone/model/letter_state.dart';
+import 'package:wordle_clone/model/wordle_completion_state.dart';
 import 'package:wordle_clone/widget/keyboard_letter_button.dart';
 import 'package:wordle_clone/widget/keyboard_icon_button.dart';
 import 'package:wordle_clone/widget/tile.dart';
@@ -113,80 +114,108 @@ class _WordlePageState extends State<WordlePage> {
             // Board-Keyboard gap
             const Spacer(flex: 2),
 
-            // Keyboard
+            // Keyboard / Stats switcher
             Expanded(
               flex: 8,
-              child: Container(
-                width: _maxKeyboardWidth,
-                height: _maxKeyboardHeight,
-                padding: const EdgeInsets.symmetric(horizontal: 3),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (LetterState letter in 'QWERTYUIOP'.letters)
-                            KeyboardLetterButton(
-                              letter: letter,
-                              tileMatch: wordle.keyboard[letter],
-                              onPressed: wordle.canType
-                                  ? () => setState(() => wordle.type(letter))
-                                  : null,
+              child: AnimatedSwitcher(
+                duration: const Duration(seconds: 5),
+                child: Container(
+                  width: _maxKeyboardWidth,
+                  height: _maxKeyboardHeight,
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: wordle.completion == WordleCompletionState.playing
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  for (var letter in 'QWERTYUIOP'.letters)
+                                    KeyboardLetterButton(
+                                      letter: letter,
+                                      tileMatch: wordle.keyboard[letter],
+                                      onPressed: wordle.canType
+                                          ? () => setState(
+                                              () => wordle.type(letter))
+                                          : null,
+                                    ),
+                                ],
+                              ),
                             ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Spacer(flex: 5),
-                          for (LetterState letter in 'ASDFGHJKL'.letters)
-                            KeyboardLetterButton(
-                              letter: letter,
-                              tileMatch: wordle.keyboard[letter],
-                              onPressed: wordle.canType
-                                  ? () => setState(() => wordle.type(letter))
-                                  : null,
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Spacer(flex: 5),
+                                  for (var letter in 'ASDFGHJKL'.letters)
+                                    KeyboardLetterButton(
+                                      letter: letter,
+                                      tileMatch: wordle.keyboard[letter],
+                                      onPressed: wordle.canType
+                                          ? () => setState(
+                                              () => wordle.type(letter))
+                                          : null,
+                                    ),
+                                  const Spacer(flex: 5),
+                                ],
+                              ),
                             ),
-                          const Spacer(flex: 5),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          KeyboardIconButton(
-                            icon: const Icon(Icons.keyboard_return_outlined),
-                            onPressed: wordle.canEnter
-                                ? () => setState(() => wordle.enter())
-                                : null,
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  KeyboardIconButton(
+                                    icon: const Icon(
+                                      Icons.keyboard_return_outlined,
+                                    ),
+                                    onPressed: wordle.canEnter
+                                        ? () => setState(
+                                              () => wordle.enter(),
+                                            )
+                                        : null,
+                                  ),
+                                  for (var letter in 'ZXCVBNM'.letters)
+                                    KeyboardLetterButton(
+                                      letter: letter,
+                                      tileMatch: wordle.keyboard[letter],
+                                      onPressed: wordle.canType
+                                          ? () => setState(
+                                              () => wordle.type(letter))
+                                          : null,
+                                    ),
+                                  KeyboardIconButton(
+                                    icon: const Icon(
+                                      Icons.backspace_outlined,
+                                    ),
+                                    onPressed: wordle.canBackspace
+                                        ? () => setState(
+                                              () => wordle.backspace(),
+                                            )
+                                        : null,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Neumorphic(
+                            style: NeumorphicStyle(
+                              depth: -1.5,
+                              intensity: 50,
+                            ),
+                            child: SizedBox.expand(),
                           ),
-                          for (LetterState letter in 'ZXCVBNM'.letters)
-                            KeyboardLetterButton(
-                              letter: letter,
-                              tileMatch: wordle.keyboard[letter],
-                              onPressed: wordle.canType
-                                  ? () => setState(() => wordle.type(letter))
-                                  : null,
-                            ),
-                          KeyboardIconButton(
-                            icon: const Icon(Icons.backspace_outlined),
-                            onPressed: wordle.canBackspace
-                                ? () => setState(() => wordle.backspace())
-                                : null,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                        ),
                 ),
               ),
             ),
