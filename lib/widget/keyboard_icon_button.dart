@@ -29,6 +29,7 @@ class KeyboardIconButton extends StatelessWidget {
       ),
       style: ButtonStyle(
         minimumSize: MaterialStateProperty.all(const Size(100, 100)),
+        enableFeedback: true,
       ),
       onPressed: onPressed,
     );

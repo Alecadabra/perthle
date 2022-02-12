@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 class LetterState {
   LetterState(this.letterString)
       : assert(letterString.length == 1),
-        assert('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.contains(letterString));
+        assert(alphabet.contains(letterString));
 
   final String letterString;
 
@@ -18,6 +18,10 @@ class LetterState {
   bool operator ==(Object other) {
     return other is LetterState && other.letterString == letterString;
   }
+
+  static bool isValid(String letterString) {
+    return letterString.length == 1 && alphabet.contains(letterString);
+  }
 }
 
 extension LetterStateCharacters on String {
@@ -25,3 +29,5 @@ extension LetterStateCharacters on String {
     return Characters(this).map((String c) => LetterState(c));
   }
 }
+
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';

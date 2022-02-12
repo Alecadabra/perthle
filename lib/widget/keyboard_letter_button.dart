@@ -63,6 +63,7 @@ class KeyboardLetterButton extends StatelessWidget {
       minimumSize: MaterialStateProperty.all(const Size(100, 80)),
       backgroundColor: MaterialStateProperty.all(_color(context)),
       elevation: MaterialStateProperty.all(0),
+      enableFeedback: true,
       // overlayColor: MaterialStateProperty.all(
       //   NeumorphicTheme.accentColor(context),
       // ),
