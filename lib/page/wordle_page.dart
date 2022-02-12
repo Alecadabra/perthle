@@ -2,7 +2,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:wordle_clone/controller/wordle_controller.dart';
 import 'package:wordle_clone/model/letter_state.dart';
-import 'package:wordle_clone/model/wordle_message_state.dart';
 import 'package:wordle_clone/widget/keyboard_letter_button.dart';
 import 'package:wordle_clone/widget/keyboard_icon_button.dart';
 import 'package:wordle_clone/widget/tile.dart';
@@ -20,14 +19,7 @@ class _WordlePageState extends State<WordlePage> {
   static const double _maxKeyboardWidth = 600;
   static const double _maxKeyboardHeight = 270;
 
-  late final WordleController wordle = WordleController(
-    word: widget.word,
-    onMessage: (WordleMessageState message) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message.toString())),
-      );
-    },
-  );
+  late final WordleController wordle = WordleController(word: widget.word);
 
   late FocusNode rootFocus;
 
