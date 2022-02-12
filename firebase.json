@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "perthle",
     "public": "build/web",
     "ignore": [
       "firebase.json",
