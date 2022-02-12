@@ -1,18 +1,27 @@
+import 'package:flutter/widgets.dart';
+
+/// Immutable state representing a letter in the English alphabet.
 class LetterState {
-  LetterState(this._letter)
-      : assert(_letter.length == 1),
-        assert('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.contains(_letter));
+  LetterState(this.letterString)
+      : assert(letterString.length == 1),
+        assert('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.contains(letterString));
 
-  final String _letter;
-
-  @override
-  String toString() => _letter;
+  final String letterString;
 
   @override
-  int get hashCode => _letter.hashCode;
+  String toString() => letterString;
+
+  @override
+  int get hashCode => letterString.hashCode;
 
   @override
   bool operator ==(Object other) {
-    return other is LetterState && other._letter == _letter;
+    return other is LetterState && other.letterString == letterString;
+  }
+}
+
+extension LetterStateCharacters on String {
+  Iterable<LetterState> get letters {
+    return Characters(this).map((String c) => LetterState(c));
   }
 }

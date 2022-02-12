@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/model/tile_match_state.dart';
@@ -10,11 +9,13 @@ class KeyboardLetterButton extends StatelessWidget {
     required this.letter,
     required this.tileMatch,
     this.flex = 10,
+    this.onPressed,
   }) : super(key: key);
 
   final LetterState letter;
   final TileMatchState tileMatch;
   final int flex;
+  final void Function()? onPressed;
 
   Color? get _color {
     switch (tileMatch) {
@@ -40,11 +41,7 @@ class KeyboardLetterButton extends StatelessWidget {
 
   ButtonStyle _buttonStyle(BuildContext context) {
     return ButtonStyle(
-      // padding: MaterialStateProperty.all(
-      //   EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-      // ),
       minimumSize: MaterialStateProperty.all(const Size(100, 80)),
-      // maximumSize: MaterialStateProperty.all(Size(140, 50)),
     );
   }
 
@@ -54,13 +51,13 @@ class KeyboardLetterButton extends StatelessWidget {
       flex: flex,
       child: Text(
         letter.toString(),
-        style: Theme.of(context).textTheme.headline6!.copyWith(
+        style: Theme.of(context).textTheme.headline6!.apply(
               color: _textColor(context),
-              fontWeight: FontWeight.w500,
+              fontFamily: 'Poppins',
             ),
         textAlign: TextAlign.center,
       ),
-      onPressed: () {},
+      onPressed: onPressed,
       style: _buttonStyle(context),
     );
   }

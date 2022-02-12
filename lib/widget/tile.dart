@@ -14,21 +14,25 @@ class Tile extends StatelessWidget {
     switch (match) {
       case TileMatchState.blank:
         return const NeumorphicStyle(
+          intensity: 50,
           depth: _depth,
         );
       case TileMatchState.wrong:
         return const NeumorphicStyle(
           color: Color(0xFF797979),
+          intensity: 50,
           depth: -_depth,
         );
       case TileMatchState.miss:
         return NeumorphicStyle(
+          intensity: 50,
           depth: -_depth,
           color: Colors.orange.shade400,
         );
       case TileMatchState.match:
         return const NeumorphicStyle(
           color: Colors.green,
+          intensity: 50,
           depth: -_depth,
         );
     }
@@ -37,6 +41,7 @@ class Tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Neumorphic(
+      style: _style,
       child: Container(
         child: Text(
           letter?.toString() ?? '',
@@ -55,8 +60,6 @@ class Tile extends StatelessWidget {
           minWidth: 40,
         ),
       ),
-      style: _style,
-      // padding: EdgeInsets.only(top: 5, bottom: 6),
     );
   }
 }

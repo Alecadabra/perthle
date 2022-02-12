@@ -1,6 +1,8 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:wordle_clone/controller/wordle_controller.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/model/tile_match_state.dart';
+import 'package:wordle_clone/model/wordle_message_state.dart';
 import 'package:wordle_clone/widget/keyboard_button.dart';
 import 'package:wordle_clone/widget/keyboard_letter_button.dart';
 import 'package:wordle_clone/widget/keyboard_util_button.dart';
@@ -19,30 +21,22 @@ class _WordlePageState extends State<WordlePage> {
   static const double _maxKeyboardWidth = 600;
   static const double _maxKeyboardHeight = 270;
 
-  late final int width = widget.word.length;
-
-  int currRow = 0;
-
-  late List<List<LetterState?>> boardLetters = List.filled(
-    6,
-    List.filled(width, LetterState('Q')),
+  late final WordleController wordle = WordleController(
+    word: widget.word,
+    onMessage: (WordleMessageState message) {
+      throw Exception(message.toString());
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text(message.toString())),
+      // );
+    },
   );
-
-  late List<List<TileMatchState>> boardMatches = List.filled(
-    6,
-    List.filled(width, TileMatchState.blank),
-  );
-
-  Map<LetterState, TileMatchState> keys = {
-    for (String chars in 'QWERTYUIOPASDFGHJKLZXCVBNM'.characters)
-      LetterState(chars): TileMatchState.blank,
-  };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
+          // Appbar
           Expanded(
             flex: 2,
             child: NeumorphicAppBar(
@@ -61,24 +55,24 @@ class _WordlePageState extends State<WordlePage> {
           Expanded(
             flex: 12,
             child: AspectRatio(
-              aspectRatio: width / 6,
+              aspectRatio: wordle.board.width / wordle.board.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  for (var i = 0; i < 6; i++)
+                  for (var i = 0; i < wordle.board.height; i++)
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          for (var j = 0; j < width; j++)
+                          for (var j = 0; j < wordle.board.width; j++)
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Tile(
-                                  match: boardMatches[i][j],
-                                  letter: boardLetters[i][j],
+                                  match: wordle.board.matches[i][j],
+                                  letter: wordle.board.letters[i][j],
                                 ),
                               ),
                             ),
@@ -90,6 +84,7 @@ class _WordlePageState extends State<WordlePage> {
             ),
           ),
 
+          // Board-Keyboard gap
           const Spacer(flex: 2),
 
           // Keyboard
@@ -108,10 +103,12 @@ class _WordlePageState extends State<WordlePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        for (String letter in 'QWERTYUIOP'.characters)
+                        for (LetterState letter in 'QWERTYUIOP'.letters)
                           KeyboardLetterButton(
-                            letter: LetterState(letter),
-                            tileMatch: keys[LetterState(letter)]!,
+                            letter: letter,
+                            tileMatch: wordle.keyboard[letter],
+                            onPressed: () =>
+                                setState(() => wordle.type(letter)),
                           ),
                       ],
                     ),
@@ -122,10 +119,12 @@ class _WordlePageState extends State<WordlePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Spacer(flex: 5),
-                        for (String letter in 'ASDFGHJKL'.characters)
+                        for (LetterState letter in 'ASDFGHJKL'.letters)
                           KeyboardLetterButton(
-                            letter: LetterState(letter),
-                            tileMatch: TileMatchState.match,
+                            letter: letter,
+                            tileMatch: wordle.keyboard[letter],
+                            onPressed: () =>
+                                setState(() => wordle.type(letter)),
                           ),
                         const Spacer(flex: 5),
                       ],
@@ -138,32 +137,18 @@ class _WordlePageState extends State<WordlePage> {
                       children: [
                         KeyboardUtilButton(
                           child: const Icon(Icons.keyboard_return_outlined),
-                          onPressed: () {
-                            setState(() {
-                              boardMatches = boardMatches
-                                  .map((e) => e
-                                      .map((e) => TileMatchState.blank)
-                                      .toList())
-                                  .toList();
-                            });
-                          },
+                          onPressed: () => setState(() => wordle.enter()),
                         ),
-                        for (String letter in 'ZXCVBNM'.characters)
+                        for (LetterState letter in 'ZXCVBNM'.letters)
                           KeyboardLetterButton(
-                            letter: LetterState(letter),
-                            tileMatch: TileMatchState.wrong,
+                            letter: letter,
+                            tileMatch: wordle.keyboard[letter],
+                            onPressed: () =>
+                                setState(() => wordle.type(letter)),
                           ),
                         KeyboardUtilButton(
                           child: const Icon(Icons.backspace_outlined),
-                          onPressed: () {
-                            setState(() {
-                              boardMatches = boardMatches
-                                  .map((e) => e
-                                      .map((e) => TileMatchState.match)
-                                      .toList())
-                                  .toList();
-                            });
-                          },
+                          onPressed: () => setState(() => wordle.backspace()),
                         ),
                       ],
                     ),
@@ -173,6 +158,7 @@ class _WordlePageState extends State<WordlePage> {
             ),
           ),
 
+          // Space under keyboard
           const Spacer(),
         ],
       ),
