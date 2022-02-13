@@ -1,7 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wordle_clone/controller/wordle_controller.dart';
 import 'package:wordle_clone/model/letter_state.dart';
+import 'package:wordle_clone/model/saved_game_state.dart';
 import 'package:wordle_clone/model/wordle_completion_state.dart';
 import 'package:wordle_clone/widget/keyboard_letter_button.dart';
 import 'package:wordle_clone/widget/keyboard_icon_button.dart';
@@ -223,14 +225,41 @@ class _WordlePageState extends State<WordlePage> {
                             ),
                           ],
                         )
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Neumorphic(
-                            style: NeumorphicStyle(
-                              depth: -1.5,
-                              intensity: 50,
+                      : Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Neumorphic(
+                              padding: const EdgeInsets.all(16),
+                              style: NeumorphicStyle(
+                                depth: -1.5,
+                                intensity: 50,
+                                lightSource: _lightSource,
+                              ),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      SavedGameState.fromBoard(
+                                        board: wordle.board,
+                                        gameNum: 1,
+                                      ).shareableString,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  NeumorphicButton(
+                                    child: const Text('Share'),
+                                    onPressed: () {
+                                      Share.share(
+                                        SavedGameState.fromBoard(
+                                          board: wordle.board,
+                                          gameNum: 1,
+                                        ).shareableString,
+                                      );
+                                    },
+                                  )
+                                ],
+                              ),
                             ),
-                            child: SizedBox.expand(),
                           ),
                         ),
                 ),
