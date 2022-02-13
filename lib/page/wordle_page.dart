@@ -8,6 +8,7 @@ import 'package:wordle_clone/model/wordle_completion_state.dart';
 import 'package:wordle_clone/widget/keyboard_letter_button.dart';
 import 'package:wordle_clone/widget/keyboard_icon_button.dart';
 import 'package:wordle_clone/widget/tile.dart';
+import 'package:wordle_clone/widget/wordle_board.dart';
 
 class WordlePage extends StatefulWidget {
   const WordlePage({Key? key, required this.word}) : super(key: key);
@@ -96,35 +97,7 @@ class _WordlePageState extends State<WordlePage> {
             // Board
             Expanded(
               flex: 12,
-              child: AspectRatio(
-                aspectRatio: wordle.board.width / wordle.board.height,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    for (var i = 0; i < wordle.board.height; i++)
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            for (var j = 0; j < wordle.board.width; j++)
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Tile(
-                                    match: wordle.board.matches[i][j],
-                                    letter: wordle.board.letters[i][j],
-                                    lightSource: _lightSource,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+              child: WordleBoard(wordle: wordle, lightSource: _lightSource),
             ),
 
             // Board-Keyboard gap
