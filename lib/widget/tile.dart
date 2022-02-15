@@ -14,7 +14,8 @@ class Tile extends StatelessWidget {
   final LetterState? letter;
   final LightSource lightSource;
 
-  static const double _depth = 1.5;
+  static const double _posDepth = 1.5;
+  static const double _negDepth = -2;
   static const double _intensity = 50;
 
   NeumorphicStyle _style(BuildContext context) {
@@ -22,20 +23,20 @@ class Tile extends StatelessWidget {
       case TileMatchState.blank:
         return NeumorphicStyle(
           intensity: _intensity,
-          depth: _depth,
+          depth: _posDepth,
           lightSource: lightSource,
         );
       case TileMatchState.wrong:
         return NeumorphicStyle(
           color: NeumorphicTheme.disabledColor(context),
           intensity: _intensity,
-          depth: -_depth,
+          depth: _negDepth,
           lightSource: lightSource,
         );
       case TileMatchState.miss:
         return NeumorphicStyle(
           intensity: _intensity,
-          depth: -_depth,
+          depth: _negDepth,
           color: Colors.orange.shade300,
           lightSource: lightSource,
         );
@@ -43,7 +44,7 @@ class Tile extends StatelessWidget {
         return NeumorphicStyle(
           color: Colors.green.shade400,
           intensity: _intensity,
-          depth: -_depth,
+          depth: _negDepth,
           lightSource: lightSource,
         );
     }
