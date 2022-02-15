@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class KeyboardButton extends StatelessWidget {
@@ -8,6 +9,7 @@ class KeyboardButton extends StatelessWidget {
     this.onPressed,
     this.flex = 10,
     this.margin = const EdgeInsets.all(2),
+    this.enableFeedback = true,
   }) : super(key: key);
 
   final Widget child;
@@ -15,6 +17,7 @@ class KeyboardButton extends StatelessWidget {
   final void Function()? onPressed;
   final int flex;
   final EdgeInsets margin;
+  final bool enableFeedback;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,12 @@ class KeyboardButton extends StatelessWidget {
             padding: margin,
             child: OutlinedButton(
               style: style,
-              onPressed: onPressed,
+              onPressed: enableFeedback && onPressed != null
+                  ? () {
+                      HapticFeedback.mediumImpact();
+                      onPressed!();
+                    }
+                  : onPressed,
               child: IgnorePointer(
                 ignoringSemantics: true,
                 child: Visibility(
