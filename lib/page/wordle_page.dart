@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:share_plus/share_plus.dart';
@@ -7,7 +9,6 @@ import 'package:wordle_clone/model/saved_game_state.dart';
 import 'package:wordle_clone/model/wordle_completion_state.dart';
 import 'package:wordle_clone/widget/keyboard_letter_button.dart';
 import 'package:wordle_clone/widget/keyboard_icon_button.dart';
-import 'package:wordle_clone/widget/tile.dart';
 import 'package:wordle_clone/widget/wordle_board.dart';
 
 class WordlePage extends StatefulWidget {
@@ -23,7 +24,7 @@ class _WordlePageState extends State<WordlePage> {
   static const double _maxKeyboardWidth = 600;
   static const double _maxKeyboardHeight = 270;
 
-  late final WordleController wordle = WordleController(word: widget.word);
+  late final WordleController wordle;
 
   late FocusNode rootFocus;
 
@@ -36,6 +37,7 @@ class _WordlePageState extends State<WordlePage> {
   void initState() {
     super.initState();
     rootFocus = FocusNode();
+    wordle = WordleController(word: widget.word);
   }
 
   @override
@@ -78,7 +80,7 @@ class _WordlePageState extends State<WordlePage> {
                     'Perthle',
                     duration: const Duration(milliseconds: 400),
                     style: NeumorphicStyle(
-                      border: NeumorphicBorder(),
+                      border: const NeumorphicBorder(),
                       depth: 1,
                       intensity: 20,
                       lightSource: _lightSource,
@@ -198,40 +200,60 @@ class _WordlePageState extends State<WordlePage> {
                             ),
                           ],
                         )
-                      : Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Neumorphic(
-                              padding: const EdgeInsets.all(16),
-                              style: NeumorphicStyle(
-                                depth: -1.5,
-                                intensity: 50,
-                                lightSource: _lightSource,
-                              ),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      SavedGameState.fromBoard(
-                                        board: wordle.board,
-                                        gameNum: 1,
-                                      ).shareableString,
-                                    ),
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Neumorphic(
+                            padding: const EdgeInsets.all(16),
+                            style: NeumorphicStyle(
+                              depth: -1.5,
+                              intensity: 50,
+                              lightSource: _lightSource,
+                            ),
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    SavedGameState.fromBoard(
+                                      board: wordle.board,
+                                      gameNum: 1,
+                                    ).shareableString,
                                   ),
-                                  const Spacer(),
-                                  NeumorphicButton(
-                                    child: const Text('Share'),
-                                    onPressed: () {
-                                      Share.share(
-                                        SavedGameState.fromBoard(
-                                          board: wordle.board,
-                                          gameNum: 1,
-                                        ).shareableString,
-                                      );
-                                    },
-                                  )
-                                ],
-                              ),
+                                ),
+                                const Spacer(),
+                                Row(
+                                  children: [
+                                    NeumorphicButton(
+                                      child: const Text('Share'),
+                                      onPressed: () {
+                                        Share.share(
+                                          SavedGameState.fromBoard(
+                                            board: wordle.board,
+                                            gameNum: 1,
+                                          ).shareableString,
+                                          subject: 'Wordle 1', // TODO Number
+                                        );
+                                      },
+                                    ),
+                                    NeumorphicButton(
+                                      child: Icon(
+                                        Icons.copy_outlined,
+                                        color: NeumorphicTheme.defaultTextColor(
+                                          context,
+                                        ),
+                                      ),
+                                      tooltip: 'Copy to clipbaord',
+                                      onPressed: () => Clipboard.setData(
+                                        ClipboardData(
+                                          text: SavedGameState.fromBoard(
+                                            board: wordle.board,
+                                            gameNum: 1,
+                                          ).shareableString,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
                             ),
                           ),
                         ),
