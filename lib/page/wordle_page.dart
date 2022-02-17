@@ -96,7 +96,7 @@ class _WordlePageState extends State<WordlePage> {
             // Board
             Expanded(
               flex: 12,
-              child: WordleBoard(wordle: wordle, lightSource: _lightSource),
+              child: WordleBoard(wordle: wordle),
             ),
 
             // Board-Keyboard gap

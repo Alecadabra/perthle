@@ -6,11 +6,9 @@ class WordleBoard extends StatelessWidget {
   const WordleBoard({
     Key? key,
     required this.wordle,
-    required this.lightSource,
   }) : super(key: key);
 
   final WordleController wordle;
-  final LightSource lightSource;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,10 @@ class WordleBoard extends StatelessWidget {
                         child: Tile(
                           match: wordle.board.matches[i][j],
                           letter: wordle.board.letters[i][j],
-                          lightSource: lightSource,
+                          lightSource: LightSource(
+                            (wordle.currCol - j) / wordle.board.width * 2,
+                            (wordle.currRow - i) / wordle.board.height * 2,
+                          ),
                         ),
                       ),
                     ),
