@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:share_plus/share_plus.dart';
@@ -7,9 +5,8 @@ import 'package:wordle_clone/controller/wordle_controller.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/model/saved_game_state.dart';
 import 'package:wordle_clone/model/wordle_completion_state.dart';
-import 'package:wordle_clone/widget/keyboard_letter_button.dart';
-import 'package:wordle_clone/widget/keyboard_icon_button.dart';
 import 'package:wordle_clone/widget/wordle_board.dart';
+import 'package:wordle_clone/widget/wordle_keyboard.dart';
 
 class WordlePage extends StatefulWidget {
   const WordlePage({Key? key, required this.word}) : super(key: key);
@@ -115,90 +112,17 @@ class _WordlePageState extends State<WordlePage> {
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 400),
                   child: wordle.completion == WordleCompletionState.playing
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  for (var letter in 'QWERTYUIOP'.letters)
-                                    KeyboardLetterButton(
-                                      letter: letter,
-                                      tileMatch: wordle.keyboard[letter],
-                                      onPressed: wordle.canType
-                                          ? () => setState(
-                                                () => wordle.type(letter),
-                                              )
-                                          : null,
-                                    ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Spacer(flex: 5),
-                                  for (var letter in 'ASDFGHJKL'.letters)
-                                    KeyboardLetterButton(
-                                      letter: letter,
-                                      tileMatch: wordle.keyboard[letter],
-                                      onPressed: wordle.canType
-                                          ? () => setState(
-                                                () => wordle.type(letter),
-                                              )
-                                          : null,
-                                    ),
-                                  const Spacer(flex: 5),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  KeyboardIconButton(
-                                    icon: const Icon(
-                                      Icons.keyboard_return_outlined,
-                                    ),
-                                    onPressed: wordle.canEnter
-                                        ? () => setState(
-                                              () => wordle.enter(),
-                                            )
-                                        : null,
-                                  ),
-                                  for (var letter in 'ZXCVBNM'.letters)
-                                    KeyboardLetterButton(
-                                      letter: letter,
-                                      tileMatch: wordle.keyboard[letter],
-                                      onPressed: wordle.canType
-                                          ? () => setState(
-                                                () => wordle.type(letter),
-                                              )
-                                          : null,
-                                    ),
-                                  KeyboardIconButton(
-                                    icon: const Icon(
-                                      Icons.backspace_outlined,
-                                    ),
-                                    onPressed: wordle.canBackspace
-                                        ? () => setState(
-                                              () => wordle.backspace(),
-                                            )
-                                        : null,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                      ? WordleKeyboard(
+                          wordle: wordle,
+                          backspaceCallback: wordle.canBackspace
+                              ? () => setState(() => wordle.backspace())
+                              : null,
+                          enterCallback: wordle.canEnter
+                              ? () => setState(() => wordle.enter())
+                              : null,
+                          typeCallback: wordle.canType
+                              ? (letter) => setState(() => wordle.type(letter))
+                              : null,
                         )
                       : Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
