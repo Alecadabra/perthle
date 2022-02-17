@@ -47,29 +47,48 @@ class WordleController {
       /* TODO Check if it's not a word */
       // onMessage(WordleMessageState.noSuchWord);
 
-      // Reveal row results logic
-      for (int i = 0; i < _width; i++) {
-        LetterState letter = board.letters[currRow][i]!;
-        String letterString = letter.letterString;
+      List<int> indicies = List.generate(_width, (i) => i);
+      String effectiveWord = word;
 
-        // Update match state
-        TileMatchState match;
-        if (word[i] == letterString) {
-          // Direct match! (Green)
-          match = TileMatchState.match;
-        } else if (word.contains(letterString)) {
-          // Miss! (Yellow)
-          match = TileMatchState.miss;
-        } else {
-          // No match! (Grey)
-          match = TileMatchState.wrong;
-        }
-        board.matches[currRow][i] = match;
-        if (keyboard[letter].precedence < match.precedence) {
-          // Only update keyboard letters of higher precedence
-          keyboard[letter] = match;
+      void revealPass({
+        required TileMatchState match,
+        required bool Function(int i, String letterString) predicate,
+      }) {
+        for (int i in indicies.toList()) {
+          LetterState letter = board.letters[currRow][i]!;
+          String letterString = letter.letterString;
+
+          if (predicate(i, letterString)) {
+            board.matches[currRow][i] = match;
+            if (keyboard[letter].precedence < match.precedence) {
+              // Only update keyboard letters of higher precedence
+              keyboard[letter] = match;
+            }
+            indicies.remove(i);
+            var effectiveWordList = effectiveWord.characters.toList();
+            effectiveWordList.remove(letterString);
+            effectiveWord = effectiveWordList.join();
+          }
         }
       }
+
+      // Match pass (Green)
+      revealPass(
+        match: TileMatchState.match,
+        predicate: (i, letterString) => word[i] == letterString,
+      );
+
+      // Miss pass (Yellow)
+      revealPass(
+        match: TileMatchState.miss,
+        predicate: (i, letterString) => effectiveWord.contains(letterString),
+      );
+
+      // Wrong pass (Grey)
+      revealPass(
+        match: TileMatchState.wrong,
+        predicate: (i, letterString) => true,
+      );
 
       // Move to next row
       currRow += 1;
