@@ -15,7 +15,10 @@ class WordleController {
   bool get inProgress => completion == WordleCompletionState.playing;
 
   final KeyboardState keyboard = KeyboardState();
-  late final BoardState board = BoardState(width: word.length);
+  late final BoardState board = BoardState(
+    width: word.length,
+    height: word.length + 1,
+  );
   int currRow = 0;
   int currCol = 0;
 
