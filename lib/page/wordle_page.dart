@@ -68,10 +68,6 @@ class _WordlePageState extends State<WordlePage> {
             Expanded(
               flex: 2,
               child: NeumorphicAppBar(
-                textStyle: Theme.of(context).textTheme.headline5!.apply(
-                      fontFamily: 'Poppins',
-                      fontWeightDelta: 1,
-                    ),
                 title: FittedBox(
                   child: Stack(
                     children: [

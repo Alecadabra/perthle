@@ -1,8 +1,5 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:wordle_clone/page/wordle_page.dart';
-import 'package:wordle_clone/widget/authenticator.dart';
-import 'firebase_options.dart';
 
 main() => runApp(const MyApp());
 
@@ -22,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: NeumorphicThemeData(
         textTheme: const TextTheme().apply(fontFamily: 'Poppins'),
       ),
-      home: const WordlePage(word: 'PERTH'),
+      home: const WordlePage(word: 'MARTO'),
     );
   }
 }
