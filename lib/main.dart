@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: NeumorphicThemeData(
         textTheme: const TextTheme().apply(fontFamily: 'Poppins'),
       ),
-      home: const WordlePage(word: 'MARTO'),
+      home: const WordlePage(word: 'PERTH'),
     );
   }
 }

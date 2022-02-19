@@ -8,19 +8,19 @@ class WordleKeyboard extends StatelessWidget {
   const WordleKeyboard({
     Key? key,
     required this.wordle,
-    this.typeCallback,
-    this.backspaceCallback,
-    this.enterCallback,
+    this.onType,
+    this.onBackspace,
+    this.onEnter,
   }) : super(key: key);
 
   final WordleController wordle;
 
-  final void Function(LetterState)? typeCallback;
-  final void Function()? backspaceCallback;
-  final void Function()? enterCallback;
+  final void Function(LetterState)? onType;
+  final void Function()? onBackspace;
+  final void Function()? onEnter;
 
   void Function()? _typeCallbackWrapper(LetterState letter) {
-    return typeCallback != null ? () => typeCallback!(letter) : null;
+    return onType != null ? () => onType!(letter) : null;
   }
 
   @override
@@ -66,7 +66,7 @@ class WordleKeyboard extends StatelessWidget {
             children: [
               KeyboardIconButton(
                 icon: const Icon(Icons.keyboard_return_outlined),
-                onPressed: enterCallback,
+                onPressed: onEnter,
               ),
               for (var letter in 'ZXCVBNM'.letters)
                 KeyboardLetterButton(
@@ -76,7 +76,7 @@ class WordleKeyboard extends StatelessWidget {
                 ),
               KeyboardIconButton(
                 icon: const Icon(Icons.backspace_outlined),
-                onPressed: backspaceCallback,
+                onPressed: onBackspace,
               ),
             ],
           ),

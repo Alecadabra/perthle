@@ -121,13 +121,13 @@ class _WordlePageState extends State<WordlePage> {
                   child: wordle.completion == WordleCompletionState.playing
                       ? WordleKeyboard(
                           wordle: wordle,
-                          backspaceCallback: wordle.canBackspace
+                          onBackspace: wordle.canBackspace
                               ? () => setState(() => wordle.backspace())
                               : null,
-                          enterCallback: wordle.canEnter
+                          onEnter: wordle.canEnter
                               ? () => setState(() => wordle.enter())
                               : null,
-                          typeCallback: wordle.canType
+                          onType: wordle.canType
                               ? (letter) => setState(() => wordle.type(letter))
                               : null,
                         )
