@@ -73,20 +73,31 @@ class _WordlePageState extends State<WordlePage> {
                       fontWeightDelta: 1,
                     ),
                 title: FittedBox(
-                  child: NeumorphicText(
-                    'Perthle',
-                    duration: const Duration(milliseconds: 400),
-                    style: NeumorphicStyle(
-                      border: const NeumorphicBorder(),
-                      depth: 1,
-                      intensity: 20,
-                      lightSource: _lightSource,
-                    ),
-                    textStyle: NeumorphicTextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 35,
-                      fontWeight: FontWeight.w900,
-                    ),
+                  child: Stack(
+                    children: [
+                      NeumorphicText(
+                        'Perthle  12',
+                        duration: const Duration(milliseconds: 400),
+                        style: NeumorphicStyle(
+                          border: const NeumorphicBorder(),
+                          depth: 1,
+                          intensity: 20,
+                          lightSource: _lightSource,
+                        ),
+                        textStyle: NeumorphicTextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 35,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      // Not visible, just pre-loads the emojis before they
+                      // need to be displayed
+                      const Visibility(
+                        visible: false,
+                        maintainState: true,
+                        child: Text('⬜🟨⬛🟩'),
+                      )
+                    ],
                   ),
                 ),
                 centerTitle: true,
@@ -154,7 +165,7 @@ class _WordlePageState extends State<WordlePage> {
                                             board: wordle.board,
                                             gameNum: 1,
                                           ).shareableString,
-                                          subject: 'Wordle 1', // TODO Number
+                                          subject: 'Perthle 1', // TODO Number
                                         );
                                       },
                                     ),
@@ -165,7 +176,7 @@ class _WordlePageState extends State<WordlePage> {
                                           context,
                                         ),
                                       ),
-                                      tooltip: 'Copy to clipbaord',
+                                      tooltip: 'Copy to Clipbaord',
                                       onPressed: () => Clipboard.setData(
                                         ClipboardData(
                                           text: SavedGameState.fromBoard(
