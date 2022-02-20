@@ -5,13 +5,19 @@ import 'package:wordle_clone/controller/wordle_controller.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/model/saved_game_state.dart';
 import 'package:wordle_clone/model/wordle_completion_state.dart';
+import 'package:wordle_clone/widget/share_panel.dart';
 import 'package:wordle_clone/widget/wordle_board.dart';
 import 'package:wordle_clone/widget/wordle_keyboard.dart';
 
 class WordlePage extends StatefulWidget {
-  const WordlePage({Key? key, required this.word}) : super(key: key);
+  const WordlePage({
+    Key? key,
+    required this.word,
+    required this.gameNum,
+  }) : super(key: key);
 
   final String word;
+  final int gameNum;
 
   @override
   State<WordlePage> createState() => _WordlePageState();
@@ -72,7 +78,7 @@ class _WordlePageState extends State<WordlePage> {
                   child: Stack(
                     children: [
                       NeumorphicText(
-                        'Perthle  12',
+                        'Perthle  ${widget.gameNum}',
                         duration: const Duration(milliseconds: 400),
                         style: NeumorphicStyle(
                           border: const NeumorphicBorder(),
@@ -131,62 +137,9 @@ class _WordlePageState extends State<WordlePage> {
                               ? (letter) => setState(() => wordle.type(letter))
                               : null,
                         )
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Neumorphic(
-                            padding: const EdgeInsets.all(16),
-                            style: NeumorphicStyle(
-                              depth: -1.5,
-                              intensity: 50,
-                              lightSource: _lightSource,
-                            ),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    SavedGameState.fromBoard(
-                                      board: wordle.board,
-                                      gameNum: 1,
-                                    ).shareableString,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Row(
-                                  children: [
-                                    NeumorphicButton(
-                                      child: const Text('Share'),
-                                      onPressed: () {
-                                        Share.share(
-                                          SavedGameState.fromBoard(
-                                            board: wordle.board,
-                                            gameNum: 1,
-                                          ).shareableString,
-                                          subject: 'Perthle 1', // TODO Number
-                                        );
-                                      },
-                                    ),
-                                    NeumorphicButton(
-                                      child: Icon(
-                                        Icons.copy_outlined,
-                                        color: NeumorphicTheme.defaultTextColor(
-                                          context,
-                                        ),
-                                      ),
-                                      tooltip: 'Copy to Clipbaord',
-                                      onPressed: () => Clipboard.setData(
-                                        ClipboardData(
-                                          text: SavedGameState.fromBoard(
-                                            board: wordle.board,
-                                            gameNum: 1,
-                                          ).shareableString,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
+                      : SharePanel(
+                          wordleController: wordle,
+                          gameNum: widget.gameNum,
                         ),
                 ),
               ),
