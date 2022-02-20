@@ -12,14 +12,21 @@ main() => runApp(const MyApp());
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  TextTheme get _textTheme {
+    return const TextTheme(
+      bodyMedium: TextStyle(fontFamily: 'Poppins'),
+      bodyLarge: TextStyle(fontFamily: 'Poppins'),
+      labelLarge: TextStyle(fontFamily: 'Poppins'),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return NeumorphicApp(
       title: 'Perthle',
-      theme: NeumorphicThemeData(
-        textTheme: const TextTheme().apply(fontFamily: 'Poppins'),
-      ),
-      home: const WordlePage(word: 'PERTH', gameNum: 12),
+      theme: NeumorphicThemeData(textTheme: _textTheme),
+      darkTheme: NeumorphicThemeData.dark(textTheme: _textTheme),
+      home: const WordlePage(word: 'TAYLOR', gameNum: 12),
     );
   }
 }
