@@ -36,7 +36,7 @@ class SavedGameState {
       usedAttempts ?? matches.length,
     );
 
-    return 'Perthle $gameNum ${usedAttempts ?? 'X'}/$maxAttempts\n' +
+    return 'Perthle $gameNum ${usedAttempts ?? 'X'}/$maxAttempts\n\n' +
         attempts.map(
           (List<TileMatchState> attempt) {
             return attempt.map(
