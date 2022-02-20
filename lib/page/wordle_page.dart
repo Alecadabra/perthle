@@ -1,10 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:wordle_clone/controller/wordle_controller.dart';
 import 'package:wordle_clone/model/letter_state.dart';
-import 'package:wordle_clone/model/saved_game_state.dart';
-import 'package:wordle_clone/model/wordle_completion_state.dart';
+import 'package:wordle_clone/widget/perthle_appbar.dart';
 import 'package:wordle_clone/widget/share_panel.dart';
 import 'package:wordle_clone/widget/wordle_board.dart';
 import 'package:wordle_clone/widget/wordle_keyboard.dart';
@@ -73,36 +71,9 @@ class _WordlePageState extends State<WordlePage> {
             // Appbar
             Expanded(
               flex: 2,
-              child: NeumorphicAppBar(
-                title: FittedBox(
-                  child: Stack(
-                    children: [
-                      NeumorphicText(
-                        'Perthle  ${widget.gameNum}',
-                        duration: const Duration(milliseconds: 400),
-                        style: NeumorphicStyle(
-                          border: const NeumorphicBorder(),
-                          depth: 1,
-                          intensity: 20,
-                          lightSource: _lightSource,
-                        ),
-                        textStyle: NeumorphicTextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 35,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      // Not visible, just pre-loads the emojis before they
-                      // need to be displayed
-                      const Visibility(
-                        visible: false,
-                        maintainState: true,
-                        child: Text('⬜🟨⬛🟩'),
-                      )
-                    ],
-                  ),
-                ),
-                centerTitle: true,
+              child: PerthleAppBar(
+                gameNum: widget.gameNum,
+                lightSource: _lightSource,
               ),
             ),
 
@@ -124,7 +95,7 @@ class _WordlePageState extends State<WordlePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 3),
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 400),
-                  child: wordle.completion == WordleCompletionState.playing
+                  child: wordle.inProgress
                       ? WordleKeyboard(
                           wordle: wordle,
                           onBackspace: wordle.canBackspace
