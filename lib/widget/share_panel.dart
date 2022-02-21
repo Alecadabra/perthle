@@ -4,12 +4,14 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wordle_clone/controller/wordle_controller.dart';
 import 'package:wordle_clone/model/saved_game_state.dart';
+import 'package:wordle_clone/model/tile_match_state.dart';
 
 class SharePanel extends StatelessWidget {
   SharePanel({
     Key? key,
     required WordleController wordleController,
     required int gameNum,
+    required this.word,
   })  : savedGameState = SavedGameState(
           gameNum: gameNum,
           matches: wordleController.board.matches,
@@ -17,6 +19,7 @@ class SharePanel extends StatelessWidget {
         super(key: key);
 
   final SavedGameState savedGameState;
+  final String word;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +38,16 @@ class SharePanel extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              if (!savedGameState.matches.any(
+                (row) => row.every((match) => match == TileMatchState.match),
+              ))
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    word,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
               Expanded(
                 flex: 10,
                 child: Text(savedGameState.shareableString),

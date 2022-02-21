@@ -122,6 +122,7 @@ class _WordlePageState extends State<WordlePage>
                       : SharePanel(
                           wordleController: wordle,
                           gameNum: widget.gameNum,
+                          word: widget.word,
                         ),
                 ),
               ),
