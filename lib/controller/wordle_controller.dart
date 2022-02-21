@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:wordle_clone/controller/dictionary_controller.dart';
+import 'package:wordle_clone/controller/shake_controller.dart';
 import 'package:wordle_clone/model/board_state.dart';
 import 'package:wordle_clone/model/keyboard_state.dart';
 import 'package:wordle_clone/model/letter_state.dart';
@@ -7,7 +8,10 @@ import 'package:wordle_clone/model/tile_match_state.dart';
 import 'package:wordle_clone/model/wordle_completion_state.dart';
 
 class WordleController {
-  WordleController({required this.word}) {
+  WordleController({
+    required this.word,
+    required this.onInvalidWord,
+  }) {
     dictionary = DictionaryController(wordLength: word.length);
   }
 
@@ -15,6 +19,8 @@ class WordleController {
   Characters get wordChars => word.characters;
 
   late DictionaryController dictionary;
+
+  final void Function() onInvalidWord;
 
   WordleCompletionState completion = WordleCompletionState.playing;
   bool get inProgress => completion == WordleCompletionState.playing;
@@ -54,6 +60,7 @@ class WordleController {
     if (canEnter) {
       // Check it's a word
       if (!dictionary.isValidWord(board.letters[currRow].join())) {
+        onInvalidWord();
         return;
       }
 

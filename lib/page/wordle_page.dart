@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:wordle_clone/controller/shake_controller.dart';
 import 'package:wordle_clone/controller/wordle_controller.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/widget/perthle_appbar.dart';
@@ -22,11 +23,14 @@ class WordlePage extends StatefulWidget {
   State<WordlePage> createState() => _WordlePageState();
 }
 
-class _WordlePageState extends State<WordlePage> {
+class _WordlePageState extends State<WordlePage>
+    with SingleTickerProviderStateMixin {
   static const double _maxKeyboardWidth = 600;
   static const double _maxKeyboardHeight = 270;
 
   late final WordleController wordle;
+
+  late final ShakeController shaker;
 
   late FocusNode rootFocus;
 
@@ -39,12 +43,17 @@ class _WordlePageState extends State<WordlePage> {
   void initState() {
     super.initState();
     rootFocus = FocusNode();
-    wordle = WordleController(word: widget.word);
+    wordle = WordleController(
+      word: widget.word,
+      onInvalidWord: () => setState(() => shaker.shake()),
+    );
+    shaker = ShakeController(vsync: this);
   }
 
   @override
   void dispose() {
     rootFocus.dispose();
+    shaker.dispose();
     super.dispose();
   }
 
@@ -75,6 +84,7 @@ class _WordlePageState extends State<WordlePage> {
               child: PerthleAppBar(
                 gameNum: widget.gameNum,
                 lightSource: _lightSource,
+                shaker: shaker,
               ),
             ),
 

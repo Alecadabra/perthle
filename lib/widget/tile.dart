@@ -60,27 +60,30 @@ class Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Neumorphic(
-      duration: const Duration(milliseconds: 400),
-      style: _style(context),
-      child: Container(
-        child: FittedBox(
-          child: Text(
-            letter?.toString() ?? ' ',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline4?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Poppins',
-                  color: textColor(context),
-                ),
+    return AspectRatio(
+      aspectRatio: 1.0,
+      child: Neumorphic(
+        duration: const Duration(milliseconds: 400),
+        style: _style(context),
+        child: Container(
+          child: FittedBox(
+            child: Text(
+              letter?.toString() ?? ' ',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline4?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Poppins',
+                    color: textColor(context),
+                  ),
+            ),
           ),
-        ),
-        alignment: Alignment.center,
-        constraints: const BoxConstraints(
-          maxHeight: 70,
-          maxWidth: 70,
-          minHeight: 40,
-          minWidth: 40,
+          alignment: Alignment.center,
+          constraints: const BoxConstraints(
+            maxHeight: 70,
+            maxWidth: 70,
+            minHeight: 40,
+            minWidth: 40,
+          ),
         ),
       ),
     );
