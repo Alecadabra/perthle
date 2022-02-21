@@ -14,7 +14,7 @@ class DictionaryController {
   late HashSet<String> _answers;
   late HashSet<String> _dictionary;
 
-  late final String _answersPath = 'assets/answers/words_$wordLength.txt';
+  late final String _answersPath = 'assets/answers/answers.txt';
   late final String _dictionaryPath = 'assets/dictionary/words_$wordLength.txt';
 
   bool isValidWord(String word) {
