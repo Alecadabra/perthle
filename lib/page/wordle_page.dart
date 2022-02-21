@@ -8,11 +8,12 @@ import 'package:wordle_clone/widget/wordle_board.dart';
 import 'package:wordle_clone/widget/wordle_keyboard.dart';
 
 class WordlePage extends StatefulWidget {
-  const WordlePage({
+  WordlePage({
     Key? key,
-    required this.word,
+    required String word,
     required this.gameNum,
-  }) : super(key: key);
+  })  : word = word.toUpperCase(),
+        super(key: key);
 
   final String word;
   final int gameNum;

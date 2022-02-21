@@ -1,4 +1,5 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:wordle_clone/controller/daily_controller.dart';
 import 'package:wordle_clone/page/wordle_page.dart';
 
 main() => runApp(const MyApp());
@@ -22,11 +23,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NeumorphicApp(
-      title: 'Perthle',
-      theme: NeumorphicThemeData(textTheme: _textTheme),
-      darkTheme: NeumorphicThemeData.dark(textTheme: _textTheme),
-      home: const WordlePage(word: 'TAYLOR', gameNum: 12),
+    DailyController dailyController = DailyController();
+    return FutureBuilder<String>(
+      future: dailyController.wordFuture,
+      builder: (context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData) {
+          return NeumorphicApp(
+            title: 'Perthle',
+            theme: NeumorphicThemeData(textTheme: _textTheme),
+            darkTheme: NeumorphicThemeData.dark(textTheme: _textTheme),
+            home: WordlePage(
+              word: snapshot.data!,
+              gameNum: dailyController.gameNum,
+            ),
+          );
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
     );
   }
 }

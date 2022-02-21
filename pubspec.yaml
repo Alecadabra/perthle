@@ -63,7 +63,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/answers/
+    - assets/answers/answers.txt
     - assets/dictionary/
 
   fonts:
