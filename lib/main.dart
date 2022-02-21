@@ -24,23 +24,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DailyController dailyController = DailyController();
-    return FutureBuilder<String>(
-      future: dailyController.wordFuture,
-      builder: (context, AsyncSnapshot<String> snapshot) {
-        if (snapshot.hasData) {
-          return NeumorphicApp(
-            title: 'Perthle',
-            theme: NeumorphicThemeData(textTheme: _textTheme),
-            darkTheme: NeumorphicThemeData.dark(textTheme: _textTheme),
-            home: WordlePage(
+    return NeumorphicApp(
+      title: 'Perthle',
+      theme: NeumorphicThemeData(textTheme: _textTheme),
+      darkTheme: NeumorphicThemeData.dark(textTheme: _textTheme),
+      home: FutureBuilder<String>(
+        future: dailyController.wordFuture,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return WordlePage(
               word: snapshot.data!,
               gameNum: dailyController.gameNum,
-            ),
-          );
-        } else {
-          return CircularProgressIndicator();
-        }
-      },
+            );
+          } else {
+            return const Scaffold();
+          }
+        },
+      ),
     );
   }
 }
