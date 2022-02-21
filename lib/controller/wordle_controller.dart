@@ -54,7 +54,6 @@ class WordleController {
     if (canEnter) {
       // Check it's a word
       if (!dictionary.isValidWord(board.letters[currRow].join())) {
-        print('Word invalid: ' + board.letters[currRow].join());
         return;
       }
 
