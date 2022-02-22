@@ -1,19 +1,19 @@
-import 'package:wordle_clone/model/board_state.dart';
 import 'package:wordle_clone/model/tile_match_state.dart';
 
 /// Immutable storage for a particular completed wordle game.
 class SavedGameState {
   const SavedGameState({required this.gameNum, required this.matches});
-
-  factory SavedGameState.fromBoard({
-    required BoardState board,
-    required int gameNum,
-  }) {
-    return SavedGameState(
-      gameNum: gameNum,
-      matches: List.unmodifiable(board.matches),
-    );
-  }
+  SavedGameState.fromJson(Map<String, dynamic> json)
+      : this(
+          gameNum: json['gameNum'],
+          matches: [
+            for (int i = 0; i < json['matches'][0].length; i++)
+              [
+                for (int j = 0; j < json['matches'].length; j++)
+                  TileMatchState.values[json['matches'][i][j]],
+              ],
+          ],
+        );
 
   final int gameNum;
   final List<List<TileMatchState>> matches;
@@ -55,5 +55,17 @@ class SavedGameState {
             ).join();
           },
         ).join("\n");
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'gameNum': gameNum,
+      'matches': [
+        for (List<TileMatchState> row in matches)
+          [
+            for (TileMatchState match in row) match.index,
+          ],
+      ],
+    };
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:wordle_clone/controller/dictionary_controller.dart';
-import 'package:wordle_clone/controller/shake_controller.dart';
 import 'package:wordle_clone/model/board_state.dart';
+import 'package:wordle_clone/model/current_game_state.dart';
 import 'package:wordle_clone/model/keyboard_state.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/model/tile_match_state.dart';
@@ -9,29 +9,29 @@ import 'package:wordle_clone/model/wordle_completion_state.dart';
 
 class WordleController {
   WordleController({
+    required this.gameNum,
     required this.word,
     required this.onInvalidWord,
-  }) {
-    dictionary = DictionaryController(wordLength: word.length);
-  }
+    CurrentGameState? gameState,
+  })  : gameState = gameState ?? CurrentGameState(gameNum: gameNum, word: word),
+        dictionary = DictionaryController(wordLength: word.length);
 
+  final CurrentGameState gameState;
+
+  final int gameNum;
   final String word;
-  Characters get wordChars => word.characters;
 
-  late DictionaryController dictionary;
+  final DictionaryController dictionary;
 
   final void Function() onInvalidWord;
 
-  WordleCompletionState completion = WordleCompletionState.playing;
+  WordleCompletionState get completion => gameState.completion;
   bool get inProgress => completion == WordleCompletionState.playing;
 
-  final KeyboardState keyboard = KeyboardState();
-  late final BoardState board = BoardState(
-    width: word.length,
-    height: word.length + 1,
-  );
-  int currRow = 0;
-  int currCol = 0;
+  KeyboardState get keyboard => gameState.keyboard;
+  BoardState get board => gameState.board;
+  int get currRow => gameState.currRow;
+  int get currCol => gameState.currCol;
 
   int get _width => board.width;
   int get _height => board.height;
@@ -41,7 +41,7 @@ class WordleController {
   void type(LetterState letter) {
     if (canType) {
       board.letters[currRow][currCol] = letter;
-      currCol += 1;
+      gameState.currCol += 1;
     }
   }
 
@@ -49,7 +49,7 @@ class WordleController {
 
   void backspace() {
     if (canBackspace) {
-      currCol -= 1;
+      gameState.currCol -= 1;
       board.letters[currRow][currCol] = null;
     }
   }
@@ -108,16 +108,16 @@ class WordleController {
       );
 
       // Move to next row
-      currRow += 1;
-      currCol = 0;
+      gameState.currRow += 1;
+      gameState.currCol = 0;
 
       // Check end of game condition
       if (board.matches[currRow - 1].every(
         (match) => match == TileMatchState.match,
       )) {
-        completion = WordleCompletionState.won;
+        gameState.completion = WordleCompletionState.won;
       } else if (currRow == _height) {
-        completion = WordleCompletionState.lost;
+        gameState.completion = WordleCompletionState.lost;
       }
     }
   }

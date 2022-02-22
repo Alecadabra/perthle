@@ -44,6 +44,7 @@ class _WordlePageState extends State<WordlePage>
     super.initState();
     rootFocus = FocusNode();
     wordle = WordleController(
+      gameNum: widget.gameNum,
       word: widget.word,
       onInvalidWord: () => setState(() => shaker.shake()),
     );
