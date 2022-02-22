@@ -59,7 +59,7 @@ class SharePanel extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Expanded(
-                      flex: 13,
+                      flex: 20,
                       child: OutlinedButton(
                         child: const Text('Share'),
                         onPressed: () {
@@ -72,7 +72,7 @@ class SharePanel extends StatelessWidget {
                     ),
                     const Spacer(),
                     Expanded(
-                      flex: 5,
+                      flex: 8,
                       child: Tooltip(
                         message: 'Copy to Clipboard',
                         child: OutlinedButton(
