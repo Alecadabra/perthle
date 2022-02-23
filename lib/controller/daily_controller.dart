@@ -4,6 +4,7 @@ class DailyController {
   final int gameNum = DateTime.now()
       .difference(DateTime.fromMillisecondsSinceEpoch(_startTimestamp))
       .inDays;
+
   late Future<String> wordFuture =
       rootBundle.loadString('assets/answers/answers.txt').then(
     (contents) {
@@ -12,5 +13,5 @@ class DailyController {
     },
   );
 
-  static const int _startTimestamp = 1645100453000;
+  static const int _startTimestamp = 1645000453000;
 }

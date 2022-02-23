@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:wordle_clone/controller/dictionary_controller.dart';
+import 'package:wordle_clone/controller/storage_controller.dart';
 import 'package:wordle_clone/model/board_state.dart';
 import 'package:wordle_clone/model/current_game_state.dart';
 import 'package:wordle_clone/model/keyboard_state.dart';
@@ -12,11 +13,14 @@ class WordleController {
     required this.gameNum,
     required this.word,
     required this.onInvalidWord,
+    required this.storage,
     CurrentGameState? gameState,
   })  : gameState = gameState ?? CurrentGameState(gameNum: gameNum, word: word),
         dictionary = DictionaryController(wordLength: word.length);
 
   final CurrentGameState gameState;
+
+  final StorageController storage;
 
   final int gameNum;
   final String word;
@@ -116,9 +120,14 @@ class WordleController {
         (match) => match == TileMatchState.match,
       )) {
         gameState.completion = WordleCompletionState.won;
+        storage.addSavedGame(gameState.toSavedGame());
       } else if (currRow == _height) {
         gameState.completion = WordleCompletionState.lost;
+        storage.addSavedGame(gameState.toSavedGame());
       }
+
+      // Update storage
+      storage.saveCurrentGame(gameState);
     }
   }
 }

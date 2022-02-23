@@ -1,6 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:wordle_clone/controller/daily_controller.dart';
-import 'package:wordle_clone/page/wordle_page.dart';
+import 'package:wordle_clone/page/start_page.dart';
+import 'package:wordle_clone/widget/storager.dart';
 
 main() => runApp(const MyApp());
 
@@ -23,24 +23,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DailyController dailyController = DailyController();
     return NeumorphicApp(
       title: 'Perthle',
       theme: NeumorphicThemeData(textTheme: _textTheme),
       darkTheme: NeumorphicThemeData.dark(textTheme: _textTheme),
-      home: FutureBuilder<String>(
-        future: dailyController.wordFuture,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return WordlePage(
-              word: snapshot.data!,
-              gameNum: dailyController.gameNum,
-            );
-          } else {
-            return const Scaffold();
-          }
-        },
-      ),
+      home: Storager(child: StartPage()),
     );
   }
 }

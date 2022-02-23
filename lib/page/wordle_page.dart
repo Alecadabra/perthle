@@ -2,9 +2,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:wordle_clone/controller/shake_controller.dart';
 import 'package:wordle_clone/controller/wordle_controller.dart';
+import 'package:wordle_clone/model/current_game_state.dart';
 import 'package:wordle_clone/model/letter_state.dart';
 import 'package:wordle_clone/widget/perthle_appbar.dart';
 import 'package:wordle_clone/widget/share_panel.dart';
+import 'package:wordle_clone/widget/storager.dart';
 import 'package:wordle_clone/widget/wordle_board.dart';
 import 'package:wordle_clone/widget/wordle_keyboard.dart';
 
@@ -13,11 +15,13 @@ class WordlePage extends StatefulWidget {
     Key? key,
     required String word,
     required this.gameNum,
+    required this.gameState,
   })  : word = word.toUpperCase(),
         super(key: key);
 
   final String word;
   final int gameNum;
+  final CurrentGameState? gameState;
 
   @override
   State<WordlePage> createState() => _WordlePageState();
@@ -46,6 +50,8 @@ class _WordlePageState extends State<WordlePage>
     wordle = WordleController(
       gameNum: widget.gameNum,
       word: widget.word,
+      gameState: widget.gameState,
+      storage: Storager.of(context),
       onInvalidWord: () => setState(() => shaker.shake()),
     );
     shaker = ShakeController(vsync: this);

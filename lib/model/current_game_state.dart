@@ -28,6 +28,8 @@ class CurrentGameState {
           completion: WordleCompletionState.values[json['completion']],
           keyboard: KeyboardState.fromJson(json['keyboard']),
           board: BoardState.fromJson(json['board']),
+          startRow: json['currRow'],
+          startCol: json['currCol'],
         );
 
   final int gameNum;
@@ -52,6 +54,8 @@ class CurrentGameState {
       'completion': completion.index,
       'keyboard': keyboard.toJson(),
       'board': board.toJson(),
+      'currRow': currRow,
+      'currCol': currCol,
     };
   }
 }

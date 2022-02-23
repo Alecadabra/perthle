@@ -29,7 +29,10 @@ class BoardState {
           letters: [
             for (int i = 0; i < json['height']; i++)
               [
-                for (int j = 0; j < json['width']; j++) json['letters'][i][j],
+                for (int j = 0; j < json['width']; j++)
+                  json['letters'][i][j] != null
+                      ? LetterState(json['letters'][i][j])
+                      : null,
               ],
           ],
           matches: [
