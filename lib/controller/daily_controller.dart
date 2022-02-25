@@ -13,5 +13,5 @@ class DailyController {
     },
   );
 
-  static const int _startTimestamp = 1645700453000;
+  static const int _startTimestamp = 1645804800000;
 }
