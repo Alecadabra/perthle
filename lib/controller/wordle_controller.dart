@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:wordle_clone/controller/dictionary_controller.dart';
-import 'package:wordle_clone/controller/storage_controller.dart';
-import 'package:wordle_clone/model/board_state.dart';
-import 'package:wordle_clone/model/current_game_state.dart';
-import 'package:wordle_clone/model/keyboard_state.dart';
-import 'package:wordle_clone/model/letter_state.dart';
-import 'package:wordle_clone/model/tile_match_state.dart';
-import 'package:wordle_clone/model/wordle_completion_state.dart';
+import 'package:perthle/controller/dictionary_controller.dart';
+import 'package:perthle/controller/storage_controller.dart';
+import 'package:perthle/model/board_state.dart';
+import 'package:perthle/model/current_game_state.dart';
+import 'package:perthle/model/keyboard_state.dart';
+import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/tile_match_state.dart';
+import 'package:perthle/model/wordle_completion_state.dart';
 
 class WordleController {
   WordleController({

@@ -1,14 +1,14 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:wordle_clone/controller/shake_controller.dart';
-import 'package:wordle_clone/controller/wordle_controller.dart';
-import 'package:wordle_clone/model/current_game_state.dart';
-import 'package:wordle_clone/model/letter_state.dart';
-import 'package:wordle_clone/widget/perthle_appbar.dart';
-import 'package:wordle_clone/widget/share_panel.dart';
-import 'package:wordle_clone/widget/storager.dart';
-import 'package:wordle_clone/widget/wordle_board.dart';
-import 'package:wordle_clone/widget/wordle_keyboard.dart';
+import 'package:perthle/controller/shake_controller.dart';
+import 'package:perthle/controller/wordle_controller.dart';
+import 'package:perthle/model/current_game_state.dart';
+import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/widget/perthle_appbar.dart';
+import 'package:perthle/widget/share_panel.dart';
+import 'package:perthle/widget/storager.dart';
+import 'package:perthle/widget/wordle_board.dart';
+import 'package:perthle/widget/wordle_keyboard.dart';
 
 class WordlePage extends StatefulWidget {
   WordlePage({

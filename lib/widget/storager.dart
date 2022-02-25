@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:wordle_clone/controller/local_storage_controller.dart';
-import 'package:wordle_clone/controller/storage_controller.dart';
+import 'package:perthle/controller/local_storage_controller.dart';
+import 'package:perthle/controller/storage_controller.dart';
 
 /// It's a word, idc what you say.
 class Storager extends StatelessWidget {

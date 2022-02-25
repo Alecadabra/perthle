@@ -1,5 +1,5 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:wordle_clone/controller/shake_controller.dart';
+import 'package:perthle/controller/shake_controller.dart';
 
 class PerthleAppBar extends StatelessWidget {
   PerthleAppBar({

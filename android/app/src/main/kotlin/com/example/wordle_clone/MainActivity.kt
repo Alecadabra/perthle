@@ -1,4 +1,4 @@
-package com.example.wordle_clone
+package com.example.perthle
 
 import io.flutter.embedding.android.FlutterActivity
 

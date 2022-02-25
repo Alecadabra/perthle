@@ -1,5 +1,5 @@
-import 'package:wordle_clone/model/current_game_state.dart';
-import 'package:wordle_clone/model/saved_game_state.dart';
+import 'package:perthle/model/current_game_state.dart';
+import 'package:perthle/model/saved_game_state.dart';
 
 abstract class StorageController {
   Future<CurrentGameState?> loadCurrentGame();

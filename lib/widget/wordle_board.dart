@@ -1,6 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:wordle_clone/controller/wordle_controller.dart';
-import 'package:wordle_clone/widget/tile.dart';
+import 'package:perthle/controller/wordle_controller.dart';
+import 'package:perthle/widget/tile.dart';
 
 class WordleBoard extends StatelessWidget {
   const WordleBoard({

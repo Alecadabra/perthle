@@ -1,6 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:wordle_clone/page/start_page.dart';
-import 'package:wordle_clone/widget/storager.dart';
+import 'package:perthle/page/start_page.dart';
+import 'package:perthle/widget/storager.dart';
 
 main() => runApp(const MyApp());
 

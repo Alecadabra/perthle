@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:wordle_clone/controller/authenticator_controller.dart';
+import 'package:perthle/controller/authenticator_controller.dart';
 
 class Authenticator extends StatelessWidget {
   const Authenticator({Key? key, required this.child}) : super(key: key);

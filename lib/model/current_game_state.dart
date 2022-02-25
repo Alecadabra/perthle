@@ -1,7 +1,7 @@
-import 'package:wordle_clone/model/board_state.dart';
-import 'package:wordle_clone/model/keyboard_state.dart';
-import 'package:wordle_clone/model/saved_game_state.dart';
-import 'package:wordle_clone/model/wordle_completion_state.dart';
+import 'package:perthle/model/board_state.dart';
+import 'package:perthle/model/keyboard_state.dart';
+import 'package:perthle/model/saved_game_state.dart';
+import 'package:perthle/model/wordle_completion_state.dart';
 
 class CurrentGameState {
   CurrentGameState({

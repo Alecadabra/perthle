@@ -1,7 +1,7 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:wordle_clone/model/letter_state.dart';
-import 'package:wordle_clone/model/tile_match_state.dart';
-import 'package:wordle_clone/widget/keyboard_button.dart';
+import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/tile_match_state.dart';
+import 'package:perthle/widget/keyboard_button.dart';
 
 class KeyboardLetterButton extends StatelessWidget {
   const KeyboardLetterButton({

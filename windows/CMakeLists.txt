@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
-project(wordle_clone LANGUAGES CXX)
+project(perthle LANGUAGES CXX)
 
-set(BINARY_NAME "wordle_clone")
+set(BINARY_NAME "perthle")
 
 cmake_policy(SET CMP0063 NEW)
 

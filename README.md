@@ -1,4 +1,4 @@
-# wordle_clone
+# perthle
 
 A new Flutter project.
 

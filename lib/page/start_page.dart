@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wordle_clone/controller/daily_controller.dart';
-import 'package:wordle_clone/controller/storage_controller.dart';
-import 'package:wordle_clone/model/current_game_state.dart';
-import 'package:wordle_clone/page/wordle_page.dart';
-import 'package:wordle_clone/widget/storager.dart';
+import 'package:perthle/controller/daily_controller.dart';
+import 'package:perthle/controller/storage_controller.dart';
+import 'package:perthle/model/current_game_state.dart';
+import 'package:perthle/page/wordle_page.dart';
+import 'package:perthle/widget/storager.dart';
 
 class StartPage extends StatelessWidget {
   StartPage({Key? key}) : super(key: key);

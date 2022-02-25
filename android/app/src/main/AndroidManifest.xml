@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.wordle_clone">
+    package="com.example.perthle">
    <application
-        android:label="wordle_clone"
+        android:label="perthle"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

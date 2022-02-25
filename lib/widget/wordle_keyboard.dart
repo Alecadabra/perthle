@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wordle_clone/controller/wordle_controller.dart';
-import 'package:wordle_clone/model/letter_state.dart';
-import 'package:wordle_clone/widget/keyboard_icon_button.dart';
-import 'package:wordle_clone/widget/keyboard_letter_button.dart';
+import 'package:perthle/controller/wordle_controller.dart';
+import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/widget/keyboard_icon_button.dart';
+import 'package:perthle/widget/keyboard_letter_button.dart';
 
 class WordleKeyboard extends StatelessWidget {
   const WordleKeyboard({

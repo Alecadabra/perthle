@@ -1,5 +1,5 @@
-import 'package:wordle_clone/model/letter_state.dart';
-import 'package:wordle_clone/model/tile_match_state.dart';
+import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/tile_match_state.dart';
 
 /// Mutable state of the wordle game board, usually 5x6.
 class BoardState {

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:wordle_clone/model/letter_state.dart';
-import 'package:wordle_clone/model/tile_match_state.dart';
+import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/tile_match_state.dart';
 
 class KeyboardState {
   KeyboardState({
