@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:localstorage/localstorage.dart';
 import 'package:wordle_clone/controller/daily_controller.dart';
 import 'package:wordle_clone/controller/storage_controller.dart';
@@ -7,48 +5,59 @@ import 'package:wordle_clone/model/saved_game_state.dart';
 import 'package:wordle_clone/model/current_game_state.dart';
 
 class LocalStorageController extends StorageController {
-  final LocalStorage _localStorage = LocalStorage('local_storage.json');
+  int get _gameNum => DailyController().gameNum;
 
-  static const String _currentGameKey = 'currentGame';
-  static const String _savedGamesKey = 'savedGames';
+  final LocalStorage _currentGameStorage = LocalStorage('current_game.json');
+  final LocalStorage _savedGamesStorage = LocalStorage('saved_games.json');
 
   @override
   Future<CurrentGameState?> loadCurrentGame() async {
-    Map<String, dynamic>? data = await _localStorage.getItem(_currentGameKey);
+    final Map<String, dynamic>? json = await _currentGameStorage.getItem(
+      '$_gameNum',
+    );
 
-    if (data == null) {
+    if (json == null) {
       return null;
     } else {
-      CurrentGameState gameState = CurrentGameState.fromJson(data);
-      if (gameState.gameNum != DailyController().gameNum) {
-        await _localStorage.setItem(_currentGameKey, jsonEncode(null));
-        return null;
-      } else {
-        return gameState;
-      }
+      return CurrentGameState.fromJson(json);
     }
   }
 
   @override
-  Future<void> saveCurrentGame(CurrentGameState? currentGame) async {
-    await _localStorage.setItem(_currentGameKey, currentGame);
+  Future<void> saveCurrentGame(final CurrentGameState? currentGame) async {
+    await _currentGameStorage.clear();
+    if (currentGame != null) {
+      await _currentGameStorage.setItem('$_gameNum', currentGame);
+    }
   }
 
   @override
   Future<void> addSavedGame(SavedGameState savedGame) async {
-    List<SavedGameState> savedGameList = await loadSavedGames();
-
-    savedGameList.add(savedGame);
-
-    await _localStorage.setItem(_savedGamesKey, jsonEncode(savedGameList));
+    await _savedGamesStorage.setItem(savedGame.gameNum.toString(), savedGame);
   }
 
   @override
   Future<List<SavedGameState>> loadSavedGames() async {
-    return await _localStorage
-            .getItem(_savedGamesKey)
-            ?.map((Map<String, dynamic> json) => SavedGameState.fromJson(json))
-            ?.toList() ??
-        [];
+    int cachedGameNum = 1;
+    SavedGameState? cachedSavedGame = SavedGameState.fromJson(
+      await _savedGamesStorage.getItem('1'),
+    );
+
+    Future<SavedGameState?> savedGameAt(int i) async {
+      if (cachedGameNum == i) {
+        return cachedSavedGame;
+      } else {
+        cachedGameNum = i;
+        cachedSavedGame = SavedGameState.fromJson(
+          await _savedGamesStorage.getItem('$i'),
+        );
+        return cachedSavedGame;
+      }
+    }
+
+    return [
+      for (int i = 1; i <= _gameNum; i++)
+        if (await savedGameAt(i) != null) (await savedGameAt(i))!,
+    ];
   }
 }
