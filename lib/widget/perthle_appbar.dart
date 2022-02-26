@@ -2,7 +2,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/shake_controller.dart';
 
 class PerthleAppBar extends StatelessWidget {
-  PerthleAppBar({
+  const PerthleAppBar({
     Key? key,
     required this.gameNum,
     required this.lightSource,
@@ -29,12 +29,18 @@ class PerthleAppBar extends StatelessWidget {
                   children: [
                     NeumorphicText(
                       'Perthle  $gameNum',
-                      duration: const Duration(milliseconds: 400),
+                      duration: Duration(
+                        // Speed up when shaking
+                        milliseconds: shaker.offset != 0 ? 0 : 400,
+                      ),
                       style: NeumorphicStyle(
                         border: const NeumorphicBorder(),
                         depth: 1,
-                        intensity: 20,
-                        lightSource: lightSource,
+                        intensity: 5,
+                        lightSource: LightSource(
+                          lightSource.dx + shaker.offset / 8,
+                          lightSource.dy,
+                        ),
                       ),
                       textStyle: NeumorphicTextStyle(
                         fontFamily: 'Poppins',

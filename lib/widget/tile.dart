@@ -14,9 +14,9 @@ class Tile extends StatelessWidget {
   final LetterState? letter;
   final LightSource lightSource;
 
-  static const double _posDepth = 1.75;
-  static const double _negDepth = -1;
-  static const double _intensity = 10;
+  static const double _posDepth = 1.5;
+  static const double _negDepth = -1.5;
+  static const double _intensity = 5;
 
   NeumorphicStyle _style(BuildContext context) {
     switch (match) {

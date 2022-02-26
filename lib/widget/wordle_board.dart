@@ -32,8 +32,8 @@ class WordleBoard extends StatelessWidget {
                           match: wordle.board.matches[i][j],
                           letter: wordle.board.letters[i][j],
                           lightSource: LightSource(
-                            (wordle.currCol - j) / wordle.board.width * 2,
-                            (wordle.currRow - i) / wordle.board.height * 2,
+                            (wordle.currCol - j) / wordle.board.width,
+                            (wordle.currRow - i) / wordle.board.height,
                           ),
                         ),
                       ),

@@ -4,7 +4,7 @@ import 'package:flutter/scheduler.dart';
 class ShakeController {
   ShakeController({required this.vsync}) {
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 500),
       vsync: vsync,
     );
   }

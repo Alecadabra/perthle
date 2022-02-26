@@ -25,8 +25,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return NeumorphicApp(
       title: 'Perthle',
-      theme: NeumorphicThemeData(textTheme: _textTheme),
-      darkTheme: NeumorphicThemeData.dark(textTheme: _textTheme),
+      theme: NeumorphicThemeData(
+        textTheme: _textTheme,
+        defaultTextColor: const Color(0xFF363A3F),
+      ),
+      darkTheme: NeumorphicThemeData.dark(
+        textTheme: _textTheme,
+        baseColor: const Color(0xff2c2f33),
+        shadowLightColor: const Color(0xff777777),
+        defaultTextColor: NeumorphicColors.background,
+      ),
       home: Storager(child: StartPage()),
     );
   }
