@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/current_game_state.dart';
@@ -6,9 +7,9 @@ import 'package:perthle/page/wordle_page.dart';
 import 'package:perthle/widget/storager.dart';
 
 class StartPage extends StatelessWidget {
-  StartPage({Key? key}) : super(key: key);
+  const StartPage({Key? key}) : super(key: key);
 
-  final DailyController _daily = DailyController();
+  DailyController get _daily => DailyController();
 
   StorageController _storage(BuildContext context) => Storager.of(context);
 
