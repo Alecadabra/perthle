@@ -2,8 +2,9 @@ import 'package:flutter/services.dart' show rootBundle;
 
 class DailyController {
   final int gameNum = DateTime.now()
-      .difference(DateTime.fromMillisecondsSinceEpoch(_startTimestamp))
-      .inDays;
+          .difference(DateTime.fromMillisecondsSinceEpoch(_startTimestamp))
+          .inDays +
+      1;
 
   late Future<String> wordFuture =
       rootBundle.loadString('assets/answers/answers.txt').then(
