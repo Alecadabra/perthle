@@ -54,7 +54,7 @@ class SavedGameState {
               },
             ).join();
           },
-        ).join("\n");
+        ).join('\n');
   }
 
   Map<String, dynamic> toJson() {

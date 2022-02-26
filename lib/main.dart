@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         shadowLightColor: const Color(0xff777777),
         defaultTextColor: NeumorphicColors.background,
       ),
-      home: Storager(child: StartPage()),
+      home: const Storager(child: StartPage()),
     );
   }
 }
