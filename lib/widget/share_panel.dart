@@ -69,7 +69,7 @@ class SharePanel extends StatelessWidget {
                         },
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(width: 16),
                     Expanded(
                       flex: 8,
                       child: Tooltip(

@@ -27,7 +27,7 @@ class WordleBoard extends StatelessWidget {
                   for (var j = 0; j < wordle.board.width; j++)
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(12),
                         child: Tile(
                           match: wordle.board.matches[i][j],
                           letter: wordle.board.letters[i][j],

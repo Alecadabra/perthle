@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       darkTheme: NeumorphicThemeData.dark(
         textTheme: _textTheme,
         baseColor: const Color(0xff2c2f33),
-        shadowLightColor: const Color(0xff777777),
+        shadowLightColor: const Color(0xFF5F5F5F),
         defaultTextColor: NeumorphicColors.background,
       ),
       home: const Storager(child: StartPage()),

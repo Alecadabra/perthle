@@ -106,7 +106,7 @@ class _WordlePageState extends State<WordlePage>
 
             // Keyboard / Stats switcher
             Expanded(
-              flex: 8,
+              flex: 7,
               child: Container(
                 width: _maxKeyboardWidth,
                 height: _maxKeyboardHeight,

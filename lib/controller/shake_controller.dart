@@ -11,11 +11,15 @@ class ShakeController {
 
   double get offset => animation.value;
 
+  double get progress => offset / maxOffset;
+
+  static double maxOffset = 24.0;
+
   final TickerProvider vsync;
 
   late final AnimationController _controller;
 
-  late final Animation<double> animation = Tween(begin: 0.0, end: 24.0)
+  late final Animation<double> animation = Tween(begin: 0.0, end: maxOffset)
       .chain(CurveTween(curve: Curves.elasticIn))
       .animate(_controller)
     ..addStatusListener(
