@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       title: 'Perthle',
       theme: NeumorphicThemeData(
         textTheme: _textTheme,
-        defaultTextColor: const Color(0xFF363A3F),
+        defaultTextColor: const Color(0xC3363A3F),
       ),
       darkTheme: NeumorphicThemeData.dark(
         textTheme: _textTheme,
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         shadowDarkColor: const Color(0xB8000000),
         shadowDarkColorEmboss: const Color(0xff000000),
         shadowLightColorEmboss: const Color(0xB9FFFFFF),
-        defaultTextColor: NeumorphicColors.background,
+        defaultTextColor: const Color(0x92DDE6E8),
       ),
       home: const Storager(child: StartPage()),
     );
