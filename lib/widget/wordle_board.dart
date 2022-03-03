@@ -1,5 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/wordle_controller.dart';
+import 'package:perthle/model/wordle_completion_state.dart';
 import 'package:perthle/widget/tile.dart';
 
 class WordleBoard extends StatelessWidget {
@@ -32,10 +33,11 @@ class WordleBoard extends StatelessWidget {
                           match: wordle.board.matches[i][j],
                           letter: wordle.board.letters[i][j],
                           lightSource: LightSource(
-                            wordle.currCol == wordle.board.width
+                            wordle.currCol == wordle.board.width ||
+                                    !wordle.inProgress
                                 ? 0
                                 : (wordle.currCol - j) / wordle.board.width,
-                            wordle.currRow == wordle.board.height
+                            !wordle.inProgress
                                 ? 0
                                 : (wordle.currRow - i) / wordle.board.height,
                           ),
