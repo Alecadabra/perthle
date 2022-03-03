@@ -1,8 +1,10 @@
 # Perthle
 
+![Icon](web/icons/Icon-192.png)
+
 A Wordle clone I made for my friends where you guess inside joke words 🥰
 
-https://perthle.web.app
+![Favicon](web/favicon.png) https://perthle.web.app
 
 ***
 
