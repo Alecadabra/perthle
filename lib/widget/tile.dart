@@ -8,11 +8,13 @@ class Tile extends StatelessWidget {
     required this.match,
     this.letter,
     required this.lightSource,
+    required this.current,
   }) : super(key: key);
 
   final TileMatchState match;
   final LetterState? letter;
   final LightSource lightSource;
+  final bool current;
 
   static const double _posDepth = 6;
   static const double _negDepth = -8;
@@ -26,13 +28,15 @@ class Tile extends StatelessWidget {
         BorderRadius.circular(MediaQuery.of(context).size.height / 65),
       );
 
+  // double square(double x) => x * x;
+
   NeumorphicStyle _style(BuildContext context) {
     switch (match) {
       case TileMatchState.blank:
         return NeumorphicStyle(
           boxShape: _boxShape(context),
           intensity: _intensity,
-          depth: _posDepth,
+          depth: current ? _posDepth * 6 : _posDepth,
           lightSource: lightSource,
           shape: _shape,
           surfaceIntensity:

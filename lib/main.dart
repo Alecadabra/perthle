@@ -31,9 +31,9 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: NeumorphicThemeData.dark(
         textTheme: _textTheme,
-        baseColor: const Color(0xff2c2f33),
-        shadowLightColor: const Color(0xFF5F5F5F),
-        shadowDarkColor: const Color(0xB8000000),
+        baseColor: Color(0xFF32353A),
+        shadowLightColor: Color(0xFF8F8F8F),
+        shadowDarkColor: Color(0xC5000000),
         shadowDarkColorEmboss: const Color(0xff000000),
         shadowLightColorEmboss: const Color(0xB9FFFFFF),
         defaultTextColor: const Color(0x92DDE6E8),

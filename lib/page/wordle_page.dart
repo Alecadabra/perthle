@@ -39,8 +39,12 @@ class _WordlePageState extends State<WordlePage>
   late FocusNode rootFocus;
 
   LightSource get _lightSource => LightSource(
-        (wordle.currCol / wordle.board.width) * 2 - 1,
-        (wordle.currRow / wordle.board.height) * 2 - 1,
+        wordle.currCol == wordle.board.width
+            ? 0
+            : wordle.currCol / wordle.board.width,
+        wordle.currRow == wordle.board.height
+            ? 0
+            : wordle.currRow / wordle.board.height,
       );
 
   @override
