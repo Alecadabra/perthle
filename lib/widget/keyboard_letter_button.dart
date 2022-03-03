@@ -28,10 +28,10 @@ class KeyboardLetterButton extends StatelessWidget {
         base = NeumorphicTheme.disabledColor(context);
         break;
       case TileMatchState.miss:
-        base = Colors.orange.shade300;
+        base = NeumorphicTheme.variantColor(context);
         break;
       case TileMatchState.match:
-        base = Colors.green.shade400;
+        base = NeumorphicTheme.accentColor(context);
         break;
     }
 
@@ -64,9 +64,6 @@ class KeyboardLetterButton extends StatelessWidget {
       backgroundColor: MaterialStateProperty.all(_color(context)),
       elevation: MaterialStateProperty.all(0),
       enableFeedback: true,
-      // overlayColor: MaterialStateProperty.all(
-      //   NeumorphicTheme.accentColor(context),
-      // ),
     );
   }
 
@@ -75,7 +72,7 @@ class KeyboardLetterButton extends StatelessWidget {
     return KeyboardButton(
       flex: flex,
       child: Text(
-        letter.toString(),
+        letter.letterString,
         style: Theme.of(context).textTheme.headline6!.apply(
               color: _textColor(context),
               fontFamily: 'Poppins',

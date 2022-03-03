@@ -2,7 +2,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/page/start_page.dart';
 import 'package:perthle/widget/storager.dart';
 
-main() => runApp(const MyApp());
+main() => runApp(const PerthleApp());
 
 // main() Firebase stuff
 // WidgetsFlutterBinding.ensureInitialized();
@@ -10,35 +10,40 @@ main() => runApp(const MyApp());
 //   options: DefaultFirebaseOptions.currentPlatform,
 // );
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class PerthleApp extends StatelessWidget {
+  const PerthleApp({Key? key}) : super(key: key);
 
-  TextTheme get _textTheme {
-    return const TextTheme(
-      bodyMedium: TextStyle(fontFamily: 'Poppins'),
-      bodyLarge: TextStyle(fontFamily: 'Poppins'),
-      labelLarge: TextStyle(fontFamily: 'Poppins'),
-    );
-  }
+  static const TextTheme _textTheme = TextTheme(
+    bodyMedium: TextStyle(fontFamily: 'Poppins'),
+    bodyLarge: TextStyle(fontFamily: 'Poppins'),
+    labelLarge: TextStyle(fontFamily: 'Poppins'),
+  );
+  static const Color _matchGreen = Color(0xFF8FDA93);
+  static const Color _missYellow = Color(0xFFDBC381);
 
   @override
   Widget build(BuildContext context) {
-    return NeumorphicApp(
+    return const NeumorphicApp(
       title: 'Perthle',
       theme: NeumorphicThemeData(
         textTheme: _textTheme,
-        defaultTextColor: const Color(0xC3363A3F),
+        defaultTextColor: Color(0xC3363A3F),
+        disabledColor: Color(0xFFACACAC),
+        accentColor: _matchGreen,
+        variantColor: _missYellow,
       ),
       darkTheme: NeumorphicThemeData.dark(
         textTheme: _textTheme,
         baseColor: Color(0xFF32353A),
         shadowLightColor: Color(0xFF8F8F8F),
         shadowDarkColor: Color(0xC5000000),
-        shadowDarkColorEmboss: const Color(0xff000000),
-        shadowLightColorEmboss: const Color(0xB9FFFFFF),
-        defaultTextColor: const Color(0x92DDE6E8),
+        shadowDarkColorEmboss: Color(0xff000000),
+        shadowLightColorEmboss: Color(0xB9FFFFFF),
+        defaultTextColor: Color(0x92DDE6E8),
+        accentColor: _matchGreen,
+        variantColor: _missYellow,
       ),
-      home: const Storager(child: StartPage()),
+      home: Storager(child: StartPage()),
     );
   }
 }
