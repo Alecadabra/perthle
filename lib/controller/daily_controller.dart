@@ -2,9 +2,8 @@ import 'package:flutter/services.dart' show rootBundle;
 
 class DailyController {
   final int gameNum = DateTime.now()
-          .difference(DateTime.fromMillisecondsSinceEpoch(_startTimestamp))
-          .inDays +
-      1;
+      .difference(DateTime.fromMillisecondsSinceEpoch(_startTimestamp))
+      .inDays;
 
   late Future<String> wordFuture =
       rootBundle.loadString('assets/answers/answers.txt').then(
@@ -14,5 +13,5 @@ class DailyController {
     },
   );
 
-  static const int _startTimestamp = 1645804800000;
+  static const int _startTimestamp = 1645718400000;
 }
