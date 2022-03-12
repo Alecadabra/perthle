@@ -5,7 +5,7 @@ import 'package:perthle/widget/keyboard_button.dart';
 
 class KeyboardLetterButton extends StatelessWidget {
   const KeyboardLetterButton({
-    Key? key,
+    final Key? key,
     required this.letter,
     required this.tileMatch,
     this.flex = 10,
@@ -17,7 +17,7 @@ class KeyboardLetterButton extends StatelessWidget {
   final int flex;
   final void Function()? onPressed;
 
-  Color? _color(BuildContext context) {
+  Color? _color(final BuildContext context) {
     Color base;
 
     switch (tileMatch) {
@@ -42,7 +42,7 @@ class KeyboardLetterButton extends StatelessWidget {
     return base;
   }
 
-  Color _textColor(BuildContext context) {
+  Color _textColor(final BuildContext context) {
     Color base;
 
     if (tileMatch == TileMatchData.blank) {
@@ -58,7 +58,7 @@ class KeyboardLetterButton extends StatelessWidget {
     return base;
   }
 
-  ButtonStyle _buttonStyle(BuildContext context) {
+  ButtonStyle _buttonStyle(final BuildContext context) {
     return ButtonStyle(
       minimumSize: MaterialStateProperty.all(const Size(100, 80)),
       backgroundColor: MaterialStateProperty.all(_color(context)),
@@ -68,7 +68,7 @@ class KeyboardLetterButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return KeyboardButton(
       flex: flex,
       child: Text(

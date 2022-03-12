@@ -3,7 +3,7 @@ import 'package:perthle/model/tile_match_state.dart';
 /// Immutable storage for a particular completed wordle game.
 class SavedGameData {
   const SavedGameData({required this.gameNum, required this.matches});
-  SavedGameData.fromJson(Map<String, dynamic> json)
+  SavedGameData.fromJson(final Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],
           matches: [
@@ -23,7 +23,7 @@ class SavedGameData {
     int? usedAttempts; // Init to null
     for (int i = matches.length - 1; i >= 0; i--) {
       if (matches[i].every(
-        (TileMatchData match) => match == TileMatchData.match,
+        (final TileMatchData match) => match == TileMatchData.match,
       )) {
         usedAttempts = i + 1;
         break; // TODO Cleaner algorithm
@@ -38,9 +38,9 @@ class SavedGameData {
 
     return 'Perthle $gameNum ${usedAttempts ?? 'X'}/$maxAttempts\n\n' +
         attempts.map(
-          (List<TileMatchData> attempt) {
+          (final List<TileMatchData> attempt) {
             return attempt.map(
-              (TileMatchData match) {
+              (final TileMatchData match) {
                 switch (match) {
                   case TileMatchData.match:
                     return '🟩';

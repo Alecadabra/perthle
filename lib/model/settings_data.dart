@@ -6,7 +6,7 @@ class SettingsData {
     this.lightEmojis = false,
     this.themeMode = ThemeMode.system,
   });
-  SettingsData.fromJson(Map<String, dynamic> json)
+  SettingsData.fromJson(final Map<String, dynamic> json)
       : this(
           hardMode: json['hardMode'],
           lightEmojis: json['lightEmojis'],

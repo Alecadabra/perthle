@@ -5,9 +5,9 @@ import 'package:perthle/controller/storage_controller.dart';
 /// using `StorageController.of(context)`.
 class InheritedStorageController extends InheritedWidget {
   const InheritedStorageController({
-    Key? key,
+    final Key? key,
     required this.storageController,
-    required Widget child,
+    required final Widget child,
   }) : super(key: key, child: child);
 
   final StorageController storageController;

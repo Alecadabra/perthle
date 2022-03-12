@@ -4,14 +4,14 @@ import 'package:perthle/widget/tile.dart';
 
 class WordleBoard extends StatelessWidget {
   const WordleBoard({
-    Key? key,
+    final Key? key,
     required this.wordle,
   }) : super(key: key);
 
   final WordleController wordle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AspectRatio(
       aspectRatio: wordle.board.width / wordle.board.height,
       child: Column(

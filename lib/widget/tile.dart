@@ -4,7 +4,7 @@ import 'package:perthle/model/tile_match_state.dart';
 
 class Tile extends StatelessWidget {
   const Tile({
-    Key? key,
+    final Key? key,
     required this.match,
     this.letter,
     required this.lightSource,
@@ -24,7 +24,7 @@ class Tile extends StatelessWidget {
     BorderRadius.circular(16),
   );
 
-  NeumorphicStyle _style(BuildContext context) {
+  NeumorphicStyle _style(final BuildContext context) {
     switch (match) {
       case TileMatchData.blank:
         return NeumorphicStyle(
@@ -67,7 +67,7 @@ class Tile extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AspectRatio(
       aspectRatio: 1.0,
       child: Neumorphic(

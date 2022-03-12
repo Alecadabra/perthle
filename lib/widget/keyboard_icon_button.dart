@@ -3,7 +3,7 @@ import 'package:perthle/widget/keyboard_button.dart';
 
 class KeyboardIconButton extends StatelessWidget {
   const KeyboardIconButton({
-    Key? key,
+    final Key? key,
     required this.icon,
     this.onPressed,
   }) : super(key: key);
@@ -11,7 +11,7 @@ class KeyboardIconButton extends StatelessWidget {
   final Icon icon;
   final Function()? onPressed;
 
-  Color _iconColor(BuildContext context) {
+  Color _iconColor(final BuildContext context) {
     if (onPressed == null) {
       return NeumorphicTheme.defaultTextColor(context).withAlpha(0x77);
     } else {
@@ -20,7 +20,7 @@ class KeyboardIconButton extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return KeyboardButton(
       flex: 15,
       child: IconTheme(

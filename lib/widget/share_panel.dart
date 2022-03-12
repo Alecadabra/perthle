@@ -7,9 +7,9 @@ import 'package:perthle/model/tile_match_state.dart';
 
 class SharePanel extends StatelessWidget {
   SharePanel({
-    Key? key,
-    required WordleController wordleController,
-    required int gameNum,
+    final Key? key,
+    required final WordleController wordleController,
+    required final int gameNum,
     required this.word,
   })  : savedGameState = SavedGameData(
           gameNum: gameNum,
@@ -21,7 +21,7 @@ class SharePanel extends StatelessWidget {
   final String word;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Card(
@@ -38,7 +38,9 @@ class SharePanel extends StatelessWidget {
           child: Column(
             children: [
               if (!savedGameState.matches.any(
-                (row) => row.every((match) => match == TileMatchData.match),
+                (final row) => row.every(
+                  (final match) => match == TileMatchData.match,
+                ),
               ))
                 Expanded(
                   flex: 2,

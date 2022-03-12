@@ -3,7 +3,7 @@ import 'package:perthle/controller/shake_controller.dart';
 
 class PerthleAppBar extends StatelessWidget {
   const PerthleAppBar({
-    Key? key,
+    final Key? key,
     required this.gameNum,
     required this.lightSource,
     required this.shaker,
@@ -14,12 +14,12 @@ class PerthleAppBar extends StatelessWidget {
   final ShakeController shaker;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return NeumorphicAppBar(
       centerTitle: true,
       title: AnimatedBuilder(
         animation: shaker.animation,
-        builder: (context, child) {
+        builder: (final context, final child) {
           return Container(
             padding: EdgeInsets.only(
               left: shaker.offset + 24,

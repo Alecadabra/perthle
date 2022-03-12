@@ -6,11 +6,11 @@ import 'package:perthle/model/current_game_state.dart';
 import 'package:perthle/page/wordle_page.dart';
 
 class StartPage extends StatelessWidget {
-  const StartPage({Key? key}) : super(key: key);
+  const StartPage({final Key? key}) : super(key: key);
 
-  Future<_InitialState> _future(BuildContext context) {
+  Future<_InitialState> _future(final BuildContext context) {
     return DailyController().wordFuture.then(
-      (String dailyWord) async {
+      (final String dailyWord) async {
         CurrentGameData? gameState =
             await StorageController.of(context).loadCurrentGame();
         return _InitialState(word: dailyWord, gameState: gameState);
@@ -19,10 +19,13 @@ class StartPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return FutureBuilder<_InitialState>(
       future: _future(context),
-      builder: (BuildContext context, AsyncSnapshot<_InitialState> snapshot) {
+      builder: (
+        final BuildContext context,
+        final AsyncSnapshot<_InitialState> snapshot,
+      ) {
         bool loading = !snapshot.hasData;
         int? gameNum = DailyController().gameNum;
         String? word = snapshot.data?.word;

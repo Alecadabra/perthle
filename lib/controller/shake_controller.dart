@@ -23,7 +23,7 @@ class ShakeController {
       .chain(CurveTween(curve: Curves.elasticIn))
       .animate(_controller)
     ..addStatusListener(
-      (status) {
+      (final status) {
         if (status == AnimationStatus.completed) {
           _controller.reverse();
         }

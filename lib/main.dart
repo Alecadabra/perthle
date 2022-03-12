@@ -12,7 +12,7 @@ main() => runApp(const PerthleApp());
 // );
 
 class PerthleApp extends StatelessWidget {
-  const PerthleApp({Key? key}) : super(key: key);
+  const PerthleApp({final Key? key}) : super(key: key);
 
   static const TextTheme _textTheme = TextTheme(
     bodyMedium: TextStyle(fontFamily: 'Poppins'),
@@ -23,7 +23,7 @@ class PerthleApp extends StatelessWidget {
   static const Color _missYellow = Color(0xFFDBC381);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return InheritedStorageController(
       storageController: LocalStorageController(),
       child: const NeumorphicApp(

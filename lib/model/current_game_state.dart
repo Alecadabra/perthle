@@ -7,11 +7,11 @@ class CurrentGameData {
   CurrentGameData({
     required this.gameNum,
     required this.word,
-    WordleCompletionData? completion,
-    KeyboardData? keyboard,
-    BoardData? board,
-    int startRow = 0,
-    int startCol = 0,
+    final WordleCompletionData? completion,
+    final KeyboardData? keyboard,
+    final BoardData? board,
+    final int startRow = 0,
+    final int startCol = 0,
   })  : completion = completion ?? WordleCompletionData.playing,
         keyboard = keyboard ?? KeyboardData(),
         board = board ??
@@ -21,7 +21,7 @@ class CurrentGameData {
             ),
         currRow = startRow,
         currCol = startCol;
-  CurrentGameData.fromJson(Map<String, dynamic> json)
+  CurrentGameData.fromJson(final Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],
           word: json['word'],

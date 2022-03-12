@@ -7,7 +7,7 @@ class DailyController {
 
   late Future<String> wordFuture =
       rootBundle.loadString('assets/answers/answers.txt').then(
-    (contents) {
+    (final contents) {
       var list = contents.split('\n');
       return list[(gameNum - 1) % list.length];
     },

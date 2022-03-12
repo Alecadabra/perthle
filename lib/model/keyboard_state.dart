@@ -4,13 +4,13 @@ import 'package:perthle/model/tile_match_state.dart';
 
 class KeyboardData {
   KeyboardData({
-    Map<LetterData, TileMatchData>? keys,
+    final Map<LetterData, TileMatchData>? keys,
   }) : _keys = keys ??
             {
               for (String chars in 'QWERTYUIOPASDFGHJKLZXCVBNM'.characters)
                 LetterData(chars): TileMatchData.blank,
             };
-  KeyboardData.fromJson(Map<String, dynamic> json)
+  KeyboardData.fromJson(final Map<String, dynamic> json)
       : this(
           keys: {
             for (String letterString in json.keys)
@@ -21,11 +21,11 @@ class KeyboardData {
 
   final Map<LetterData, TileMatchData> _keys;
 
-  TileMatchData operator [](LetterData letter) {
+  TileMatchData operator [](final LetterData letter) {
     return _keys[letter]!;
   }
 
-  void operator []=(LetterData letter, TileMatchData match) {
+  void operator []=(final LetterData letter, final TileMatchData match) {
     _keys[letter] = match;
   }
 

@@ -15,18 +15,18 @@ class LetterData {
   int get hashCode => letterString.hashCode;
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(final Object other) {
     return other is LetterData && other.letterString == letterString;
   }
 
-  static bool isValid(String letterString) {
+  static bool isValid(final String letterString) {
     return letterString.length == 1 && alphabet.contains(letterString);
   }
 }
 
 extension LetterStateCharacters on String {
   Iterable<LetterData> get letters {
-    return Characters(this).map((String c) => LetterData(c));
+    return Characters(this).map((final String c) => LetterData(c));
   }
 }
 

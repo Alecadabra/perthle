@@ -34,7 +34,7 @@ class LocalStorageController extends StorageController {
   }
 
   @override
-  Future<void> addSavedGame(SavedGameData savedGame) async {
+  Future<void> addSavedGame(final SavedGameData savedGame) async {
     await _savedGamesStorage.setItem(savedGame.gameNum.toString(), savedGame);
   }
 
@@ -45,7 +45,7 @@ class LocalStorageController extends StorageController {
       await _savedGamesStorage.getItem('1'),
     );
 
-    Future<SavedGameData?> savedGameAt(int i) async {
+    Future<SavedGameData?> savedGameAt(final int i) async {
       if (cachedGameNum == i) {
         return cachedSavedGame;
       } else {

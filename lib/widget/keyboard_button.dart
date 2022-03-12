@@ -3,7 +3,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class KeyboardButton extends StatelessWidget {
   const KeyboardButton({
-    Key? key,
+    final Key? key,
     required this.child,
     this.style,
     this.onPressed,
@@ -20,7 +20,7 @@ class KeyboardButton extends StatelessWidget {
   final bool enableFeedback;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Expanded(
       flex: flex,
       child: Stack(

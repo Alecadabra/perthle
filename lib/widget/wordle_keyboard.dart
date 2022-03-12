@@ -6,7 +6,7 @@ import 'package:perthle/widget/keyboard_letter_button.dart';
 
 class WordleKeyboard extends StatelessWidget {
   const WordleKeyboard({
-    Key? key,
+    final Key? key,
     required this.wordle,
     this.onType,
     this.onBackspace,
@@ -19,12 +19,12 @@ class WordleKeyboard extends StatelessWidget {
   final void Function()? onBackspace;
   final void Function()? onEnter;
 
-  void Function()? _typeCallbackWrapper(LetterData letter) {
+  void Function()? _typeCallbackWrapper(final LetterData letter) {
     return onType != null ? () => onType!(letter) : null;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,

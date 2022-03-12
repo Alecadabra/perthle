@@ -12,8 +12,8 @@ import 'package:perthle/widget/wordle_keyboard.dart';
 
 class WordlePage extends StatefulWidget {
   WordlePage({
-    Key? key,
-    required String word,
+    final Key? key,
+    required final String word,
     required this.gameNum,
     required this.gameState,
   })  : word = word.toUpperCase(),
@@ -66,12 +66,12 @@ class _WordlePageState extends State<WordlePage>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     FocusScope.of(context).requestFocus(rootFocus);
     return KeyboardListener(
       autofocus: true,
       focusNode: rootFocus,
-      onKeyEvent: (KeyEvent key) {
+      onKeyEvent: (final KeyEvent key) {
         final LogicalKeyboardKey logicalKey = key.logicalKey;
         final String? char = key.character?.toUpperCase();
 
@@ -121,11 +121,14 @@ class _WordlePageState extends State<WordlePage>
                               ? () => setState(() => wordle.backspace())
                               : null,
                           onEnter: wordle.canEnter
-                              ? () => setState(() =>
-                                  wordle.enter(StorageController.of(context)))
+                              ? () => setState(() => wordle.enter(
+                                    StorageController.of(context),
+                                  ))
                               : null,
                           onType: wordle.canType
-                              ? (letter) => setState(() => wordle.type(letter))
+                              ? (final letter) => setState(
+                                    () => wordle.type(letter),
+                                  )
                               : null,
                         )
                       : SharePanel(

@@ -6,8 +6,8 @@ class BoardData {
   BoardData({
     this.width = 5,
     this.height = 6,
-    List<List<LetterData?>>? letters,
-    List<List<TileMatchData>>? matches,
+    final List<List<LetterData?>>? letters,
+    final List<List<TileMatchData>>? matches,
   })  : letters = letters ??
             [
               for (int i = 0; i < height; i++)
@@ -22,7 +22,7 @@ class BoardData {
                   for (int j = 0; j < width; j++) TileMatchData.blank,
                 ],
             ];
-  BoardData.fromJson(Map<String, dynamic> json)
+  BoardData.fromJson(final Map<String, dynamic> json)
       : this(
           width: json['width'],
           height: json['height'],
