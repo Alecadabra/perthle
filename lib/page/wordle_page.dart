@@ -1,12 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/shake_controller.dart';
+import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/controller/wordle_controller.dart';
 import 'package:perthle/model/current_game_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/share_panel.dart';
-import 'package:perthle/widget/storager.dart';
 import 'package:perthle/widget/wordle_board.dart';
 import 'package:perthle/widget/wordle_keyboard.dart';
 
@@ -53,7 +53,6 @@ class _WordlePageState extends State<WordlePage>
       gameNum: widget.gameNum,
       word: widget.word,
       gameState: widget.gameState,
-      storage: Storager.of(context),
       onInvalidWord: () => setState(() => shaker.shake()),
     );
     shaker = ShakeController(vsync: this);
@@ -79,7 +78,7 @@ class _WordlePageState extends State<WordlePage>
         if (logicalKey == LogicalKeyboardKey.backspace) {
           setState(() => wordle.backspace());
         } else if (logicalKey == LogicalKeyboardKey.enter) {
-          setState(() => wordle.enter());
+          setState(() => wordle.enter(StorageController.of(context)));
         } else if (char != null && LetterData.isValid(char)) {
           setState(() => wordle.type(LetterData(char)));
         }
@@ -122,7 +121,8 @@ class _WordlePageState extends State<WordlePage>
                               ? () => setState(() => wordle.backspace())
                               : null,
                           onEnter: wordle.canEnter
-                              ? () => setState(() => wordle.enter())
+                              ? () => setState(() =>
+                                  wordle.enter(StorageController.of(context)))
                               : null,
                           onType: wordle.canType
                               ? (letter) => setState(() => wordle.type(letter))

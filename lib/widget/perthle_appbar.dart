@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/shake_controller.dart';
 

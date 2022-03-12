@@ -1,6 +1,5 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/wordle_controller.dart';
-import 'package:perthle/model/wordle_completion_state.dart';
 import 'package:perthle/widget/tile.dart';
 
 class WordleBoard extends StatelessWidget {

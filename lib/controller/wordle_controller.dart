@@ -13,14 +13,11 @@ class WordleController {
     required this.gameNum,
     required this.word,
     required this.onInvalidWord,
-    required this.storage,
     CurrentGameData? gameState,
   })  : gameState = gameState ?? CurrentGameData(gameNum: gameNum, word: word),
         dictionary = DictionaryController(wordLength: word.length);
 
   final CurrentGameData gameState;
-
-  final StorageController storage;
 
   final int gameNum;
   final String word;
@@ -60,7 +57,7 @@ class WordleController {
 
   bool get canEnter => currCol >= _width && inProgress && dictionary.isLoaded;
 
-  void enter() {
+  void enter(StorageController storage) {
     if (canEnter) {
       // Check it's a word
       if (!dictionary.isValidWord(board.letters[currRow].join())) {
