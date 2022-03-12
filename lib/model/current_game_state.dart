@@ -3,31 +3,31 @@ import 'package:perthle/model/keyboard_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/wordle_completion_state.dart';
 
-class CurrentGameState {
-  CurrentGameState({
+class CurrentGameData {
+  CurrentGameData({
     required this.gameNum,
     required this.word,
-    WordleCompletionState? completion,
-    KeyboardState? keyboard,
-    BoardState? board,
+    WordleCompletionData? completion,
+    KeyboardData? keyboard,
+    BoardData? board,
     int startRow = 0,
     int startCol = 0,
-  })  : completion = completion ?? WordleCompletionState.playing,
-        keyboard = keyboard ?? KeyboardState(),
+  })  : completion = completion ?? WordleCompletionData.playing,
+        keyboard = keyboard ?? KeyboardData(),
         board = board ??
-            BoardState(
+            BoardData(
               width: word.length,
               height: word.length + 1,
             ),
         currRow = startRow,
         currCol = startCol;
-  CurrentGameState.fromJson(Map<String, dynamic> json)
+  CurrentGameData.fromJson(Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],
           word: json['word'],
-          completion: WordleCompletionState.values[json['completion']],
-          keyboard: KeyboardState.fromJson(json['keyboard']),
-          board: BoardState.fromJson(json['board']),
+          completion: WordleCompletionData.values[json['completion']],
+          keyboard: KeyboardData.fromJson(json['keyboard']),
+          board: BoardData.fromJson(json['board']),
           startRow: json['currRow'],
           startCol: json['currCol'],
         );
@@ -35,16 +35,16 @@ class CurrentGameState {
   final int gameNum;
   final String word;
 
-  WordleCompletionState completion;
+  WordleCompletionData completion;
 
-  final KeyboardState keyboard;
-  final BoardState board;
+  final KeyboardData keyboard;
+  final BoardData board;
 
   int currRow;
   int currCol;
 
-  SavedGameState toSavedGame() {
-    return SavedGameState(gameNum: gameNum, matches: board.matches);
+  SavedGameData toSavedGame() {
+    return SavedGameData(gameNum: gameNum, matches: board.matches);
   }
 
   Map<String, dynamic> toJson() {

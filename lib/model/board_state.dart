@@ -2,12 +2,12 @@ import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
 /// Mutable state of the wordle game board, usually 5x6.
-class BoardState {
-  BoardState({
+class BoardData {
+  BoardData({
     this.width = 5,
     this.height = 6,
-    List<List<LetterState?>>? letters,
-    List<List<TileMatchState>>? matches,
+    List<List<LetterData?>>? letters,
+    List<List<TileMatchData>>? matches,
   })  : letters = letters ??
             [
               for (int i = 0; i < height; i++)
@@ -19,10 +19,10 @@ class BoardState {
             [
               for (int i = 0; i < height; i++)
                 [
-                  for (int j = 0; j < width; j++) TileMatchState.blank,
+                  for (int j = 0; j < width; j++) TileMatchData.blank,
                 ],
             ];
-  BoardState.fromJson(Map<String, dynamic> json)
+  BoardData.fromJson(Map<String, dynamic> json)
       : this(
           width: json['width'],
           height: json['height'],
@@ -31,7 +31,7 @@ class BoardState {
               [
                 for (int j = 0; j < json['width']; j++)
                   json['letters'][i][j] != null
-                      ? LetterState(json['letters'][i][j])
+                      ? LetterData(json['letters'][i][j])
                       : null,
               ],
           ],
@@ -39,7 +39,7 @@ class BoardState {
             for (int i = 0; i < json['height']; i++)
               [
                 for (int j = 0; j < json['width']; j++)
-                  TileMatchState.values[json['matches'][i][j]],
+                  TileMatchData.values[json['matches'][i][j]],
               ],
           ],
         );
@@ -47,24 +47,24 @@ class BoardState {
   final int width;
   final int height;
 
-  final List<List<LetterState?>> letters;
+  final List<List<LetterData?>> letters;
 
-  final List<List<TileMatchState>> matches;
+  final List<List<TileMatchData>> matches;
 
   Map<String, dynamic> toJson() {
     return {
       'width': width,
       'height': height,
       'letters': [
-        for (List<LetterState?> row in letters)
+        for (List<LetterData?> row in letters)
           [
-            for (LetterState? letter in row) letter?.letterString,
+            for (LetterData? letter in row) letter?.letterString,
           ],
       ],
       'matches': [
-        for (List<TileMatchState> row in matches)
+        for (List<TileMatchData> row in matches)
           [
-            for (TileMatchState match in row) match.index,
+            for (TileMatchData match in row) match.index,
           ],
       ]
     };

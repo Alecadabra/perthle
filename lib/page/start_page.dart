@@ -15,7 +15,7 @@ class StartPage extends StatelessWidget {
 
   Future<_InitialState> _future(BuildContext context) => _daily.wordFuture.then(
         (String dailyWord) async {
-          CurrentGameState? gameState =
+          CurrentGameData? gameState =
               await _storage(context).loadCurrentGame();
           return _InitialState(word: dailyWord, gameState: gameState);
         },
@@ -29,7 +29,7 @@ class StartPage extends StatelessWidget {
         bool loading = !snapshot.hasData;
         int? gameNum = _daily.gameNum;
         String? word = snapshot.data?.word;
-        CurrentGameState? gameState = snapshot.data?.gameState;
+        CurrentGameData? gameState = snapshot.data?.gameState;
 
         return AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
@@ -49,5 +49,5 @@ class _InitialState {
   });
 
   final String word;
-  final CurrentGameState? gameState;
+  final CurrentGameData? gameState;
 }

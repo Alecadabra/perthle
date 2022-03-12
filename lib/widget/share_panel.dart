@@ -11,13 +11,13 @@ class SharePanel extends StatelessWidget {
     required WordleController wordleController,
     required int gameNum,
     required this.word,
-  })  : savedGameState = SavedGameState(
+  })  : savedGameState = SavedGameData(
           gameNum: gameNum,
           matches: wordleController.board.matches,
         ),
         super(key: key);
 
-  final SavedGameState savedGameState;
+  final SavedGameData savedGameState;
   final String word;
 
   @override
@@ -38,7 +38,7 @@ class SharePanel extends StatelessWidget {
           child: Column(
             children: [
               if (!savedGameState.matches.any(
-                (row) => row.every((match) => match == TileMatchState.match),
+                (row) => row.every((match) => match == TileMatchData.match),
               ))
                 Expanded(
                   flex: 2,

@@ -2,11 +2,11 @@ import 'package:perthle/model/current_game_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 
 abstract class StorageController {
-  Future<CurrentGameState?> loadCurrentGame();
+  Future<CurrentGameData?> loadCurrentGame();
 
-  Future<void> saveCurrentGame(CurrentGameState? currentGame);
+  Future<void> saveCurrentGame(CurrentGameData? currentGame);
 
-  Future<List<SavedGameState>> loadSavedGames();
+  Future<List<SavedGameData>> loadSavedGames();
 
-  Future<void> addSavedGame(SavedGameState savedGame);
+  Future<void> addSavedGame(SavedGameData savedGame);
 }

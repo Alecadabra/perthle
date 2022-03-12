@@ -12,8 +12,8 @@ class KeyboardLetterButton extends StatelessWidget {
     this.onPressed,
   }) : super(key: key);
 
-  final LetterState letter;
-  final TileMatchState tileMatch;
+  final LetterData letter;
+  final TileMatchData tileMatch;
   final int flex;
   final void Function()? onPressed;
 
@@ -21,21 +21,21 @@ class KeyboardLetterButton extends StatelessWidget {
     Color base;
 
     switch (tileMatch) {
-      case TileMatchState.blank:
+      case TileMatchData.blank:
         base = NeumorphicTheme.baseColor(context);
         break;
-      case TileMatchState.wrong:
+      case TileMatchData.wrong:
         base = NeumorphicTheme.disabledColor(context);
         break;
-      case TileMatchState.miss:
+      case TileMatchData.miss:
         base = NeumorphicTheme.variantColor(context);
         break;
-      case TileMatchState.match:
+      case TileMatchData.match:
         base = NeumorphicTheme.accentColor(context);
         break;
     }
 
-    if (tileMatch != TileMatchState.blank && onPressed == null) {
+    if (tileMatch != TileMatchData.blank && onPressed == null) {
       base = base.withAlpha(0xaa);
     }
 
@@ -45,13 +45,13 @@ class KeyboardLetterButton extends StatelessWidget {
   Color _textColor(BuildContext context) {
     Color base;
 
-    if (tileMatch == TileMatchState.blank) {
+    if (tileMatch == TileMatchData.blank) {
       base = NeumorphicTheme.defaultTextColor(context);
     } else {
       base = NeumorphicTheme.baseColor(context);
     }
 
-    if (tileMatch == TileMatchState.blank && onPressed == null) {
+    if (tileMatch == TileMatchData.blank && onPressed == null) {
       base = base.withAlpha(0x77);
     }
 

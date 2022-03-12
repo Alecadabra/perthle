@@ -21,7 +21,7 @@ class WordlePage extends StatefulWidget {
 
   final String word;
   final int gameNum;
-  final CurrentGameState? gameState;
+  final CurrentGameData? gameState;
 
   @override
   State<WordlePage> createState() => _WordlePageState();
@@ -80,8 +80,8 @@ class _WordlePageState extends State<WordlePage>
           setState(() => wordle.backspace());
         } else if (logicalKey == LogicalKeyboardKey.enter) {
           setState(() => wordle.enter());
-        } else if (char != null && LetterState.isValid(char)) {
-          setState(() => wordle.type(LetterState(char)));
+        } else if (char != null && LetterData.isValid(char)) {
+          setState(() => wordle.type(LetterData(char)));
         }
       },
       child: Scaffold(

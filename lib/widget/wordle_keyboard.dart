@@ -15,11 +15,11 @@ class WordleKeyboard extends StatelessWidget {
 
   final WordleController wordle;
 
-  final void Function(LetterState)? onType;
+  final void Function(LetterData)? onType;
   final void Function()? onBackspace;
   final void Function()? onEnter;
 
-  void Function()? _typeCallbackWrapper(LetterState letter) {
+  void Function()? _typeCallbackWrapper(LetterData letter) {
     return onType != null ? () => onType!(letter) : null;
   }
 

@@ -14,11 +14,11 @@ class WordleController {
     required this.word,
     required this.onInvalidWord,
     required this.storage,
-    CurrentGameState? gameState,
-  })  : gameState = gameState ?? CurrentGameState(gameNum: gameNum, word: word),
+    CurrentGameData? gameState,
+  })  : gameState = gameState ?? CurrentGameData(gameNum: gameNum, word: word),
         dictionary = DictionaryController(wordLength: word.length);
 
-  final CurrentGameState gameState;
+  final CurrentGameData gameState;
 
   final StorageController storage;
 
@@ -29,11 +29,11 @@ class WordleController {
 
   final void Function() onInvalidWord;
 
-  WordleCompletionState get completion => gameState.completion;
-  bool get inProgress => completion == WordleCompletionState.playing;
+  WordleCompletionData get completion => gameState.completion;
+  bool get inProgress => completion == WordleCompletionData.playing;
 
-  KeyboardState get keyboard => gameState.keyboard;
-  BoardState get board => gameState.board;
+  KeyboardData get keyboard => gameState.keyboard;
+  BoardData get board => gameState.board;
   int get currRow => gameState.currRow;
   int get currCol => gameState.currCol;
 
@@ -42,7 +42,7 @@ class WordleController {
 
   bool get canType => currCol < _width && currRow < _height && inProgress;
 
-  void type(LetterState letter) {
+  void type(LetterData letter) {
     if (canType) {
       board.letters[currRow][currCol] = letter;
       gameState.currCol += 1;
@@ -72,11 +72,11 @@ class WordleController {
       String effectiveWord = word;
 
       void revealPass({
-        required TileMatchState match,
+        required TileMatchData match,
         required bool Function(int i, String letterString) predicate,
       }) {
         for (int i in indicies.toList()) {
-          LetterState letter = board.letters[currRow][i]!;
+          LetterData letter = board.letters[currRow][i]!;
           String letterString = letter.letterString;
 
           if (predicate(i, letterString)) {
@@ -95,19 +95,19 @@ class WordleController {
 
       // Match pass (Green)
       revealPass(
-        match: TileMatchState.match,
+        match: TileMatchData.match,
         predicate: (i, letterString) => word[i] == letterString,
       );
 
       // Miss pass (Yellow)
       revealPass(
-        match: TileMatchState.miss,
+        match: TileMatchData.miss,
         predicate: (i, letterString) => effectiveWord.contains(letterString),
       );
 
       // Wrong pass (Grey)
       revealPass(
-        match: TileMatchState.wrong,
+        match: TileMatchData.wrong,
         predicate: (i, letterString) => true,
       );
 
@@ -117,12 +117,12 @@ class WordleController {
 
       // Check end of game condition
       if (board.matches[currRow - 1].every(
-        (match) => match == TileMatchState.match,
+        (match) => match == TileMatchData.match,
       )) {
-        gameState.completion = WordleCompletionState.won;
+        gameState.completion = WordleCompletionData.won;
         storage.addSavedGame(gameState.toSavedGame());
       } else if (currRow == _height) {
-        gameState.completion = WordleCompletionState.lost;
+        gameState.completion = WordleCompletionData.lost;
         storage.addSavedGame(gameState.toSavedGame());
       }
 

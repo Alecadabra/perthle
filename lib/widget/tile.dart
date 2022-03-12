@@ -11,8 +11,8 @@ class Tile extends StatelessWidget {
     required this.current,
   }) : super(key: key);
 
-  final TileMatchState match;
-  final LetterState? letter;
+  final TileMatchData match;
+  final LetterData? letter;
   final LightSource lightSource;
   final bool current;
 
@@ -26,7 +26,7 @@ class Tile extends StatelessWidget {
 
   NeumorphicStyle _style(BuildContext context) {
     switch (match) {
-      case TileMatchState.blank:
+      case TileMatchData.blank:
         return NeumorphicStyle(
           boxShape: _boxShape,
           intensity: 0.65,
@@ -36,7 +36,7 @@ class Tile extends StatelessWidget {
           surfaceIntensity:
               NeumorphicTheme.isUsingDark(context) ? 0.008 : 0.018,
         );
-      case TileMatchState.wrong:
+      case TileMatchData.wrong:
         return NeumorphicStyle(
           boxShape: _boxShape,
           color: NeumorphicTheme.disabledColor(context),
@@ -45,7 +45,7 @@ class Tile extends StatelessWidget {
           shape: NeumorphicShape.concave,
           lightSource: lightSource,
         );
-      case TileMatchState.miss:
+      case TileMatchData.miss:
         return NeumorphicStyle(
           boxShape: _boxShape,
           color: NeumorphicTheme.variantColor(context),
@@ -54,7 +54,7 @@ class Tile extends StatelessWidget {
           shape: NeumorphicShape.concave,
           lightSource: lightSource,
         );
-      case TileMatchState.match:
+      case TileMatchData.match:
         return NeumorphicStyle(
           boxShape: _boxShape,
           color: NeumorphicTheme.accentColor(context),
@@ -84,7 +84,7 @@ class Tile extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline4?.copyWith(
                           fontWeight: FontWeight.w500,
                           fontFamily: 'Poppins',
-                          color: match != TileMatchState.blank
+                          color: match != TileMatchData.blank
                               ? NeumorphicTheme.baseColor(context)
                               : NeumorphicTheme.defaultTextColor(context),
                         ),

@@ -11,7 +11,7 @@ class LocalStorageController extends StorageController {
   final LocalStorage _savedGamesStorage = LocalStorage('saved_games.json');
 
   @override
-  Future<CurrentGameState?> loadCurrentGame() async {
+  Future<CurrentGameData?> loadCurrentGame() async {
     final Map<String, dynamic>? json = await _currentGameStorage.getItem(
       '$_gameNum',
     );
@@ -19,12 +19,12 @@ class LocalStorageController extends StorageController {
     if (json == null) {
       return null;
     } else {
-      return CurrentGameState.fromJson(json);
+      return CurrentGameData.fromJson(json);
     }
   }
 
   @override
-  Future<void> saveCurrentGame(final CurrentGameState? currentGame) async {
+  Future<void> saveCurrentGame(final CurrentGameData? currentGame) async {
     await _currentGameStorage.clear();
     if (currentGame != null) {
       await _currentGameStorage.setItem('$_gameNum', currentGame);
@@ -32,23 +32,23 @@ class LocalStorageController extends StorageController {
   }
 
   @override
-  Future<void> addSavedGame(SavedGameState savedGame) async {
+  Future<void> addSavedGame(SavedGameData savedGame) async {
     await _savedGamesStorage.setItem(savedGame.gameNum.toString(), savedGame);
   }
 
   @override
-  Future<List<SavedGameState>> loadSavedGames() async {
+  Future<List<SavedGameData>> loadSavedGames() async {
     int cachedGameNum = 1;
-    SavedGameState? cachedSavedGame = SavedGameState.fromJson(
+    SavedGameData? cachedSavedGame = SavedGameData.fromJson(
       await _savedGamesStorage.getItem('1'),
     );
 
-    Future<SavedGameState?> savedGameAt(int i) async {
+    Future<SavedGameData?> savedGameAt(int i) async {
       if (cachedGameNum == i) {
         return cachedSavedGame;
       } else {
         cachedGameNum = i;
-        cachedSavedGame = SavedGameState.fromJson(
+        cachedSavedGame = SavedGameData.fromJson(
           await _savedGamesStorage.getItem('$i'),
         );
         return cachedSavedGame;

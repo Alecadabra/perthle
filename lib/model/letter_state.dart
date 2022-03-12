@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
 /// Immutable state representing a letter in the English alphabet.
-class LetterState {
-  LetterState(this.letterString)
+class LetterData {
+  LetterData(this.letterString)
       : assert(letterString.length == 1),
         assert(alphabet.contains(letterString));
 
@@ -16,7 +16,7 @@ class LetterState {
 
   @override
   bool operator ==(Object other) {
-    return other is LetterState && other.letterString == letterString;
+    return other is LetterData && other.letterString == letterString;
   }
 
   static bool isValid(String letterString) {
@@ -25,8 +25,8 @@ class LetterState {
 }
 
 extension LetterStateCharacters on String {
-  Iterable<LetterState> get letters {
-    return Characters(this).map((String c) => LetterState(c));
+  Iterable<LetterData> get letters {
+    return Characters(this).map((String c) => LetterData(c));
   }
 }
 
