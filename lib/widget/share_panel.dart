@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/model/settings_data.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:perthle/controller/wordle_controller.dart';
 import 'package:perthle/model/saved_game_state.dart';
@@ -11,6 +12,7 @@ class SharePanel extends StatelessWidget {
     required final WordleController wordleController,
     required final int gameNum,
     required this.word,
+    required this.lightEmojis,
   })  : savedGameState = SavedGameData(
           gameNum: gameNum,
           matches: wordleController.board.matches,
@@ -19,6 +21,7 @@ class SharePanel extends StatelessWidget {
 
   final SavedGameData savedGameState;
   final String word;
+  final bool lightEmojis;
 
   @override
   Widget build(final BuildContext context) {
@@ -51,7 +54,7 @@ class SharePanel extends StatelessWidget {
                 ),
               Expanded(
                 flex: 10,
-                child: Text(savedGameState.shareableString),
+                child: Text(savedGameState.shareableString(lightEmojis)),
               ),
               const Spacer(),
               Expanded(
@@ -65,7 +68,7 @@ class SharePanel extends StatelessWidget {
                         child: const Text('Share'),
                         onPressed: () {
                           Share.share(
-                            savedGameState.shareableString,
+                            savedGameState.shareableString(lightEmojis),
                             subject: 'Perthle ${savedGameState.gameNum}',
                           );
                         },
@@ -79,7 +82,9 @@ class SharePanel extends StatelessWidget {
                         child: OutlinedButton(
                           child: const Icon(Icons.copy_outlined, size: 18),
                           onPressed: () => Clipboard.setData(
-                            ClipboardData(text: savedGameState.shareableString),
+                            ClipboardData(
+                              text: savedGameState.shareableString(lightEmojis),
+                            ),
                           ),
                         ),
                       ),

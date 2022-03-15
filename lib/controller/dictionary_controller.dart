@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:perthle/controller/daily_controller.dart';
 
 class DictionaryController {
   DictionaryController({required this.wordLength}) {
@@ -11,10 +12,10 @@ class DictionaryController {
 
   bool isLoaded = false;
 
-  late HashSet<String> _answers;
+  final HashSet<String> _answers = HashSet.of(DailyController.answers);
+
   late HashSet<String> _dictionary;
 
-  late final String _answersPath = 'assets/answers/answers.txt';
   late final String _dictionaryPath = 'assets/dictionary/words_$wordLength.txt';
 
   bool isValidWord(String word) {
@@ -23,12 +24,6 @@ class DictionaryController {
   }
 
   Future<void> _loadDictionary() async {
-    String answersString = await rootBundle.loadString(
-      _answersPath,
-      cache: false,
-    );
-    _answers = HashSet.of(answersString.split('\n'));
-
     String dictionaryString = await rootBundle.loadString(
       _dictionaryPath,
       cache: false,

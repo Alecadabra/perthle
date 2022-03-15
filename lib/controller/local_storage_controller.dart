@@ -3,12 +3,14 @@ import 'package:perthle/controller/daily_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/current_game_state.dart';
+import 'package:perthle/model/settings_data.dart';
 
 class LocalStorageController extends StorageController {
   int get _gameNum => DailyController().gameNum;
 
   final LocalStorage _currentGameStorage = LocalStorage('current_game.json');
   final LocalStorage _savedGamesStorage = LocalStorage('saved_games.json');
+  final LocalStorage _settingsStorage = LocalStorage('settings.json');
 
   @override
   Future<CurrentGameData?> loadCurrentGame() async {
@@ -59,5 +61,18 @@ class LocalStorageController extends StorageController {
       for (int i = 1; i <= _gameNum; i++)
         if (await savedGameAt(i) != null) (await savedGameAt(i))!,
     ];
+  }
+
+  static const _settingsKey = 'settings';
+
+  @override
+  Future<SettingsData> loadSettings() async {
+    Map<String, dynamic>? json = await _settingsStorage.getItem(_settingsKey);
+    return json != null ? SettingsData.fromJson(json) : const SettingsData();
+  }
+
+  @override
+  Future<void> setSettings(final SettingsData settings) async {
+    await _settingsStorage.setItem(_settingsKey, settings);
   }
 }

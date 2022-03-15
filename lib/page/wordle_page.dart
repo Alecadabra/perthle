@@ -5,6 +5,7 @@ import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/controller/wordle_controller.dart';
 import 'package:perthle/model/current_game_state.dart';
 import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/share_panel.dart';
 import 'package:perthle/widget/wordle_board.dart';
@@ -16,12 +17,14 @@ class WordlePage extends StatefulWidget {
     required final String word,
     required this.gameNum,
     required this.gameState,
+    required this.settings,
   })  : word = word.toUpperCase(),
         super(key: key);
 
   final String word;
   final int gameNum;
   final CurrentGameData? gameState;
+  final SettingsData settings;
 
   @override
   State<WordlePage> createState() => _WordlePageState();
@@ -54,6 +57,7 @@ class _WordlePageState extends State<WordlePage>
       word: widget.word,
       gameState: widget.gameState,
       onInvalidWord: () => setState(() => shaker.shake()),
+      hardMode: widget.settings.hardMode,
     );
     shaker = ShakeController(vsync: this);
   }
@@ -103,6 +107,14 @@ class _WordlePageState extends State<WordlePage>
             ),
 
             // Board-Keyboard gap
+            // Expanded(
+            //   flex: 2,
+            //   child: OutlinedButton(
+            //     onPressed: () async =>
+            //         StorageController.of(context).setSettings(SettingsData()),
+            //     child: Text('${widget.settings.toJson()}'),
+            //   ),
+            // ),
             const Spacer(flex: 2),
 
             // Keyboard / Stats switcher
@@ -135,6 +147,7 @@ class _WordlePageState extends State<WordlePage>
                           wordleController: wordle,
                           gameNum: widget.gameNum,
                           word: widget.word,
+                          lightEmojis: widget.settings.lightEmojis,
                         ),
                 ),
               ),

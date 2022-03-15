@@ -10,7 +10,7 @@ class SettingsData {
       : this(
           hardMode: json['hardMode'],
           lightEmojis: json['lightEmojis'],
-          themeMode: json['themeMode'],
+          themeMode: ThemeMode.values[json['themeMode']],
         );
 
   final bool hardMode;
@@ -21,7 +21,7 @@ class SettingsData {
     return {
       'hardMode': hardMode,
       'lightEmojis': lightEmojis,
-      'themeMode': themeMode,
+      'themeMode': themeMode.index,
     };
   }
 }

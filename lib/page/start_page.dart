@@ -3,10 +3,16 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/current_game_state.dart';
+import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/page/wordle_page.dart';
 
 class StartPage extends StatelessWidget {
-  const StartPage({final Key? key}) : super(key: key);
+  const StartPage({
+    final Key? key,
+    required this.settings,
+  }) : super(key: key);
+
+  final SettingsData settings;
 
   @override
   Widget build(final BuildContext context) {
@@ -20,12 +26,13 @@ class StartPage extends StatelessWidget {
       ) {
         return AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
-          child: gameDataSnapshot.hasData
+          child: gameDataSnapshot.connectionState == ConnectionState.done
               // Game data loaded
               ? WordlePage(
                   word: daily.word,
                   gameNum: daily.gameNum,
                   gameState: gameDataSnapshot.data,
+                  settings: settings,
                 )
               // Game data not yet loaded
               : const Scaffold(),

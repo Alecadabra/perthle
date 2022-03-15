@@ -18,7 +18,7 @@ class SavedGameData {
   final int gameNum;
   final List<List<TileMatchData>> matches;
 
-  String get shareableString {
+  String shareableString(final bool lightEmojis) {
     int maxAttempts = matches.length;
     int? usedAttempts; // Init to null
     for (int i = matches.length - 1; i >= 0; i--) {

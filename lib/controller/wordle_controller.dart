@@ -14,6 +14,7 @@ class WordleController {
     required this.word,
     required this.onInvalidWord,
     final CurrentGameData? gameState,
+    required this.hardMode,
   })  : gameState = gameState ?? CurrentGameData(gameNum: gameNum, word: word),
         dictionary = DictionaryController(wordLength: word.length);
 
@@ -21,6 +22,8 @@ class WordleController {
 
   final int gameNum;
   final String word;
+
+  final bool hardMode;
 
   final DictionaryController dictionary;
 
