@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:perthle/model/settings_data.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:perthle/controller/wordle_controller.dart';
 import 'package:perthle/model/saved_game_state.dart';
