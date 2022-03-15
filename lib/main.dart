@@ -3,7 +3,7 @@ import 'package:perthle/controller/local_storage_controller.dart';
 import 'package:perthle/page/start_page.dart';
 import 'package:perthle/widget/inherited_storage_controller.dart';
 
-main() => runApp(const PerthleApp());
+main() => runApp(PerthleApp());
 
 // main() Firebase stuff
 // WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +12,7 @@ main() => runApp(const PerthleApp());
 // );
 
 class PerthleApp extends StatelessWidget {
-  const PerthleApp({final Key? key}) : super(key: key);
+  PerthleApp({final Key? key}) : super(key: key);
 
   static const TextTheme _textTheme = TextTheme(
     bodyMedium: TextStyle(fontFamily: 'Poppins'),
@@ -22,10 +22,12 @@ class PerthleApp extends StatelessWidget {
   static const Color _matchGreen = Color(0xFF8FDA93);
   static const Color _missYellow = Color(0xFFDBC381);
 
+  final storage = LocalStorageController();
+
   @override
   Widget build(final BuildContext context) {
     return InheritedStorageController(
-      storageController: LocalStorageController(),
+      storageController: storage,
       child: const NeumorphicApp(
         title: 'Perthle',
         theme: NeumorphicThemeData(
