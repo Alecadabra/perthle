@@ -5,8 +5,6 @@ import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/current_game_state.dart';
 
 class LocalStorageController extends StorageController {
-  LocalStorageController();
-
   int get _gameNum => DailyController().gameNum;
 
   final LocalStorage _currentGameStorage = LocalStorage('current_game.json');
