@@ -40,7 +40,9 @@ class WordleBoard extends StatelessWidget {
                                 ? 0
                                 : (wordle.currRow - i) / wordle.board.height,
                           ),
-                          current: j == wordle.currCol && i == wordle.currRow ||
+                          current: wordle.inProgress &&
+                                  j == wordle.currCol &&
+                                  i == wordle.currRow ||
                               wordle.currCol == wordle.board.width &&
                                   i == wordle.currRow,
                         ),
