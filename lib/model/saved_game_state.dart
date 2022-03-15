@@ -47,7 +47,7 @@ class SavedGameData {
                   case TileMatchData.miss:
                     return '🟨';
                   case TileMatchData.wrong:
-                    return '⬛';
+                    return lightEmojis ? '⬜' : '⬛';
                   case TileMatchData.blank:
                     throw StateError('Blank match impossible');
                 }
