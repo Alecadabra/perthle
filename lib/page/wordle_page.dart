@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/shake_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/controller/wordle_controller.dart';
@@ -18,6 +19,7 @@ class WordlePage extends StatefulWidget {
     required this.gameNum,
     required this.gameState,
     required this.settings,
+    required this.navigator,
   })  : word = word.toUpperCase(),
         super(key: key);
 
@@ -25,6 +27,7 @@ class WordlePage extends StatefulWidget {
   final int gameNum;
   final CurrentGameData? gameState;
   final SettingsData settings;
+  final PerthleNavigator navigator;
 
   @override
   State<WordlePage> createState() => _WordlePageState();
@@ -94,7 +97,7 @@ class _WordlePageState extends State<WordlePage>
             Expanded(
               flex: 2,
               child: PerthleAppBar(
-                gameNum: widget.gameNum,
+                title: 'Perthle ${widget.gameNum}',
                 lightSource: _lightSource,
                 shaker: shaker,
               ),
@@ -107,15 +110,20 @@ class _WordlePageState extends State<WordlePage>
             ),
 
             // Board-Keyboard gap
-            // Expanded(
-            //   flex: 2,
-            //   child: OutlinedButton(
-            //     onPressed: () async =>
-            //         StorageController.of(context).setSettings(SettingsData()),
-            //     child: Text('${widget.settings.toJson()}'),
-            //   ),
-            // ),
-            const Spacer(flex: 2),
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: OutlinedButton(
+                  onPressed: () async => widget.navigator.toSettings(),
+                  child: Icon(
+                    Icons.settings_outlined,
+                    color: NeumorphicTheme.defaultTextColor(context),
+                  ),
+                ),
+              ),
+            ),
+            // const Spacer(flex: 2),
 
             // Keyboard / Stats switcher
             Expanded(

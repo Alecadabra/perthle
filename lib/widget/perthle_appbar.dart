@@ -4,12 +4,12 @@ import 'package:perthle/controller/shake_controller.dart';
 class PerthleAppBar extends StatelessWidget {
   const PerthleAppBar({
     final Key? key,
-    required this.gameNum,
+    required this.title,
     required this.lightSource,
     required this.shaker,
   }) : super(key: key);
 
-  final int gameNum;
+  final String title;
   final LightSource lightSource;
   final ShakeController shaker;
 
@@ -29,7 +29,7 @@ class PerthleAppBar extends StatelessWidget {
               child: Stack(
                 children: [
                   NeumorphicText(
-                    'Perthle  $gameNum',
+                    title,
                     duration: Duration(
                       // Speed up when shaking
                       milliseconds: shaker.offset != 0 ? 0 : 400,

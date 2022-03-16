@@ -1,18 +1,25 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_controller.dart';
+import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/current_game_state.dart';
 import 'package:perthle/model/settings_data.dart';
+import 'package:perthle/page/settings_page.dart';
 import 'package:perthle/page/wordle_page.dart';
 
 class StartPage extends StatelessWidget {
-  const StartPage({
+  StartPage({
     final Key? key,
     required this.settings,
   }) : super(key: key);
 
   final SettingsData settings;
+
+  final PerthleNavigator _navigator = PerthleNavigator(
+    pageController: PageController(),
+  );
 
   @override
   Widget build(final BuildContext context) {
@@ -28,16 +35,54 @@ class StartPage extends StatelessWidget {
           duration: const Duration(milliseconds: 500),
           child: gameDataSnapshot.connectionState == ConnectionState.done
               // Game data loaded
-              ? WordlePage(
-                  word: daily.word,
-                  gameNum: daily.gameNum,
-                  gameState: gameDataSnapshot.data,
-                  settings: settings,
+              ? Container(
+                  color: NeumorphicTheme.baseColor(context),
+                  child: PageView(
+                    scrollBehavior: const PerthleScrollBehavior(),
+                    controller: _navigator.pageController,
+                    children: [
+                      WordlePage(
+                        word: daily.word,
+                        gameNum: daily.gameNum,
+                        gameState: gameDataSnapshot.data,
+                        settings: settings,
+                        navigator: _navigator,
+                      ),
+                      SettingsPage(navigator: _navigator),
+                    ],
+                  ),
                 )
               // Game data not yet loaded
               : const Scaffold(),
         );
       },
+    );
+  }
+}
+
+class PerthleScrollBehavior extends ScrollBehavior {
+  const PerthleScrollBehavior() : super(androidOverscrollIndicator: null);
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => PointerDeviceKind.values.toSet();
+
+  @override
+  ScrollPhysics getScrollPhysics(final BuildContext context) {
+    return const BouncingScrollPhysics();
+  }
+
+  @override
+  Widget buildScrollbar(
+    final BuildContext context,
+    final Widget child,
+    final ScrollableDetails details,
+  ) {
+    return SafeArea(
+      minimum: const EdgeInsets.all(16),
+      child: Scrollbar(
+        controller: details.controller,
+        child: child,
+      ),
     );
   }
 }
