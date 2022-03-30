@@ -12,6 +12,10 @@ class WordleBoard extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final EdgeInsets padding = EdgeInsets.all(
+      MediaQuery.of(context).size.height / 15 / wordle.word.length,
+    );
+
     return AspectRatio(
       aspectRatio: wordle.board.width / wordle.board.height,
       child: Column(
@@ -27,7 +31,7 @@ class WordleBoard extends StatelessWidget {
                   for (var j = 0; j < wordle.board.width; j++)
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(12),
+                        padding: padding,
                         child: Tile(
                           match: wordle.board.matches[i][j],
                           letter: wordle.board.letters[i][j],
