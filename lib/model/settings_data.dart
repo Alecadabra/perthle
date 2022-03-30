@@ -24,4 +24,16 @@ class SettingsData {
       'themeMode': themeMode.index,
     };
   }
+
+  SettingsData copyWith({
+    final bool? hardMode,
+    final bool? lightEmojis,
+    final ThemeMode? themeMode,
+  }) {
+    return SettingsData(
+      hardMode: hardMode ?? this.hardMode,
+      lightEmojis: lightEmojis ?? this.hardMode,
+      themeMode: themeMode ?? this.themeMode,
+    );
+  }
 }

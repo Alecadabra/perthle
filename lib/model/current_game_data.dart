@@ -1,7 +1,7 @@
-import 'package:perthle/model/board_state.dart';
-import 'package:perthle/model/keyboard_state.dart';
-import 'package:perthle/model/saved_game_state.dart';
-import 'package:perthle/model/wordle_completion_state.dart';
+import 'package:perthle/model/board_data.dart';
+import 'package:perthle/model/keyboard_data.dart';
+import 'package:perthle/model/saved_game_data.dart';
+import 'package:perthle/model/wordle_completion_data.dart';
 
 class CurrentGameData {
   CurrentGameData({
@@ -21,6 +21,7 @@ class CurrentGameData {
             ),
         currRow = startRow,
         currCol = startCol;
+  @override
   CurrentGameData.fromJson(final Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],

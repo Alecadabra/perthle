@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:perthle/controller/dictionary_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
-import 'package:perthle/model/board_state.dart';
-import 'package:perthle/model/current_game_state.dart';
-import 'package:perthle/model/keyboard_state.dart';
-import 'package:perthle/model/letter_state.dart';
-import 'package:perthle/model/tile_match_state.dart';
-import 'package:perthle/model/wordle_completion_state.dart';
+import 'package:perthle/model/board_data.dart';
+import 'package:perthle/model/current_game_data.dart';
+import 'package:perthle/model/keyboard_data.dart';
+import 'package:perthle/model/letter_data.dart';
+import 'package:perthle/model/tile_match_data.dart';
+import 'package:perthle/model/wordle_completion_data.dart';
 
 class WordleController {
   WordleController({

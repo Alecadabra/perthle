@@ -1,4 +1,4 @@
-import 'package:perthle/model/tile_match_state.dart';
+import 'package:perthle/model/tile_match_data.dart';
 
 /// Immutable storage for a particular completed wordle game.
 class SavedGameData {

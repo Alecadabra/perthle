@@ -2,8 +2,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:perthle/controller/wordle_controller.dart';
-import 'package:perthle/model/saved_game_state.dart';
-import 'package:perthle/model/tile_match_state.dart';
+import 'package:perthle/model/saved_game_data.dart';
+import 'package:perthle/model/tile_match_data.dart';
 
 class SharePanel extends StatelessWidget {
   SharePanel({

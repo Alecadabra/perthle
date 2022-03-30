@@ -1,8 +1,8 @@
 import 'package:localstorage/localstorage.dart';
 import 'package:perthle/controller/daily_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
-import 'package:perthle/model/saved_game_state.dart';
-import 'package:perthle/model/current_game_state.dart';
+import 'package:perthle/model/saved_game_data.dart';
+import 'package:perthle/model/current_game_data.dart';
 import 'package:perthle/model/settings_data.dart';
 
 class LocalStorageController extends StorageController {

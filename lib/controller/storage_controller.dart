@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:perthle/model/current_game_state.dart';
-import 'package:perthle/model/saved_game_state.dart';
+import 'package:perthle/model/current_game_data.dart';
+import 'package:perthle/model/saved_game_data.dart';
 import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/widget/inherited_storage_controller.dart';
 

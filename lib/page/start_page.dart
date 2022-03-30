@@ -4,7 +4,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_controller.dart';
 import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
-import 'package:perthle/model/current_game_state.dart';
+import 'package:perthle/model/current_game_data.dart';
 import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/page/settings_page.dart';
 import 'package:perthle/page/wordle_page.dart';
