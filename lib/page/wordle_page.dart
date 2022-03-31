@@ -14,7 +14,7 @@ import 'package:perthle/widget/wordle_board.dart';
 import 'package:perthle/widget/wordle_keyboard.dart';
 
 class WordlePage extends StatefulWidget {
-  WordlePage({
+  const WordlePage({
     final Key? key,
     required this.daily,
     required this.gameState,
