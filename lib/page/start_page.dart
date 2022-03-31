@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_controller.dart';
@@ -47,7 +46,7 @@ class StartPage extends StatelessWidget {
                         settings: settings,
                         navigator: _navigator,
                       ),
-                      // SettingsPage(navigator: _navigator),
+                      SettingsPage(navigator: _navigator),
                     ],
                   ),
                 )
@@ -77,7 +76,6 @@ class PerthleScrollBehavior extends ScrollBehavior {
     final ScrollableDetails details,
   ) {
     return SafeArea(
-      minimum: const EdgeInsets.all(16),
       child: Scrollbar(
         controller: details.controller,
         child: child,
