@@ -22,7 +22,7 @@ class DailyController {
 
   static const int _startTimestamp = 1645718400000;
 
-  static const int _originalListSize = 38;
+  static const int _originalListSize = 35;
 
   static const String _special = '\u{75}\u{73}\u0073\u0079';
 
@@ -120,6 +120,10 @@ class DailyController {
     'csbp',
     'sydney',
     'winc',
+    'sunset',
+    'cronch',
+    'martin',
+    'aqwa',
   ];
 
   static const List<String> longAnswers = [
@@ -134,6 +138,12 @@ class DailyController {
     'australia',
     'mcgowan',
     'geography',
+    'impreza',
+    'hillarys',
+    'powerpoint',
+    'snapchat',
+    'burrito',
+    'forklift',
   ];
 
   static const List<String> specialAnswers = [
