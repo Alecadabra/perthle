@@ -1,4 +1,6 @@
-# Perthle ![Favicon](web/favicon.png)
+# Perthle ![Favicon](web/favicon.png) 
+
+[![CD](https://github.com/Alecadabra/perthle/actions/workflows/flutter.yml/badge.svg)](https://github.com/Alecadabra/perthle/actions/workflows/flutter.yml)
 
 A Wordle clone I made for my friends where you guess inside joke words 🥰
 
