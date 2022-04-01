@@ -46,7 +46,7 @@ class StartPage extends StatelessWidget {
                         settings: settings,
                         navigator: _navigator,
                       ),
-                      SettingsPage(navigator: _navigator),
+                      // SettingsPage(navigator: _navigator),
                     ],
                   ),
                 )
