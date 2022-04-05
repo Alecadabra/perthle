@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/controller/daily_controller.dart';
 import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/shake_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
@@ -13,18 +14,15 @@ import 'package:perthle/widget/wordle_board.dart';
 import 'package:perthle/widget/wordle_keyboard.dart';
 
 class WordlePage extends StatefulWidget {
-  WordlePage({
+  const WordlePage({
     final Key? key,
-    required final String word,
-    required this.gameNum,
+    required this.daily,
     required this.gameState,
     required this.settings,
     required this.navigator,
-  })  : word = word.toUpperCase(),
-        super(key: key);
+  }) : super(key: key);
 
-  final String word;
-  final int gameNum;
+  final DailyController daily;
   final CurrentGameData? gameState;
   final SettingsData settings;
   final PerthleNavigator navigator;
@@ -56,8 +54,8 @@ class _WordlePageState extends State<WordlePage>
     super.initState();
     rootFocus = FocusNode();
     wordle = WordleController(
-      gameNum: widget.gameNum,
-      word: widget.word,
+      gameNum: widget.daily.gameNum,
+      word: widget.daily.word,
       gameState: widget.gameState,
       onInvalidWord: () => setState(() => shaker.shake()),
       hardMode: widget.settings.hardMode,
@@ -97,7 +95,7 @@ class _WordlePageState extends State<WordlePage>
             Expanded(
               flex: 2,
               child: PerthleAppBar(
-                title: 'Perthle ${widget.gameNum}',
+                title: '${widget.daily.gameModeString} ${widget.daily.gameNum}',
                 lightSource: _lightSource,
                 shaker: shaker,
               ),
@@ -110,19 +108,21 @@ class _WordlePageState extends State<WordlePage>
             ),
 
             // Board-Keyboard gap
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: OutlinedButton(
-                  onPressed: () async => widget.navigator.toSettings(),
-                  child: Icon(
-                    Icons.settings_outlined,
-                    color: NeumorphicTheme.defaultTextColor(context),
+            true
+                ? const Spacer(flex: 2)
+                : Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: OutlinedButton(
+                        onPressed: () async => widget.navigator.toSettings(),
+                        child: Icon(
+                          Icons.settings_outlined,
+                          color: NeumorphicTheme.defaultTextColor(context),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
             // const Spacer(flex: 2),
 
             // Keyboard / Stats switcher
@@ -153,8 +153,7 @@ class _WordlePageState extends State<WordlePage>
                         )
                       : SharePanel(
                           wordleController: wordle,
-                          gameNum: widget.gameNum,
-                          word: widget.word,
+                          daily: widget.daily,
                           lightEmojis: widget.settings.lightEmojis,
                         ),
                 ),

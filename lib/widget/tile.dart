@@ -20,15 +20,16 @@ class Tile extends StatelessWidget {
   static const double _negDepth = -8;
   static const double _intensity = 0.65;
 
-  static final NeumorphicBoxShape _boxShape = NeumorphicBoxShape.roundRect(
-    BorderRadius.circular(16),
-  );
+  NeumorphicBoxShape _boxShape(final BuildContext context) =>
+      NeumorphicBoxShape.roundRect(
+        BorderRadius.circular(MediaQuery.of(context).size.height / 65),
+      );
 
   NeumorphicStyle _style(final BuildContext context) {
     switch (match) {
       case TileMatchData.blank:
         return NeumorphicStyle(
-          boxShape: _boxShape,
+          boxShape: _boxShape(context),
           intensity: 0.65,
           depth: current ? _posDepth * 6 : _posDepth,
           lightSource: lightSource,
@@ -38,7 +39,7 @@ class Tile extends StatelessWidget {
         );
       case TileMatchData.wrong:
         return NeumorphicStyle(
-          boxShape: _boxShape,
+          boxShape: _boxShape(context),
           color: NeumorphicTheme.disabledColor(context),
           intensity: _intensity,
           depth: _negDepth,
@@ -47,7 +48,7 @@ class Tile extends StatelessWidget {
         );
       case TileMatchData.miss:
         return NeumorphicStyle(
-          boxShape: _boxShape,
+          boxShape: _boxShape(context),
           color: NeumorphicTheme.variantColor(context),
           intensity: _intensity,
           depth: _negDepth,
@@ -56,7 +57,7 @@ class Tile extends StatelessWidget {
         );
       case TileMatchData.match:
         return NeumorphicStyle(
-          boxShape: _boxShape,
+          boxShape: _boxShape(context),
           color: NeumorphicTheme.accentColor(context),
           intensity: _intensity,
           depth: _negDepth,
