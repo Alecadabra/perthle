@@ -24,6 +24,8 @@ class _SettingsPageState extends State<SettingsPage>
   final LightSource lightSource = LightSource.bottomLeft;
   late final ShakeController shake;
 
+  static const double _maxWidth = 620;
+
   @override
   void initState() {
     shake = ShakeController(vsync: this);
@@ -38,23 +40,82 @@ class _SettingsPageState extends State<SettingsPage>
         lightSource: lightSource,
         shaker: shake,
       ),
-      body: Column(
+      body: SizedBox(
+        width: _maxWidth,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            _SettingsRow(
+              name: 'Theme mode',
+              builder: (final context, final settings) {
+                return NeumorphicToggle(
+                  width: 250,
+                  selectedIndex: settings.themeMode.index,
+                  thumb: Neumorphic(),
+                  children: ThemeMode.values.map(
+                    (final themeMode) {
+                      final firstLetter = themeMode.name[0].toUpperCase();
+                      final rest = themeMode.name.substring(1);
+                      return ToggleElement(
+                        foreground: Center(child: Text('$firstLetter$rest')),
+                        background: Center(child: Text('$firstLetter$rest')),
+                      );
+                    },
+                  ).toList(),
+                  onChanged: (final idx) => context
+                      .read<SettingsCubit>()
+                      .edit(themeMode: ThemeMode.values[idx]),
+                );
+              },
+            ),
+            _SettingsRow(
+              name: 'Emoji style',
+              builder: (final context, final settings) {
+                return NeumorphicToggle(
+                  width: 100,
+                  selectedIndex: settings.lightEmojis ? 0 : 1,
+                  thumb: Neumorphic(),
+                  children: [
+                    ToggleElement(
+                      foreground: const Center(child: Text('⬜')),
+                      background: const Center(child: Text('⬜')),
+                    ),
+                    ToggleElement(
+                      foreground: const Center(child: Text('⬛')),
+                      background: const Center(child: Text('⬛')),
+                    ),
+                  ],
+                  onChanged: (final idx) =>
+                      context.read<SettingsCubit>().edit(lightEmojis: idx == 0),
+                );
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsRow extends StatelessWidget {
+  const _SettingsRow({
+    final Key? key,
+    required this.name,
+    required this.builder,
+  }) : super(key: key);
+
+  final String name;
+  final Widget Function(BuildContext, SettingsData) builder;
+
+  @override
+  Widget build(final BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          BlocBuilder<SettingsCubit, SettingsData>(
-            builder: (final context, final settings) {
-              return NeumorphicToggle(
-                selectedIndex: settings.themeMode.index,
-                thumb: Neumorphic(),
-                children: ThemeMode.values
-                    .map((final themeMode) =>
-                        ToggleElement(foreground: Text(themeMode.name)))
-                    .toList(),
-                onChanged: (final idx) => context
-                    .read<SettingsCubit>()
-                    .edit(themeMode: ThemeMode.values[idx]),
-              );
-            },
-          )
+          Expanded(child: Text(name)),
+          BlocBuilder<SettingsCubit, SettingsData>(builder: builder),
         ],
       ),
     );
