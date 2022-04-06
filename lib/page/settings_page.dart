@@ -5,6 +5,7 @@ import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/controller/shake_controller.dart';
 import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
+import 'package:perthle/widget/perthle_scaffold.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
@@ -31,17 +32,14 @@ class _SettingsPageState extends State<SettingsPage>
 
   @override
   Widget build(final BuildContext context) {
-    return Scaffold(
+    return PerthleScaffold(
+      appBar: PerthleAppBar(
+        title: 'Settings',
+        lightSource: lightSource,
+        shaker: shake,
+      ),
       body: Column(
         children: [
-          Expanded(
-            child: PerthleAppBar(
-              title: 'Settings',
-              lightSource: lightSource,
-              shaker: shake,
-            ), // TODO Make perthle scaffold that has consistent app bar size
-            // across multiple pages on the slider
-          ),
           BlocBuilder<SettingsCubit, SettingsData>(
             builder: (final context, final settings) {
               return NeumorphicToggle(

@@ -11,6 +11,7 @@ import 'package:perthle/model/current_game_data.dart';
 import 'package:perthle/model/letter_data.dart';
 import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
+import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/share_panel.dart';
 import 'package:perthle/widget/wordle_board.dart';
 import 'package:perthle/widget/wordle_keyboard.dart';
@@ -88,19 +89,14 @@ class _WordlePageState extends State<WordlePage>
           setState(() => wordle.type(LetterData(char)));
         }
       },
-      child: Scaffold(
+      child: PerthleScaffold(
+        appBar: PerthleAppBar(
+          title: '${widget.daily.gameModeString} ${widget.daily.gameNum}',
+          lightSource: _lightSource,
+          shaker: shaker,
+        ),
         body: Column(
           children: [
-            // Appbar
-            Expanded(
-              flex: 2,
-              child: PerthleAppBar(
-                title: '${widget.daily.gameModeString} ${widget.daily.gameNum}',
-                lightSource: _lightSource,
-                shaker: shaker,
-              ),
-            ),
-
             // Board
             Expanded(
               flex: 12,
@@ -108,21 +104,7 @@ class _WordlePageState extends State<WordlePage>
             ),
 
             // Board-Keyboard gap
-            true
-                ? const Spacer(flex: 2)
-                : Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: OutlinedButton(
-                        onPressed: () async => widget.navigator.toSettings(),
-                        child: Icon(
-                          Icons.settings_outlined,
-                          color: NeumorphicTheme.defaultTextColor(context),
-                        ),
-                      ),
-                    ),
-                  ),
+            const Spacer(flex: 2),
             // const Spacer(flex: 2),
 
             // Keyboard / Stats switcher
