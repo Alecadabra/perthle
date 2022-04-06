@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/local_storage_controller.dart';
 import 'package:perthle/controller/settings_cubit.dart';
-import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/page/start_page.dart';
 import 'package:perthle/widget/inherited_storage_controller.dart';
@@ -51,7 +50,7 @@ class PerthleApp extends StatelessWidget {
               accentColor: _matchGreen,
               variantColor: _missYellow,
             ),
-            home: StartPage(),
+            home: const StartPage(),
           );
         }),
       ),

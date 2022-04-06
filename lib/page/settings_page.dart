@@ -21,6 +21,13 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage>
     with SingleTickerProviderStateMixin {
   final LightSource lightSource = LightSource.bottomLeft;
+  late final ShakeController shake;
+
+  @override
+  void initState() {
+    shake = ShakeController(vsync: this);
+    super.initState();
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -31,7 +38,7 @@ class _SettingsPageState extends State<SettingsPage>
             child: PerthleAppBar(
               title: 'Settings',
               lightSource: lightSource,
-              shaker: ShakeController(vsync: this),
+              shaker: shake,
             ), // TODO Make perthle scaffold that has consistent app bar size
             // across multiple pages on the slider
           ),

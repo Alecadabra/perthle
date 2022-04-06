@@ -4,16 +4,24 @@ import 'package:perthle/controller/daily_controller.dart';
 import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/current_game_data.dart';
-import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/page/settings_page.dart';
 import 'package:perthle/page/wordle_page.dart';
 
-class StartPage extends StatelessWidget {
-  StartPage({final Key? key}) : super(key: key);
+class StartPage extends StatefulWidget {
+  const StartPage({final Key? key}) : super(key: key);
 
-  final PerthleNavigator _navigator = PerthleNavigator(
-    pageController: PageController(),
-  );
+  @override
+  State<StartPage> createState() => _StartPageState();
+}
+
+class _StartPageState extends State<StartPage> {
+  late PerthleNavigator _navigator;
+
+  @override
+  void initState() {
+    _navigator = PerthleNavigator(pageController: PageController());
+    super.initState();
+  }
 
   @override
   Widget build(final BuildContext context) {
