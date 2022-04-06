@@ -75,4 +75,32 @@ class LocalStorageController extends StorageController {
   Future<void> setSettings(final SettingsData settings) async {
     await _settingsStorage.setItem(_settingsKey, settings);
   }
+
+  @override
+  Future<void> save<T>(final T data) async {
+    if (data is SettingsData) {
+      await setSettings(data);
+    } else if (data is List<SavedGameData>) {
+      for (SavedGameData game in data) {
+        await addSavedGame(game);
+      }
+    } else if (data is CurrentGameData?) {
+      await saveCurrentGame(data);
+    } else {
+      throw UnsupportedError('Unsupported type $T and data $data');
+    }
+  }
+
+  @override
+  Future<T?> load<T>() async {
+    if (T == SettingsData) {
+      return await loadSettings() as T;
+    } else if (T == List) {
+      return await loadSavedGames() as T;
+    } else if (T == CurrentGameData) {
+      return await loadCurrentGame() as T;
+    } else {
+      throw UnsupportedError('Unsupported type $T');
+    }
+  }
 }

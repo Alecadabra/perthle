@@ -9,12 +9,7 @@ import 'package:perthle/page/settings_page.dart';
 import 'package:perthle/page/wordle_page.dart';
 
 class StartPage extends StatelessWidget {
-  StartPage({
-    final Key? key,
-    required this.settings,
-  }) : super(key: key);
-
-  final SettingsData settings;
+  StartPage({final Key? key}) : super(key: key);
 
   final PerthleNavigator _navigator = PerthleNavigator(
     pageController: PageController(),
@@ -43,10 +38,9 @@ class StartPage extends StatelessWidget {
                       WordlePage(
                         daily: daily,
                         gameState: gameDataSnapshot.data,
-                        settings: settings,
                         navigator: _navigator,
                       ),
-                      // SettingsPage(navigator: _navigator),
+                      SettingsPage(navigator: _navigator),
                     ],
                   ),
                 )

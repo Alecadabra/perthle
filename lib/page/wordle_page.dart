@@ -1,7 +1,9 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_controller.dart';
 import 'package:perthle/controller/perthle_page_controller.dart';
+import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/controller/shake_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/controller/wordle_controller.dart';
@@ -18,13 +20,11 @@ class WordlePage extends StatefulWidget {
     final Key? key,
     required this.daily,
     required this.gameState,
-    required this.settings,
     required this.navigator,
   }) : super(key: key);
 
   final DailyController daily;
   final CurrentGameData? gameState;
-  final SettingsData settings;
   final PerthleNavigator navigator;
 
   @override
@@ -58,7 +58,7 @@ class _WordlePageState extends State<WordlePage>
       word: widget.daily.word,
       gameState: widget.gameState,
       onInvalidWord: () => setState(() => shaker.shake()),
-      hardMode: widget.settings.hardMode,
+      hardMode: true, // TODO Get value from settings
     );
     shaker = ShakeController(vsync: this);
   }
@@ -151,11 +151,14 @@ class _WordlePageState extends State<WordlePage>
                                   )
                               : null,
                         )
-                      : SharePanel(
-                          wordleController: wordle,
-                          daily: widget.daily,
-                          lightEmojis: widget.settings.lightEmojis,
-                        ),
+                      : BlocBuilder<SettingsCubit, SettingsData>(
+                          builder: (final context, final settings) {
+                          return SharePanel(
+                            wordleController: wordle,
+                            daily: widget.daily,
+                            lightEmojis: settings.lightEmojis,
+                          );
+                        }),
                 ),
               ),
             ),

@@ -1,12 +1,33 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:perthle/controller/persistent_cubit.dart';
+import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/settings_data.dart';
 
-class SettingsCubit extends Cubit<SettingsData> {
-  SettingsCubit({
-    required final SettingsData state,
-  }) : super(state);
+class SettingsCubit extends PersistentCubit<SettingsData> {
+  SettingsCubit({required final StorageController storage})
+      : super(
+          initialState: const SettingsData(),
+          storage: storage,
+        );
 
-  bool get hardMode => state.hardMode;
+  SettingsData edit({
+    final bool? hardMode,
+    final bool? lightEmojis,
+    final ThemeMode? themeMode,
+  }) {
+    SettingsData data = state.copyWith(
+      hardMode: hardMode,
+      lightEmojis: lightEmojis,
+      themeMode: themeMode,
+    );
+    emit(data);
+    return data;
+  }
 
-  set hardMode(final bool hardMode) => emit(state.copyWith(hardMode: hardMode));
+  @override
+  SettingsData? fromJson(final Map<String, dynamic> json) =>
+      SettingsData.fromJson(json);
+
+  @override
+  Map<String, dynamic> toJson(final SettingsData state) => state.toJson();
 }

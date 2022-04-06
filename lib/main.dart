@@ -1,5 +1,8 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/local_storage_controller.dart';
+import 'package:perthle/controller/settings_cubit.dart';
+import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/page/start_page.dart';
 import 'package:perthle/widget/inherited_storage_controller.dart';
@@ -23,35 +26,35 @@ class PerthleApp extends StatelessWidget {
   Widget build(final BuildContext context) {
     return InheritedStorageController(
       storageController: storage,
-      child: FutureBuilder<SettingsData>(
-          future: storage.loadSettings(),
-          builder: (final context, final snapshot) {
-            final SettingsData settings = snapshot.data ?? const SettingsData();
-
-            return NeumorphicApp(
-              title: 'Perthle',
-              themeMode: settings.themeMode,
-              theme: const NeumorphicThemeData(
-                textTheme: _textTheme,
-                defaultTextColor: Color(0xC3363A3F),
-                disabledColor: Color(0xFFACACAC),
-                accentColor: _matchGreen,
-                variantColor: _missYellow,
-              ),
-              darkTheme: const NeumorphicThemeData.dark(
-                textTheme: _textTheme,
-                baseColor: Color(0xFF32353A),
-                shadowLightColor: Color(0xFF8F8F8F),
-                shadowDarkColor: Color(0xC5000000),
-                shadowDarkColorEmboss: Color(0xff000000),
-                shadowLightColorEmboss: Color(0xB9FFFFFF),
-                defaultTextColor: Color(0x92DDE6E8),
-                accentColor: _matchGreen,
-                variantColor: _missYellow,
-              ),
-              home: StartPage(settings: settings),
-            );
-          }),
+      child: BlocProvider(
+        create: ((final context) => SettingsCubit(storage: storage)),
+        child: BlocBuilder<SettingsCubit, SettingsData>(
+            builder: (final context, final SettingsData settings) {
+          return NeumorphicApp(
+            title: 'Perthle',
+            themeMode: settings.themeMode,
+            theme: const NeumorphicThemeData(
+              textTheme: _textTheme,
+              defaultTextColor: Color(0xC3363A3F),
+              disabledColor: Color(0xFFACACAC),
+              accentColor: _matchGreen,
+              variantColor: _missYellow,
+            ),
+            darkTheme: const NeumorphicThemeData.dark(
+              textTheme: _textTheme,
+              baseColor: Color(0xFF32353A),
+              shadowLightColor: Color(0xFF8F8F8F),
+              shadowDarkColor: Color(0xC5000000),
+              shadowDarkColorEmboss: Color(0xff000000),
+              shadowLightColorEmboss: Color(0xB9FFFFFF),
+              defaultTextColor: Color(0x92DDE6E8),
+              accentColor: _matchGreen,
+              variantColor: _missYellow,
+            ),
+            home: StartPage(),
+          );
+        }),
+      ),
     );
   }
 }
