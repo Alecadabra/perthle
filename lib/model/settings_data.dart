@@ -32,7 +32,7 @@ class SettingsData {
   }) {
     return SettingsData(
       hardMode: hardMode ?? this.hardMode,
-      lightEmojis: lightEmojis ?? this.hardMode,
+      lightEmojis: lightEmojis ?? this.lightEmojis,
       themeMode: themeMode ?? this.themeMode,
     );
   }
