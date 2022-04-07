@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/local_storage_controller.dart';
 import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/model/settings_data.dart';
@@ -25,34 +26,43 @@ class PerthleApp extends StatelessWidget {
   Widget build(final BuildContext context) {
     return InheritedStorageController(
       storageController: storage,
-      child: BlocProvider(
-        create: ((final context) => SettingsCubit(storage: storage)),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (final context) => DailyCubit(),
+          ),
+          BlocProvider(
+            create: (final context) => SettingsCubit(storage: storage),
+          ),
+        ],
         child: BlocBuilder<SettingsCubit, SettingsData>(
+            buildWhen: (final previous, final current) =>
+                previous.themeMode != current.themeMode,
             builder: (final context, final SettingsData settings) {
-          return NeumorphicApp(
-            title: 'Perthle',
-            themeMode: settings.themeMode,
-            theme: const NeumorphicThemeData(
-              textTheme: _textTheme,
-              defaultTextColor: Color(0xC3363A3F),
-              disabledColor: Color(0xFFACACAC),
-              accentColor: _matchGreen,
-              variantColor: _missYellow,
-            ),
-            darkTheme: const NeumorphicThemeData.dark(
-              textTheme: _textTheme,
-              baseColor: Color(0xFF32353A),
-              shadowLightColor: Color(0xFF8F8F8F),
-              shadowDarkColor: Color(0xC5000000),
-              shadowDarkColorEmboss: Color(0xff000000),
-              shadowLightColorEmboss: Color(0xB9FFFFFF),
-              defaultTextColor: Color(0x92DDE6E8),
-              accentColor: _matchGreen,
-              variantColor: _missYellow,
-            ),
-            home: const StartPage(),
-          );
-        }),
+              return NeumorphicApp(
+                title: 'Perthle',
+                themeMode: settings.themeMode,
+                theme: const NeumorphicThemeData(
+                  textTheme: _textTheme,
+                  defaultTextColor: Color(0xC3363A3F),
+                  disabledColor: Color(0xFFACACAC),
+                  accentColor: _matchGreen,
+                  variantColor: _missYellow,
+                ),
+                darkTheme: const NeumorphicThemeData.dark(
+                  textTheme: _textTheme,
+                  baseColor: Color(0xFF32353A),
+                  shadowLightColor: Color(0xFF8F8F8F),
+                  shadowDarkColor: Color(0xC5000000),
+                  shadowDarkColorEmboss: Color(0xff000000),
+                  shadowLightColorEmboss: Color(0xB9FFFFFF),
+                  defaultTextColor: Color(0x92DDE6E8),
+                  accentColor: _matchGreen,
+                  variantColor: _missYellow,
+                ),
+                home: const StartPage(),
+              );
+            }),
       ),
     );
   }

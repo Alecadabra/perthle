@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/controller/dictionary_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/board_data.dart';
@@ -8,17 +9,19 @@ import 'package:perthle/model/letter_data.dart';
 import 'package:perthle/model/tile_match_data.dart';
 import 'package:perthle/model/wordle_completion_data.dart';
 
-class WordleController {
+class WordleController extends Cubit<CurrentGameData> {
   WordleController({
     required this.gameNum,
     required this.word,
     required this.onInvalidWord,
     final CurrentGameData? gameState,
     required this.hardMode,
-  })  : gameState = gameState ?? CurrentGameData(gameNum: gameNum, word: word),
-        dictionary = DictionaryController(wordLength: word.length);
+  })  : dictionary = DictionaryController(wordLength: word.length),
+        super(gameState ?? CurrentGameData(gameNum: gameNum, word: word));
 
-  final CurrentGameData gameState;
+  CurrentGameData get gameState => state;
+
+  // TODO Change to emit behaviour and change pages to build from bloc
 
   final int gameNum;
   final String word;

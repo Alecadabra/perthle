@@ -1,9 +1,12 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_controller.dart';
+import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/current_game_data.dart';
+import 'package:perthle/model/daily_data.dart';
 import 'package:perthle/page/settings_page.dart';
 import 'package:perthle/page/wordle_page.dart';
 
@@ -25,8 +28,6 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(final BuildContext context) {
-    DailyController daily = DailyController();
-
     return FutureBuilder<CurrentGameData?>(
       future: StorageController.of(context).loadCurrentGame(),
       builder: (
@@ -44,7 +45,6 @@ class _StartPageState extends State<StartPage> {
                     controller: _navigator.pageController,
                     children: [
                       WordlePage(
-                        daily: daily,
                         gameState: gameDataSnapshot.data,
                         navigator: _navigator,
                       ),

@@ -1,26 +1,21 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:perthle/controller/daily_controller.dart';
+import 'package:perthle/controller/daily_cubit.dart';
+import 'package:perthle/controller/settings_cubit.dart';
+import 'package:perthle/model/daily_data.dart';
+import 'package:perthle/model/settings_data.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:perthle/controller/wordle_controller.dart';
 import 'package:perthle/model/saved_game_data.dart';
 import 'package:perthle/model/tile_match_data.dart';
 
 class SharePanel extends StatelessWidget {
-  SharePanel({
+  const SharePanel({
     final Key? key,
-    required final WordleController wordleController,
-    required this.daily,
-    required this.lightEmojis,
-  })  : savedGameState = SavedGameData(
-          gameNum: daily.gameNum,
-          matches: wordleController.board.matches,
-        ),
-        super(key: key);
+    required this.savedGameState,
+  }) : super(key: key);
 
-  final DailyController daily;
   final SavedGameData savedGameState;
-  final bool lightEmojis;
 
   @override
   Widget build(final BuildContext context) {
@@ -46,14 +41,23 @@ class SharePanel extends StatelessWidget {
               ))
                 Expanded(
                   flex: 2,
-                  child: Text(
-                    daily.word,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
+                  child: BlocBuilder<DailyCubit, DailyData>(
+                      builder: (final context, final daily) {
+                    return Text(
+                      daily.word,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    );
+                  }),
                 ),
               Expanded(
                 flex: 10,
-                child: Text(savedGameState.shareableString(lightEmojis)),
+                child: BlocBuilder<SettingsCubit, SettingsData>(
+                  buildWhen: (final previous, final current) =>
+                      previous.lightEmojis == current.lightEmojis,
+                  builder: (final context, final settings) => Text(
+                    savedGameState.shareableString(settings.lightEmojis),
+                  ),
+                ),
               ),
               const Spacer(),
               Expanded(
@@ -63,29 +67,42 @@ class SharePanel extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 20,
-                      child: OutlinedButton(
-                        child: const Text('Share'),
-                        onPressed: () {
-                          Share.share(
-                            savedGameState.shareableString(lightEmojis),
-                            subject: 'Perthle ${savedGameState.gameNum}',
-                          );
-                        },
-                      ),
+                      child: BlocBuilder<SettingsCubit, SettingsData>(
+                          buildWhen: (final previous, final current) =>
+                              previous.lightEmojis == current.lightEmojis,
+                          builder: (final context, final settings) {
+                            return OutlinedButton(
+                              child: const Text('Share'),
+                              onPressed: () {
+                                Share.share(
+                                  savedGameState
+                                      .shareableString(settings.lightEmojis),
+                                  subject: 'Perthle ${savedGameState.gameNum}',
+                                );
+                              },
+                            );
+                          }),
                     ),
                     const SizedBox(width: 16),
                     Expanded(
                       flex: 8,
                       child: Tooltip(
                         message: 'Copy to Clipboard',
-                        child: OutlinedButton(
-                          child: const Icon(Icons.copy_outlined, size: 18),
-                          onPressed: () => Clipboard.setData(
-                            ClipboardData(
-                              text: savedGameState.shareableString(lightEmojis),
-                            ),
-                          ),
-                        ),
+                        child: BlocBuilder<SettingsCubit, SettingsData>(
+                            buildWhen: (final previous, final current) =>
+                                previous.lightEmojis == current.lightEmojis,
+                            builder: (final context, final settings) {
+                              return OutlinedButton(
+                                child:
+                                    const Icon(Icons.copy_outlined, size: 18),
+                                onPressed: () => Clipboard.setData(
+                                  ClipboardData(
+                                    text: savedGameState
+                                        .shareableString(settings.lightEmojis),
+                                  ),
+                                ),
+                              );
+                            }),
                       ),
                     )
                   ],

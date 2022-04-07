@@ -2,13 +2,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_controller.dart';
+import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/controller/shake_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/controller/wordle_controller.dart';
 import 'package:perthle/model/current_game_data.dart';
+import 'package:perthle/model/daily_data.dart';
 import 'package:perthle/model/letter_data.dart';
+import 'package:perthle/model/saved_game_data.dart';
 import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
@@ -19,12 +22,10 @@ import 'package:perthle/widget/wordle_keyboard.dart';
 class WordlePage extends StatefulWidget {
   const WordlePage({
     final Key? key,
-    required this.daily,
     required this.gameState,
     required this.navigator,
   }) : super(key: key);
 
-  final DailyController daily;
   final CurrentGameData? gameState;
   final PerthleNavigator navigator;
 
@@ -55,8 +56,8 @@ class _WordlePageState extends State<WordlePage>
     super.initState();
     rootFocus = FocusNode();
     wordle = WordleController(
-      gameNum: widget.daily.gameNum,
-      word: widget.daily.word,
+      gameNum: context.read<DailyCubit>().state.gameNum,
+      word: context.read<DailyCubit>().state.word,
       gameState: widget.gameState,
       onInvalidWord: () => setState(() => shaker.shake()),
       hardMode: true, // TODO Get value from settings
@@ -90,11 +91,14 @@ class _WordlePageState extends State<WordlePage>
         }
       },
       child: PerthleScaffold(
-        appBar: PerthleAppBar(
-          title: '${widget.daily.gameModeString} ${widget.daily.gameNum}',
-          lightSource: _lightSource,
-          shaker: shaker,
-        ),
+        appBar: BlocBuilder<DailyCubit, DailyData>(
+            builder: (final context, final daily) {
+          return PerthleAppBar(
+            title: '${daily.gameModeString} ${daily.gameNum}',
+            lightSource: _lightSource,
+            shaker: shaker,
+          );
+        }),
         body: Column(
           children: [
             // Board
@@ -133,12 +137,13 @@ class _WordlePageState extends State<WordlePage>
                                   )
                               : null,
                         )
-                      : BlocBuilder<SettingsCubit, SettingsData>(
-                          builder: (final context, final settings) {
+                      : BlocBuilder<DailyCubit, DailyData>(
+                          builder: (final context, final daily) {
                           return SharePanel(
-                            wordleController: wordle,
-                            daily: widget.daily,
-                            lightEmojis: settings.lightEmojis,
+                            savedGameState: SavedGameData(
+                              gameNum: daily.gameNum,
+                              matches: wordle.board.matches,
+                            ),
                           );
                         }),
                 ),
