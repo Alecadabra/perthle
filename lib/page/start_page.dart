@@ -5,7 +5,7 @@ import 'package:perthle/controller/daily_controller.dart';
 import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
-import 'package:perthle/model/current_game_data.dart';
+import 'package:perthle/model/game_data.dart';
 import 'package:perthle/model/daily_data.dart';
 import 'package:perthle/page/settings_page.dart';
 import 'package:perthle/page/wordle_page.dart';
@@ -28,11 +28,11 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(final BuildContext context) {
-    return FutureBuilder<CurrentGameData?>(
+    return FutureBuilder<GameData?>(
       future: StorageController.of(context).loadCurrentGame(),
       builder: (
         final BuildContext context,
-        final AsyncSnapshot<CurrentGameData?> gameDataSnapshot,
+        final AsyncSnapshot<GameData?> gameDataSnapshot,
       ) {
         return AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),

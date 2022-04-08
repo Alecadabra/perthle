@@ -29,6 +29,13 @@ class KeyboardData {
     _keys[letter] = match;
   }
 
+  KeyboardData clone() => KeyboardData(
+        keys: {
+          for (MapEntry<LetterData, TileMatchData> entry in _keys.entries)
+            entry.key: entry.value,
+        },
+      );
+
   Map<String, dynamic> toJson() {
     return {
       for (LetterData letter in _keys.keys)

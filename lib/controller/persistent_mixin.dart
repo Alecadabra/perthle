@@ -20,6 +20,8 @@ mixin PersistentMixin<State> on BlocBase<State> {
   @override
   void onChange(final Change<State> change) {
     super.onChange(change);
-    _storage?.save(change.nextState).then((final _) {});
+    if (change.currentState != change.nextState) {
+      _storage?.save(change.nextState).then((final _) {});
+    }
   }
 }

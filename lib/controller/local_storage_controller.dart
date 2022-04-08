@@ -2,7 +2,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:perthle/controller/daily_controller.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/saved_game_data.dart';
-import 'package:perthle/model/current_game_data.dart';
+import 'package:perthle/model/game_data.dart';
 import 'package:perthle/model/settings_data.dart';
 
 class LocalStorageController extends StorageController {
@@ -13,7 +13,7 @@ class LocalStorageController extends StorageController {
   final LocalStorage _settingsStorage = LocalStorage('settings.json');
 
   @override
-  Future<CurrentGameData?> loadCurrentGame() async {
+  Future<GameData?> loadCurrentGame() async {
     final Map<String, dynamic>? json = await _currentGameStorage.getItem(
       '$_gameNum',
     );
@@ -21,16 +21,14 @@ class LocalStorageController extends StorageController {
     if (json == null) {
       return null;
     } else {
-      return CurrentGameData.fromJson(json);
+      return GameData.fromJson(json);
     }
   }
 
   @override
-  Future<void> saveCurrentGame(final CurrentGameData? currentGame) async {
+  Future<void> saveCurrentGame(final GameData currentGame) async {
     await _currentGameStorage.clear();
-    if (currentGame != null) {
-      await _currentGameStorage.setItem('$_gameNum', currentGame);
-    }
+    await _currentGameStorage.setItem('$_gameNum', currentGame);
   }
 
   @override
@@ -84,7 +82,7 @@ class LocalStorageController extends StorageController {
       for (SavedGameData game in data) {
         await addSavedGame(game);
       }
-    } else if (data is CurrentGameData?) {
+    } else if (data is GameData) {
       await saveCurrentGame(data);
     } else {
       throw UnsupportedError('Unsupported type $T and data $data');
@@ -97,8 +95,8 @@ class LocalStorageController extends StorageController {
       return await loadSettings() as T;
     } else if (T == List) {
       return await loadSavedGames() as T;
-    } else if (T == CurrentGameData) {
-      return await loadCurrentGame() as T;
+    } else if (T == GameData) {
+      return await loadCurrentGame() as T?;
     } else {
       throw UnsupportedError('Unsupported type $T');
     }

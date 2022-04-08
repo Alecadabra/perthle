@@ -4,8 +4,8 @@ import 'package:perthle/model/tile_match_data.dart';
 /// Mutable state of the wordle game board, usually 5x6.
 class BoardData {
   BoardData({
-    this.width = 5,
-    this.height = 6,
+    required this.width,
+    required this.height,
     final List<List<LetterData?>>? letters,
     final List<List<TileMatchData>>? matches,
   })  : letters = letters ??
@@ -50,6 +50,20 @@ class BoardData {
   final List<List<LetterData?>> letters;
 
   final List<List<TileMatchData>> matches;
+
+  BoardData copyWith({
+    final int? width,
+    final int? height,
+    final List<List<LetterData?>>? letters,
+    final List<List<TileMatchData>>? matches,
+  }) {
+    return BoardData(
+      width: width ?? this.width,
+      height: height ?? this.height,
+      letters: letters ?? this.letters,
+      matches: matches ?? this.matches,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {

@@ -1,4 +1,7 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/controller/game_bloc.dart';
+import 'package:perthle/model/game_data.dart';
 import 'package:perthle/model/letter_data.dart';
 import 'package:perthle/model/tile_match_data.dart';
 import 'package:perthle/widget/keyboard_button.dart';
@@ -7,17 +10,17 @@ class KeyboardLetterButton extends StatelessWidget {
   const KeyboardLetterButton({
     final Key? key,
     required this.letter,
-    required this.tileMatch,
     this.flex = 10,
-    this.onPressed,
   }) : super(key: key);
 
   final LetterData letter;
-  final TileMatchData tileMatch;
   final int flex;
-  final void Function()? onPressed;
 
-  Color? _color(final BuildContext context) {
+  Color? _color(
+    final BuildContext context,
+    final bool canType,
+    final TileMatchData tileMatch,
+  ) {
     Color base;
 
     switch (tileMatch) {
@@ -35,14 +38,18 @@ class KeyboardLetterButton extends StatelessWidget {
         break;
     }
 
-    if (tileMatch != TileMatchData.blank && onPressed == null) {
+    if (tileMatch != TileMatchData.blank && !canType) {
       base = base.withAlpha(0xaa);
     }
 
     return base;
   }
 
-  Color _textColor(final BuildContext context) {
+  Color _textColor(
+    final BuildContext context,
+    final bool canType,
+    final TileMatchData tileMatch,
+  ) {
     Color base;
 
     if (tileMatch == TileMatchData.blank) {
@@ -51,17 +58,22 @@ class KeyboardLetterButton extends StatelessWidget {
       base = NeumorphicTheme.baseColor(context);
     }
 
-    if (tileMatch == TileMatchData.blank && onPressed == null) {
+    if (tileMatch == TileMatchData.blank && !canType) {
       base = base.withAlpha(0x77);
     }
 
     return base;
   }
 
-  ButtonStyle _buttonStyle(final BuildContext context) {
+  ButtonStyle _buttonStyle(
+    final BuildContext context,
+    final bool canType,
+    final TileMatchData tileMatch,
+  ) {
     return ButtonStyle(
       minimumSize: MaterialStateProperty.all(const Size(100, 80)),
-      backgroundColor: MaterialStateProperty.all(_color(context)),
+      backgroundColor:
+          MaterialStateProperty.all(_color(context, canType, tileMatch)),
       elevation: MaterialStateProperty.all(0),
       enableFeedback: true,
     );
@@ -69,19 +81,26 @@ class KeyboardLetterButton extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return KeyboardButton(
-      flex: flex,
-      child: Text(
-        letter.letterString,
-        style: Theme.of(context).textTheme.headline6!.apply(
-              color: _textColor(context),
-              fontFamily: 'Poppins',
-              fontWeightDelta: -1,
-            ),
-        textAlign: TextAlign.center,
-      ),
-      onPressed: onPressed,
-      style: _buttonStyle(context),
+    return BlocBuilder<GameBloc, GameData>(
+      builder: (final context, final gameData) {
+        bool canType = gameData.canType;
+        TileMatchData tileMatch = gameData.keyboard[letter];
+        return KeyboardButton(
+          flex: flex,
+          child: Text(
+            letter.letterString,
+            style: Theme.of(context).textTheme.headline6!.apply(
+                  color: _textColor(context, canType, tileMatch),
+                  fontFamily: 'Poppins',
+                  fontWeightDelta: -1,
+                ),
+            textAlign: TextAlign.center,
+          ),
+          onPressed:
+              gameData.canType ? () => GameBloc.of(context).type(letter) : null,
+          style: _buttonStyle(context, canType, tileMatch),
+        );
+      },
     );
   }
 }
