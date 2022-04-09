@@ -1,8 +1,6 @@
 name: Preview CD
 on:
   push:
-    branches:
-      - '**'
     branches-ignore:
       - main
 jobs:
