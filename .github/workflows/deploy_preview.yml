@@ -1,0 +1,40 @@
+name: Preview CD
+on:
+  push:
+    branches-ignore:
+      - main
+jobs:
+  build_web:
+    name: Build Flutter (Web)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: subosito/flutter-action@main
+      with:
+          channel: 'stable'
+    - run: flutter pub get
+    - run: flutter build web
+    - name: Archive Production Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: web-build
+        path: build/web
+  deploy_web:
+    name: Deploy Web to Firebase Hosting
+    needs: build_web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: web-build
+          path: web-build
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: hosting:channel:deploy preview
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_ID: default
