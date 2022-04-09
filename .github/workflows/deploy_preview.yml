@@ -30,13 +30,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: web-build
-          path: web-build
-      - name: Extract branch name
-        run: echo running on branch ${GITHUB_REF##*/}
+          path: public
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
-          args: hosting:channel:deploy --public web-build ${GITHUB_REF##*/}
+          args: hosting:channel:deploy ${GITHUB_REF##*/}
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_ID: default
