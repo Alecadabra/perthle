@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:perthle/controller/game_bloc.dart';
-import 'package:perthle/model/game_data.dart';
 import 'package:perthle/model/letter_data.dart';
 import 'package:perthle/widget/keyboard_icon_button.dart';
 import 'package:perthle/widget/keyboard_letter_button.dart';

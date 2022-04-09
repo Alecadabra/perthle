@@ -1,25 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:perthle/model/game_data.dart';
-import 'package:perthle/model/saved_game_data.dart';
-import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/widget/inherited_storage_controller.dart';
 
 abstract class StorageController {
-  Future<GameData?> loadCurrentGame();
+  const StorageController();
 
-  Future<void> saveCurrentGame(final GameData currentGame);
+  Future<void> save(final String key, final Map<String, dynamic> data);
 
-  Future<List<SavedGameData>> loadSavedGames();
-
-  Future<void> addSavedGame(final SavedGameData savedGame);
-
-  Future<SettingsData> loadSettings();
-
-  Future<void> setSettings(final SettingsData settings);
-
-  Future<void> save<T>(final T data);
-
-  Future<T?> load<T>();
+  Future<Map<String, dynamic>?> load(final String key);
 
   /// Retrieves a StorageController from the nearest InheritedStorageController
   /// in the widget tree, if there is one

@@ -17,11 +17,9 @@ import 'package:perthle/widget/wordle_keyboard.dart';
 class WordlePage extends StatefulWidget {
   const WordlePage({
     final Key? key,
-    required this.gameState,
     required this.navigator,
   }) : super(key: key);
 
-  final GameData? gameState;
   final PerthleNavigator navigator;
 
   @override

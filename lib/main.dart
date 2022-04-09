@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_cubit.dart';
+import 'package:perthle/controller/dictionary_cubit.dart';
 import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/controller/local_storage_controller.dart';
 import 'package:perthle/controller/settings_cubit.dart';
@@ -33,9 +34,15 @@ class PerthleApp extends StatelessWidget {
             create: (final context) => DailyCubit(),
           ),
           BlocProvider(
+            create: (final context) => DictionaryCubit(
+              dailyCubit: DailyCubit.of(context),
+            ),
+          ),
+          BlocProvider(
             create: (final context) => GameBloc(
               storage: storage,
-              dailyCubit: context.read<DailyCubit>(),
+              dailyCubit: DailyCubit.of(context),
+              dictionaryCubit: DictionaryCubit.of(context),
             ),
           ),
           BlocProvider(

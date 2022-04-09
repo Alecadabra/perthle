@@ -7,7 +7,13 @@ abstract class PersistentBloc<Event, State> extends Bloc<Event, State>
   PersistentBloc({
     required final State initialState,
     required final StorageController storage,
-  }) : super(initialState) {
-    persist(storage);
+  })  : _storage = storage,
+        super(initialState) {
+    persist();
   }
+
+  final StorageController _storage;
+
+  @override
+  StorageController get storage => _storage;
 }

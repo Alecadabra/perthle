@@ -7,7 +7,13 @@ abstract class PersistentCubit<State> extends Cubit<State>
   PersistentCubit({
     required final State initialState,
     required final StorageController storage,
-  }) : super(initialState) {
-    persist(storage);
+  })  : _storage = storage,
+        super(initialState) {
+    persist();
   }
+
+  final StorageController _storage;
+
+  @override
+  StorageController get storage => _storage;
 }

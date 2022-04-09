@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/controller/daily_cubit.dart';
-import 'package:perthle/controller/dictionary_controller.dart';
+import 'package:perthle/controller/dictionary_cubit.dart';
 import 'package:perthle/controller/game_event.dart';
 import 'package:perthle/controller/persistent_bloc.dart';
 import 'package:perthle/controller/storage_controller.dart';
+import 'package:perthle/model/daily_data.dart';
+import 'package:perthle/model/dictionary_data.dart';
 import 'package:perthle/model/game_data.dart';
 import 'package:perthle/model/keyboard_data.dart';
 import 'package:perthle/model/letter_data.dart';
@@ -19,11 +21,8 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
   GameBloc({
     required final StorageController storage,
     required this.dailyCubit,
-  })  : dictionary = DictionaryController(
-          // TODO Set dictionary loaded event
-          wordLength: dailyCubit.state.word.length,
-        ),
-        super(
+    required this.dictionaryCubit,
+  }) : super(
           storage: storage,
           initialState: GameData(
             gameNum: dailyCubit.state.gameNum,
@@ -32,6 +31,9 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
         ) {
     dailySubscription = dailyCubit.stream.listen(
       (final daily) => add(GameNewDailyEvent(daily)),
+    );
+    dictionarySubscription = dictionaryCubit.stream.listen(
+      (final dictionary) => add(GameDictionaryLoadedEvent(dictionary == null)),
     );
 
     on<GameNewDailyEvent>(_newDaily);
@@ -43,11 +45,12 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
   }
 
   final DailyCubit dailyCubit;
-  late StreamSubscription dailySubscription;
+  late StreamSubscription<DailyData> dailySubscription;
+
+  final DictionaryCubit dictionaryCubit;
+  late StreamSubscription<DictionaryData?> dictionarySubscription;
 
   // final bool hardMode; TODO Hard mode
-
-  final DictionaryController dictionary;
 
   void type(final LetterData letter) {
     if (state.canType) {
@@ -65,7 +68,9 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
     if (state.canEnter) {
       add(
         GameEnterEvent(
-          dictionary.isValidWord(state.board.letters[state.currRow].join()),
+          dictionaryCubit.isValidWord(
+            state.board.letters[state.currRow].join(),
+          ),
         ),
       );
     }
@@ -73,10 +78,15 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
 
   @override
   GameData? fromJson(final Map<String, dynamic> json) =>
-      GameData.fromJson(json);
+      GameData.fromJson(json['${state.gameNum}']);
 
   @override
-  Map<String, dynamic> toJson(final GameData state) => state.toJson();
+  Map<String, dynamic> toJson(final GameData state) => {
+        '${state.gameNum}': state.toJson(), // Key used for backwards compat
+      };
+
+  @override
+  String get key => 'current_game';
 
   static GameBloc of(final BuildContext context) =>
       BlocProvider.of<GameBloc>(context);

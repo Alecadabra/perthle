@@ -5,23 +5,31 @@ mixin PersistentMixin<State> on BlocBase<State> {
   State? fromJson(final Map<String, dynamic> json);
   Map<String, dynamic> toJson(final State state);
 
-  StorageController? _storage;
+  StorageController get storage;
+  String get key;
 
-  void persist(final StorageController storage) {
-    _storage = storage;
-
-    storage.load<State>().then((final State? value) {
-      if (value != null) {
-        emit(value);
-      }
-    });
+  void persist() {
+    storage.load(key).then(
+      (final Map<String, dynamic>? json) {
+        if (json != null) {
+          try {
+            final State? loadedState = fromJson(json);
+            if (loadedState != null) {
+              emit(loadedState);
+            }
+          } catch (_) {
+            rethrow; // TODO Don't throw
+          }
+        }
+      },
+    );
   }
 
   @override
   void onChange(final Change<State> change) {
     super.onChange(change);
     if (change.currentState != change.nextState) {
-      _storage?.save(change.nextState).then((final _) {});
+      storage.save(key, toJson(change.nextState)).then((final _) {});
     }
   }
 }
