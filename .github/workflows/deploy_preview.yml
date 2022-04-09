@@ -31,10 +31,12 @@ jobs:
         with:
           name: web-build
           path: web-build
+      - name: Extract branch name
+        run: echo running on branch ${GITHUB_REF##*/}
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
-          args: hosting:channel:deploy preview
+          args: hosting:channel:deploy --public web-build ${GITHUB_REF##*/}
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_ID: default
