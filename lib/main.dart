@@ -9,7 +9,10 @@ import 'package:perthle/model/settings_data.dart';
 import 'package:perthle/page/start_page.dart';
 import 'package:perthle/widget/inherited_storage_controller.dart';
 
-main() => runApp(PerthleApp());
+main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(PerthleApp());
+}
 
 class PerthleApp extends StatelessWidget {
   PerthleApp({final Key? key}) : super(key: key);

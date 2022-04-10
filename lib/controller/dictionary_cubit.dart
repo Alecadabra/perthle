@@ -19,7 +19,7 @@ class DictionaryCubit extends PersistentCubit<DictionaryData?> {
         ) {
     dailySubscription = dailyCubit.stream.listen(
       (final daily) {
-        emit(null); // Remove the yesterday's dictionary
+        emit(null); // Remove yesterday's dictionary
         persist(); // Start loading today's dictionary
       },
     );

@@ -8,24 +8,19 @@ class LocalStorageController extends StorageController {
     for (MapEntry<String, dynamic> entry in data.entries) {
       await storage.setItem(entry.key, entry.value);
     }
-    storage.dispose();
   }
 
   @override
   Future<Map<String, dynamic>?> load(final String key) async {
     LocalStorage storage = _storage(key);
-    try {
-      final Map<String, dynamic>? data = await storage.getItem(key);
-      if (data == null) {
-        return null;
-      } else {
-        return {
-          for (MapEntry<String, dynamic> entry in data.entries)
-            entry.key: entry.value,
-        };
-      }
-    } finally {
-      storage.dispose();
+    final Map<String, dynamic>? data = await storage.getItem(key);
+    if (data == null) {
+      return null;
+    } else {
+      return {
+        for (MapEntry<String, dynamic> entry in data.entries)
+          entry.key: entry.value,
+      };
     }
   }
 
