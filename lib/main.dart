@@ -53,34 +53,33 @@ class PerthleApp extends StatelessWidget {
           ),
         ],
         child: BlocBuilder<SettingsCubit, SettingsData>(
-          buildWhen: (final previous, final current) =>
-              previous.themeMode != current.themeMode,
-          builder: (final context, final SettingsData settings) {
-            return NeumorphicApp(
-              title: 'Perthle',
-              themeMode: settings.themeMode,
-              theme: const NeumorphicThemeData(
-                textTheme: _textTheme,
-                defaultTextColor: Color(0xC3363A3F),
-                disabledColor: Color(0xFFACACAC),
-                accentColor: _matchGreen,
-                variantColor: _missYellow,
-              ),
-              darkTheme: const NeumorphicThemeData.dark(
-                textTheme: _textTheme,
-                baseColor: Color(0xFF32353A),
-                shadowLightColor: Color(0xFF8F8F8F),
-                shadowDarkColor: Color(0xC5000000),
-                shadowDarkColorEmboss: Color(0xff000000),
-                shadowLightColorEmboss: Color(0xB9FFFFFF),
-                defaultTextColor: Color(0x92DDE6E8),
-                accentColor: _matchGreen,
-                variantColor: _missYellow,
-              ),
-              home: const StartPage(),
-            );
-          },
-        ),
+            buildWhen: (final previous, final current) =>
+                previous.themeMode != current.themeMode,
+            builder: (final context, final SettingsData settings) {
+              return NeumorphicApp(
+                title: 'Perthle',
+                themeMode: settings.themeMode,
+                theme: const NeumorphicThemeData(
+                  textTheme: _textTheme,
+                  defaultTextColor: Color(0xC3363A3F),
+                  disabledColor: Color(0xFFACACAC),
+                  accentColor: _matchGreen,
+                  variantColor: _missYellow,
+                ),
+                darkTheme: const NeumorphicThemeData.dark(
+                  textTheme: _textTheme,
+                  baseColor: Color(0xFF32353A),
+                  shadowLightColor: Color(0xFF8F8F8F),
+                  shadowDarkColor: Color(0xC5000000),
+                  shadowDarkColorEmboss: Color(0xff000000),
+                  shadowLightColorEmboss: Color(0xB9FFFFFF),
+                  defaultTextColor: Color(0x92DDE6E8),
+                  accentColor: _matchGreen,
+                  variantColor: _missYellow,
+                ),
+                home: const StartPage(),
+              );
+            }),
       ),
     );
   }

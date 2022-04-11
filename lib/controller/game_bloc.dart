@@ -33,7 +33,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
       (final daily) => add(GameNewDailyEvent(daily)),
     );
     dictionarySubscription = dictionaryCubit.stream.listen(
-      (final dictionary) => add(GameDictionaryLoadedEvent(dictionary != null)),
+      (final dictionary) => add(GameDictionaryLoadedEvent(dictionary == null)),
     );
 
     on<GameNewDailyEvent>(_newDaily);
