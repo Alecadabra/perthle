@@ -196,15 +196,6 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
         predicate: (final i, final letterString) => true,
       );
 
-      emit(
-        state.copyWith(
-          keyboard: newKeyboard,
-          board: state.board.copyWith(matches: newMatches),
-          currRow: state.currRow + 1,
-          currCol: 0,
-        ),
-      );
-
       // Check end of game condition
       if (newMatches[state.currRow].every(
         (final match) => match == TileMatchData.match,
@@ -213,6 +204,15 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
       } else if (state.currRow == state.board.height) {
         add(const GameCompletionEvent(WordleCompletionData.lost));
       }
+
+      emit(
+        state.copyWith(
+          keyboard: newKeyboard,
+          board: state.board.copyWith(matches: newMatches),
+          currRow: state.currRow + 1,
+          currCol: 0,
+        ),
+      );
     }
   }
 
