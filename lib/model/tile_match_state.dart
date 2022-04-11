@@ -1,5 +1,5 @@
 /// Immutable enumeration representing a wordle letter's state.
-enum TileMatchData {
+enum TileMatchState {
   /// This tile has not yet been part of a guess.
   blank,
 
@@ -15,16 +15,16 @@ enum TileMatchData {
   match,
 }
 
-extension TileMatchStatePrecedence on TileMatchData {
+extension TileMatchStatePrecedence on TileMatchState {
   int get precedence {
     switch (this) {
-      case TileMatchData.blank:
+      case TileMatchState.blank:
         return 0;
-      case TileMatchData.wrong:
+      case TileMatchState.wrong:
         return 1;
-      case TileMatchData.miss:
+      case TileMatchState.miss:
         return 2;
-      case TileMatchData.match:
+      case TileMatchState.match:
         return 3;
     }
   }

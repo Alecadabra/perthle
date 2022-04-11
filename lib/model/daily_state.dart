@@ -1,7 +1,7 @@
-import 'package:perthle/model/game_mode_data.dart';
+import 'package:perthle/model/game_mode_state.dart';
 
-class DailyData {
-  const DailyData({
+class DailyState {
+  const DailyState({
     required this.gameNum,
     required this.word,
     required this.gameMode,
@@ -9,15 +9,15 @@ class DailyData {
 
   final int gameNum;
   final String word;
-  final GameMode gameMode;
+  final GameModeState gameMode;
 
   String get gameModeString {
     switch (gameMode) {
-      case GameMode.perthle:
+      case GameModeState.perthle:
         return 'Perthle';
-      case GameMode.perthlonger:
+      case GameModeState.perthlonger:
         return 'Perthlonger';
-      case GameMode.special:
+      case GameModeState.special:
         return 'Perthl$_special';
     }
   }

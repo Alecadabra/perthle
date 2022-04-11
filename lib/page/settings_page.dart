@@ -3,7 +3,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/controller/shake_controller.dart';
-import 'package:perthle/model/settings_data.dart';
+import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 
@@ -105,7 +105,7 @@ class _SettingsRow extends StatelessWidget {
   }) : super(key: key);
 
   final String name;
-  final Widget Function(BuildContext, SettingsData) builder;
+  final Widget Function(BuildContext, SettingsState) builder;
 
   @override
   Widget build(final BuildContext context) {
@@ -115,7 +115,7 @@ class _SettingsRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(child: Text(name)),
-          BlocBuilder<SettingsCubit, SettingsData>(builder: builder),
+          BlocBuilder<SettingsCubit, SettingsState>(builder: builder),
         ],
       ),
     );

@@ -1,13 +1,13 @@
-import 'package:perthle/model/letter_data.dart';
-import 'package:perthle/model/tile_match_data.dart';
+import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/tile_match_state.dart';
 
 /// Mutable state of the wordle game board, usually 5x6.
-class BoardData {
-  BoardData({
+class BoardState {
+  BoardState({
     required this.width,
     required this.height,
-    final List<List<LetterData?>>? letters,
-    final List<List<TileMatchData>>? matches,
+    final List<List<LetterState?>>? letters,
+    final List<List<TileMatchState>>? matches,
   })  : letters = letters ??
             [
               for (int i = 0; i < height; i++)
@@ -19,10 +19,10 @@ class BoardData {
             [
               for (int i = 0; i < height; i++)
                 [
-                  for (int j = 0; j < width; j++) TileMatchData.blank,
+                  for (int j = 0; j < width; j++) TileMatchState.blank,
                 ],
             ];
-  BoardData.fromJson(final Map<String, dynamic> json)
+  BoardState.fromJson(final Map<String, dynamic> json)
       : this(
           width: json['width'],
           height: json['height'],
@@ -31,7 +31,7 @@ class BoardData {
               [
                 for (int j = 0; j < json['width']; j++)
                   json['letters'][i][j] != null
-                      ? LetterData(json['letters'][i][j])
+                      ? LetterState(json['letters'][i][j])
                       : null,
               ],
           ],
@@ -39,7 +39,7 @@ class BoardData {
             for (int i = 0; i < json['height']; i++)
               [
                 for (int j = 0; j < json['width']; j++)
-                  TileMatchData.values[json['matches'][i][j]],
+                  TileMatchState.values[json['matches'][i][j]],
               ],
           ],
         );
@@ -47,17 +47,17 @@ class BoardData {
   final int width;
   final int height;
 
-  final List<List<LetterData?>> letters;
+  final List<List<LetterState?>> letters;
 
-  final List<List<TileMatchData>> matches;
+  final List<List<TileMatchState>> matches;
 
-  BoardData copyWith({
+  BoardState copyWith({
     final int? width,
     final int? height,
-    final List<List<LetterData?>>? letters,
-    final List<List<TileMatchData>>? matches,
+    final List<List<LetterState?>>? letters,
+    final List<List<TileMatchState>>? matches,
   }) {
-    return BoardData(
+    return BoardState(
       width: width ?? this.width,
       height: height ?? this.height,
       letters: letters ?? this.letters,
@@ -70,15 +70,15 @@ class BoardData {
       'width': width,
       'height': height,
       'letters': [
-        for (List<LetterData?> row in letters)
+        for (List<LetterState?> row in letters)
           [
-            for (LetterData? letter in row) letter?.letterString,
+            for (LetterState? letter in row) letter?.letterString,
           ],
       ],
       'matches': [
-        for (List<TileMatchData> row in matches)
+        for (List<TileMatchState> row in matches)
           [
-            for (TileMatchData match in row) match.index,
+            for (TileMatchState match in row) match.index,
           ],
       ]
     };

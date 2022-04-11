@@ -5,7 +5,7 @@ import 'package:perthle/controller/dictionary_cubit.dart';
 import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/controller/local_storage_controller.dart';
 import 'package:perthle/controller/settings_cubit.dart';
-import 'package:perthle/model/settings_data.dart';
+import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/page/start_page.dart';
 import 'package:perthle/widget/inherited_storage_controller.dart';
 
@@ -52,10 +52,10 @@ class PerthleApp extends StatelessWidget {
             create: (final context) => SettingsCubit(storage: storage),
           ),
         ],
-        child: BlocBuilder<SettingsCubit, SettingsData>(
+        child: BlocBuilder<SettingsCubit, SettingsState>(
           buildWhen: (final previous, final current) =>
               previous.themeMode != current.themeMode,
-          builder: (final context, final SettingsData settings) {
+          builder: (final context, final SettingsState settings) {
             return NeumorphicApp(
               title: 'Perthle',
               themeMode: settings.themeMode,

@@ -1,29 +1,30 @@
-import 'package:perthle/model/board_data.dart';
-import 'package:perthle/model/keyboard_data.dart';
-import 'package:perthle/model/saved_game_data.dart';
-import 'package:perthle/model/wordle_completion_data.dart';
+import 'package:perthle/model/board_state.dart';
+import 'package:perthle/model/keyboard_state.dart';
+import 'package:perthle/model/saved_game_state.dart';
+import 'package:perthle/model/wordle_completion_state.dart';
 
-class GameData {
-  GameData({
+class GameState {
+  GameState({
     required this.gameNum,
     required this.word,
-    final WordleCompletionData? completion,
-    final KeyboardData? keyboard,
-    final BoardData? board,
+    final WordleCompletionState? completion,
+    final KeyboardState? keyboard,
+    final BoardState? board,
     this.currRow = 0,
     this.currCol = 0,
     this.dictionaryLoaded = false,
-  })  : completion = completion ?? WordleCompletionData.playing,
-        keyboard = keyboard ?? KeyboardData(),
-        board = board ?? BoardData(width: word.length, height: word.length + 1);
+  })  : completion = completion ?? WordleCompletionState.playing,
+        keyboard = keyboard ?? KeyboardState(),
+        board =
+            board ?? BoardState(width: word.length, height: word.length + 1);
   @override
-  GameData.fromJson(final Map<String, dynamic> json)
+  GameState.fromJson(final Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],
           word: json['word'],
-          completion: WordleCompletionData.values[json['completion']],
-          keyboard: KeyboardData.fromJson(json['keyboard']),
-          board: BoardData.fromJson(json['board']),
+          completion: WordleCompletionState.values[json['completion']],
+          keyboard: KeyboardState.fromJson(json['keyboard']),
+          board: BoardState.fromJson(json['board']),
           currRow: json['currRow'],
           currCol: json['currCol'],
         );
@@ -31,11 +32,11 @@ class GameData {
   final int gameNum;
   final String word;
 
-  final WordleCompletionData completion;
-  bool get inProgress => completion == WordleCompletionData.playing;
+  final WordleCompletionState completion;
+  bool get inProgress => completion == WordleCompletionState.playing;
 
-  final KeyboardData keyboard;
-  final BoardData board;
+  final KeyboardState keyboard;
+  final BoardState board;
 
   final int currRow;
   final int currCol;
@@ -49,17 +50,17 @@ class GameData {
   bool get canBackspace => currCol != 0 && inProgress;
   bool get canEnter => currCol >= _width && inProgress && dictionaryLoaded;
 
-  GameData copyWith({
+  GameState copyWith({
     final int? gameNum,
     final String? word,
-    final WordleCompletionData? completion,
-    final KeyboardData? keyboard,
-    final BoardData? board,
+    final WordleCompletionState? completion,
+    final KeyboardState? keyboard,
+    final BoardState? board,
     final int? currRow,
     final int? currCol,
     final bool? dictionaryLoaded,
   }) {
-    return GameData(
+    return GameState(
       gameNum: gameNum ?? this.gameNum,
       word: word ?? this.word,
       completion: completion ?? this.completion,
@@ -71,8 +72,8 @@ class GameData {
     );
   }
 
-  SavedGameData toSavedGame() {
-    return SavedGameData(gameNum: gameNum, matches: board.matches);
+  SavedGameState toSavedGame() {
+    return SavedGameState(gameNum: gameNum, matches: board.matches);
   }
 
   Map<String, dynamic> toJson() {

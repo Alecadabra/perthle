@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class SettingsData {
-  const SettingsData({
+class SettingsState {
+  const SettingsState({
     this.hardMode = false,
     this.lightEmojis = false,
     this.themeMode = ThemeMode.system,
   });
-  SettingsData.fromJson(final Map<String, dynamic> json)
+  SettingsState.fromJson(final Map<String, dynamic> json)
       : this(
           hardMode: json['hardMode'],
           lightEmojis: json['lightEmojis'],
@@ -25,12 +25,12 @@ class SettingsData {
     };
   }
 
-  SettingsData copyWith({
+  SettingsState copyWith({
     final bool? hardMode,
     final bool? lightEmojis,
     final ThemeMode? themeMode,
   }) {
-    return SettingsData(
+    return SettingsState(
       hardMode: hardMode ?? this.hardMode,
       lightEmojis: lightEmojis ?? this.lightEmojis,
       themeMode: themeMode ?? this.themeMode,

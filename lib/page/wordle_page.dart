@@ -5,9 +5,9 @@ import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/shake_controller.dart';
-import 'package:perthle/model/game_data.dart';
-import 'package:perthle/model/daily_data.dart';
-import 'package:perthle/model/letter_data.dart';
+import 'package:perthle/model/game_state.dart';
+import 'package:perthle/model/daily_state.dart';
+import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/share_panel.dart';
@@ -36,7 +36,7 @@ class _WordlePageState extends State<WordlePage>
   late FocusNode rootFocus;
 
   LightSource get _lightSource {
-    GameData gameData = GameBloc.of(context).state;
+    GameState gameData = GameBloc.of(context).state;
     return LightSource(
       gameData.currCol == gameData.board.width || !gameData.inProgress
           ? 0
@@ -74,12 +74,12 @@ class _WordlePageState extends State<WordlePage>
           gameBloc.backspace();
         } else if (logicalKey == LogicalKeyboardKey.enter) {
           gameBloc.enter();
-        } else if (char != null && LetterData.isValid(char)) {
-          gameBloc.type(LetterData(char));
+        } else if (char != null && LetterState.isValid(char)) {
+          gameBloc.type(LetterState(char));
         }
       },
       child: PerthleScaffold(
-        appBar: BlocBuilder<DailyCubit, DailyData>(
+        appBar: BlocBuilder<DailyCubit, DailyState>(
           builder: (final context, final daily) {
             return PerthleAppBar(
               title: '${daily.gameModeString} ${daily.gameNum}',
@@ -103,7 +103,7 @@ class _WordlePageState extends State<WordlePage>
                 width: _maxKeyboardWidth,
                 height: _maxKeyboardHeight,
                 padding: const EdgeInsets.symmetric(horizontal: 3),
-                child: BlocBuilder<GameBloc, GameData>(
+                child: BlocBuilder<GameBloc, GameState>(
                   builder: (final context, final gameData) {
                     return AnimatedSwitcher(
                       duration: const Duration(milliseconds: 400),

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/game_bloc.dart';
-import 'package:perthle/model/game_data.dart';
+import 'package:perthle/model/game_state.dart';
 import 'package:perthle/widget/keyboard_button.dart';
 
 class KeyboardIconButton extends StatelessWidget {
@@ -44,7 +44,7 @@ class KeyboardBackspaceButton extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return BlocBuilder<GameBloc, GameData>(
+    return BlocBuilder<GameBloc, GameState>(
         builder: (final context, final gameData) {
       return KeyboardIconButton(
         icon: const Icon(Icons.backspace_outlined),
@@ -61,7 +61,7 @@ class KeyboardEnterButton extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return BlocBuilder<GameBloc, GameData>(
+    return BlocBuilder<GameBloc, GameState>(
         builder: (final context, final gameData) {
       return KeyboardIconButton(
         icon: const Icon(Icons.keyboard_return_outlined),

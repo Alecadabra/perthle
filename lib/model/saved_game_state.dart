@@ -1,29 +1,29 @@
-import 'package:perthle/model/tile_match_data.dart';
+import 'package:perthle/model/tile_match_state.dart';
 
 /// Immutable storage for a particular completed wordle game.
-class SavedGameData {
-  const SavedGameData({required this.gameNum, required this.matches});
-  SavedGameData.fromJson(final Map<String, dynamic> json)
+class SavedGameState {
+  const SavedGameState({required this.gameNum, required this.matches});
+  SavedGameState.fromJson(final Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],
           matches: [
             for (int i = 0; i < json['matches'][0].length; i++)
               [
                 for (int j = 0; j < json['matches'].length; j++)
-                  TileMatchData.values[json['matches'][i][j]],
+                  TileMatchState.values[json['matches'][i][j]],
               ],
           ],
         );
 
   final int gameNum;
-  final List<List<TileMatchData>> matches;
+  final List<List<TileMatchState>> matches;
 
   String shareableString(final bool lightEmojis) {
     int maxAttempts = matches.length;
     int? usedAttempts; // Init to null
     for (int i = matches.length - 1; i >= 0; i--) {
       if (matches[i].every(
-        (final TileMatchData match) => match == TileMatchData.match,
+        (final TileMatchState match) => match == TileMatchState.match,
       )) {
         usedAttempts = i + 1;
         break; // TODO Cleaner algorithm
@@ -31,24 +31,24 @@ class SavedGameData {
     }
 
     // Matches matrix with blank rows removed
-    List<List<TileMatchData>> attempts = matches.sublist(
+    List<List<TileMatchState>> attempts = matches.sublist(
       0,
       usedAttempts ?? matches.length,
     );
 
     return 'Perthle $gameNum ${usedAttempts ?? 'X'}/$maxAttempts\n\n' +
         attempts.map(
-          (final List<TileMatchData> attempt) {
+          (final List<TileMatchState> attempt) {
             return attempt.map(
-              (final TileMatchData match) {
+              (final TileMatchState match) {
                 switch (match) {
-                  case TileMatchData.match:
+                  case TileMatchState.match:
                     return '🟩';
-                  case TileMatchData.miss:
+                  case TileMatchState.miss:
                     return '🟨';
-                  case TileMatchData.wrong:
+                  case TileMatchState.wrong:
                     return lightEmojis ? '⬜' : '⬛';
-                  case TileMatchData.blank:
+                  case TileMatchState.blank:
                     throw StateError('Blank match impossible');
                 }
               },
@@ -61,9 +61,9 @@ class SavedGameData {
     return {
       'gameNum': gameNum,
       'matches': [
-        for (List<TileMatchData> row in matches)
+        for (List<TileMatchState> row in matches)
           [
-            for (TileMatchData match in row) match.index,
+            for (TileMatchState match in row) match.index,
           ],
       ],
     };

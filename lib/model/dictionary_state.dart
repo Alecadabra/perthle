@@ -1,8 +1,8 @@
 import 'dart:collection';
 
-class DictionaryData {
-  const DictionaryData({required this.hashSet});
-  DictionaryData.fromJson(final Map<String, dynamic> json)
+class DictionaryState {
+  const DictionaryState({required this.hashSet});
+  DictionaryState.fromJson(final Map<String, dynamic> json)
       : this(hashSet: HashSet.of(json[jsonKey]));
 
   final HashSet hashSet;

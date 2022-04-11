@@ -2,16 +2,16 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:perthle/model/daily_data.dart';
-import 'package:perthle/model/game_mode_data.dart';
+import 'package:perthle/model/daily_state.dart';
+import 'package:perthle/model/game_mode_state.dart';
 
-class DailyCubit extends Cubit<DailyData> {
+class DailyCubit extends Cubit<DailyState> {
   DailyCubit() : super(resolve()) {
     emitTomorrow();
   }
 
   @override
-  void onChange(final Change<DailyData> change) {
+  void onChange(final Change<DailyState> change) {
     super.onChange(change);
     emitTomorrow();
   }
@@ -27,10 +27,10 @@ class DailyCubit extends Cubit<DailyData> {
     Future.delayed(timeUntilMidnight).then((final _) => emit(resolve()));
   }
 
-  static DailyData resolve() => dailyDataForDateTime(DateTime.now());
+  static DailyState resolve() => dailyDataForDateTime(DateTime.now());
 
-  static DailyData dailyDataForDateTime(final DateTime time) {
-    return DailyData(
+  static DailyState dailyDataForDateTime(final DateTime time) {
+    return DailyState(
       gameNum: gameNumForDateTime(time),
       word: wordForDateTime(time),
       gameMode: gameModeForDateTime(time),
@@ -43,13 +43,13 @@ class DailyCubit extends Cubit<DailyData> {
 
   static const String _special = '\u{75}\u{73}\u0073\u0079';
 
-  static GameMode gameModeForDateTime(final DateTime time) {
+  static GameModeState gameModeForDateTime(final DateTime time) {
     if (time.weekday < 6 || gameNumForDateTime(time) <= _originalListSize) {
-      return GameMode.perthle;
+      return GameModeState.perthle;
     } else if (time.weekday == 6) {
-      return GameMode.perthlonger;
+      return GameModeState.perthlonger;
     } else {
-      return GameMode.special;
+      return GameModeState.special;
     }
   }
 
@@ -62,27 +62,27 @@ class DailyCubit extends Cubit<DailyData> {
         gameModeForDateTime(time),
       );
 
-  static String wordForGame(final int game, final GameMode gameMode) {
+  static String wordForGame(final int game, final GameModeState gameMode) {
     if (game <= _originalListSize) {
       // Original Perthle
-      return DailyData.answers[game - 1].toUpperCase();
+      return DailyState.answers[game - 1].toUpperCase();
     } else {
-      if (gameMode == GameMode.perthle) {
+      if (gameMode == GameModeState.perthle) {
         // Perthle
         int index = game - _originalListSize - 1;
-        int length = DailyData.answers.length;
+        int length = DailyState.answers.length;
         int seed = index ~/ length;
-        var list = DailyData.answers.toList()..shuffle(Random(seed));
+        var list = DailyState.answers.toList()..shuffle(Random(seed));
         return list[index % length].toUpperCase();
-      } else if (gameMode == GameMode.perthlonger) {
+      } else if (gameMode == GameModeState.perthlonger) {
         // Perthlonger
         int index = (game - _originalListSize - 1) ~/ 7;
-        return DailyData.longAnswers[index % DailyData.longAnswers.length]
+        return DailyState.longAnswers[index % DailyState.longAnswers.length]
             .toUpperCase();
       } else {
         // Special
         int index = (game - _originalListSize - 1) ~/ 7;
-        return '${DailyData.specialAnswers[index % DailyData.specialAnswers.length]}$_special'
+        return '${DailyState.specialAnswers[index % DailyState.specialAnswers.length]}$_special'
             .toUpperCase();
       }
     }

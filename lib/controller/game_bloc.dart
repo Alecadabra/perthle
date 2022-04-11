@@ -7,24 +7,24 @@ import 'package:perthle/controller/dictionary_cubit.dart';
 import 'package:perthle/controller/game_event.dart';
 import 'package:perthle/controller/persistent_bloc.dart';
 import 'package:perthle/controller/storage_controller.dart';
-import 'package:perthle/model/daily_data.dart';
-import 'package:perthle/model/dictionary_data.dart';
-import 'package:perthle/model/game_data.dart';
-import 'package:perthle/model/keyboard_data.dart';
-import 'package:perthle/model/letter_data.dart';
-import 'package:perthle/model/tile_match_data.dart';
-import 'package:perthle/model/wordle_completion_data.dart';
+import 'package:perthle/model/daily_state.dart';
+import 'package:perthle/model/dictionary_state.dart';
+import 'package:perthle/model/game_state.dart';
+import 'package:perthle/model/keyboard_state.dart';
+import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/tile_match_state.dart';
+import 'package:perthle/model/wordle_completion_state.dart';
 
-typedef GameEmitter = Emitter<GameData>;
+typedef GameEmitter = Emitter<GameState>;
 
-class GameBloc extends PersistentBloc<GameEvent, GameData> {
+class GameBloc extends PersistentBloc<GameEvent, GameState> {
   GameBloc({
     required final StorageController storage,
     required this.dailyCubit,
     required this.dictionaryCubit,
   }) : super(
           storage: storage,
-          initialState: GameData(
+          initialState: GameState(
             gameNum: dailyCubit.state.gameNum,
             word: dailyCubit.state.word,
           ),
@@ -45,14 +45,14 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
   }
 
   final DailyCubit dailyCubit;
-  late StreamSubscription<DailyData> dailySubscription;
+  late StreamSubscription<DailyState> dailySubscription;
 
   final DictionaryCubit dictionaryCubit;
-  late StreamSubscription<DictionaryData?> dictionarySubscription;
+  late StreamSubscription<DictionaryState?> dictionarySubscription;
 
   // final bool hardMode; TODO Hard mode
 
-  void type(final LetterData letter) {
+  void type(final LetterState letter) {
     if (state.canType) {
       add(GameLetterTypeEvent(letter));
     }
@@ -77,11 +77,11 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
   }
 
   @override
-  GameData? fromJson(final Map<String, dynamic> json) =>
-      GameData.fromJson(json['${state.gameNum}']);
+  GameState? fromJson(final Map<String, dynamic> json) =>
+      GameState.fromJson(json['${state.gameNum}']);
 
   @override
-  Map<String, dynamic> toJson(final GameData state) => {
+  Map<String, dynamic> toJson(final GameState state) => {
         '${state.gameNum}': state.toJson(), // Key used for backwards compat
       };
 
@@ -95,7 +95,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
 
   void _newDaily(final GameNewDailyEvent event, final GameEmitter emit) {
     emit(
-      GameData(gameNum: event.dailyData.gameNum, word: event.dailyData.word),
+      GameState(gameNum: event.dailyData.gameNum, word: event.dailyData.word),
     );
   }
 
@@ -149,17 +149,17 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
       List<int> indicies = List.generate(state.board.width, (final i) => i);
       String effectiveWord = state.word;
 
-      List<List<TileMatchData>> newMatches = [
-        for (List<TileMatchData> row in state.board.matches) [...row],
+      List<List<TileMatchState>> newMatches = [
+        for (List<TileMatchState> row in state.board.matches) [...row],
       ];
-      KeyboardData newKeyboard = state.keyboard.clone();
+      KeyboardState newKeyboard = state.keyboard.clone();
 
       void revealPass({
-        required final TileMatchData match,
+        required final TileMatchState match,
         required final bool Function(int i, String letterString) predicate,
       }) {
         for (int i in indicies.toList()) {
-          LetterData letter = state.board.letters[state.currRow][i]!;
+          LetterState letter = state.board.letters[state.currRow][i]!;
           String letterString = letter.letterString;
 
           if (predicate(i, letterString)) {
@@ -178,31 +178,31 @@ class GameBloc extends PersistentBloc<GameEvent, GameData> {
 
       // Match pass (Green)
       revealPass(
-        match: TileMatchData.match,
+        match: TileMatchState.match,
         predicate: (final i, final letterString) =>
             state.word[i] == letterString,
       );
 
       // Miss pass (Yellow)
       revealPass(
-        match: TileMatchData.miss,
+        match: TileMatchState.miss,
         predicate: (final i, final letterString) =>
             effectiveWord.contains(letterString),
       );
 
       // Wrong pass (Grey)
       revealPass(
-        match: TileMatchData.wrong,
+        match: TileMatchState.wrong,
         predicate: (final i, final letterString) => true,
       );
 
       // Check end of game condition
       if (newMatches[state.currRow].every(
-        (final match) => match == TileMatchData.match,
+        (final match) => match == TileMatchState.match,
       )) {
-        add(const GameCompletionEvent(WordleCompletionData.won));
+        add(const GameCompletionEvent(WordleCompletionState.won));
       } else if (state.currRow == state.board.height) {
-        add(const GameCompletionEvent(WordleCompletionData.lost));
+        add(const GameCompletionEvent(WordleCompletionState.lost));
       }
 
       emit(

@@ -6,15 +6,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/controller/asset_storage_controller.dart';
 import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/persistent_cubit.dart';
-import 'package:perthle/model/daily_data.dart';
-import 'package:perthle/model/dictionary_data.dart';
+import 'package:perthle/model/daily_state.dart';
+import 'package:perthle/model/dictionary_state.dart';
 
-class DictionaryCubit extends PersistentCubit<DictionaryData?> {
+class DictionaryCubit extends PersistentCubit<DictionaryState?> {
   DictionaryCubit({required this.dailyCubit})
       : super(
           initialState: null,
           storage: const AssetStorageController(
-            listKey: DictionaryData.jsonKey,
+            listKey: DictionaryState.jsonKey,
           ),
         ) {
     dailySubscription = dailyCubit.stream.listen(
@@ -31,10 +31,10 @@ class DictionaryCubit extends PersistentCubit<DictionaryData?> {
   int get wordLength => dailyCubit.state.word.length;
   bool get isLoaded => state != null;
 
-  final HashSet<String> _answers = HashSet.of(DailyData.allAnswers);
+  final HashSet<String> _answers = HashSet.of(DailyState.allAnswers);
 
   bool isValidWord(final String word) {
-    final DictionaryData? _dictionary = state;
+    final DictionaryState? _dictionary = state;
     if (_dictionary == null) {
       throw StateError('isValidWord called before dictionary loaded');
     }
@@ -43,12 +43,12 @@ class DictionaryCubit extends PersistentCubit<DictionaryData?> {
   }
 
   @override
-  DictionaryData? fromJson(final Map<String, dynamic> json) {
-    return DictionaryData.fromJson(json);
+  DictionaryState? fromJson(final Map<String, dynamic> json) {
+    return DictionaryState.fromJson(json);
   }
 
   @override
-  Map<String, dynamic> toJson(final DictionaryData? state) => {};
+  Map<String, dynamic> toJson(final DictionaryState? state) => {};
 
   @override
   String get key => 'assets/dictionary/words_$wordLength.txt';

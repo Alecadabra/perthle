@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:perthle/model/daily_data.dart';
-import 'package:perthle/model/letter_data.dart';
-import 'package:perthle/model/wordle_completion_data.dart';
+import 'package:perthle/model/daily_state.dart';
+import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/wordle_completion_state.dart';
 
 abstract class GameEvent extends Equatable {
   const GameEvent();
@@ -9,7 +9,7 @@ abstract class GameEvent extends Equatable {
 
 class GameNewDailyEvent extends GameEvent {
   const GameNewDailyEvent(this.dailyData) : super();
-  final DailyData dailyData;
+  final DailyState dailyData;
 
   @override
   List<Object?> get props => [dailyData];
@@ -17,7 +17,7 @@ class GameNewDailyEvent extends GameEvent {
 
 class GameLetterTypeEvent extends GameEvent {
   const GameLetterTypeEvent(this.letterData) : super();
-  final LetterData letterData;
+  final LetterState letterData;
 
   @override
   List<Object?> get props => [letterData];
@@ -40,7 +40,7 @@ class GameEnterEvent extends GameEvent {
 
 class GameCompletionEvent extends GameEvent {
   const GameCompletionEvent(this.completion) : super();
-  final WordleCompletionData completion;
+  final WordleCompletionState completion;
 
   @override
   List<Object?> get props => [completion];

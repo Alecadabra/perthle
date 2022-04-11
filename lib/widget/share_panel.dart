@@ -4,12 +4,12 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/controller/settings_cubit.dart';
-import 'package:perthle/model/daily_data.dart';
-import 'package:perthle/model/game_data.dart';
-import 'package:perthle/model/settings_data.dart';
+import 'package:perthle/model/daily_state.dart';
+import 'package:perthle/model/game_state.dart';
+import 'package:perthle/model/settings_state.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:perthle/model/saved_game_data.dart';
-import 'package:perthle/model/tile_match_data.dart';
+import 'package:perthle/model/saved_game_state.dart';
+import 'package:perthle/model/tile_match_state.dart';
 
 class SharePanel extends StatelessWidget {
   const SharePanel({final Key? key}) : super(key: key);
@@ -29,19 +29,19 @@ class SharePanel extends StatelessWidget {
         color: NeumorphicTheme.baseColor(context),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: BlocBuilder<GameBloc, GameData>(
+          child: BlocBuilder<GameBloc, GameState>(
             builder: (final context, final gameData) {
-              SavedGameData savedGameState = gameData.toSavedGame();
+              SavedGameState savedGameState = gameData.toSavedGame();
               return Column(
                 children: [
                   if (!savedGameState.matches.any(
                     (final row) => row.every(
-                      (final match) => match == TileMatchData.match,
+                      (final match) => match == TileMatchState.match,
                     ),
                   ))
                     Expanded(
                       flex: 2,
-                      child: BlocBuilder<DailyCubit, DailyData>(
+                      child: BlocBuilder<DailyCubit, DailyState>(
                           builder: (final context, final daily) {
                         return Text(
                           daily.word,
@@ -51,7 +51,7 @@ class SharePanel extends StatelessWidget {
                     ),
                   Expanded(
                     flex: 10,
-                    child: BlocBuilder<SettingsCubit, SettingsData>(
+                    child: BlocBuilder<SettingsCubit, SettingsState>(
                       buildWhen: (final previous, final current) =>
                           previous.lightEmojis == current.lightEmojis,
                       builder: (final context, final settings) => Text(
@@ -67,7 +67,7 @@ class SharePanel extends StatelessWidget {
                       children: [
                         Expanded(
                           flex: 20,
-                          child: BlocBuilder<SettingsCubit, SettingsData>(
+                          child: BlocBuilder<SettingsCubit, SettingsState>(
                               buildWhen: (final previous, final current) =>
                                   previous.lightEmojis == current.lightEmojis,
                               builder: (final context, final settings) {
@@ -89,7 +89,7 @@ class SharePanel extends StatelessWidget {
                           flex: 8,
                           child: Tooltip(
                             message: 'Copy to Clipboard',
-                            child: BlocBuilder<SettingsCubit, SettingsData>(
+                            child: BlocBuilder<SettingsCubit, SettingsState>(
                                 buildWhen: (final previous, final current) =>
                                     previous.lightEmojis == current.lightEmojis,
                                 builder: (final context, final settings) {

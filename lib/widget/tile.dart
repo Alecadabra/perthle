@@ -1,6 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:perthle/model/letter_data.dart';
-import 'package:perthle/model/tile_match_data.dart';
+import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/tile_match_state.dart';
 
 class Tile extends StatelessWidget {
   const Tile({
@@ -11,8 +11,8 @@ class Tile extends StatelessWidget {
     required this.current,
   }) : super(key: key);
 
-  final TileMatchData match;
-  final LetterData? letter;
+  final TileMatchState match;
+  final LetterState? letter;
   final LightSource lightSource;
   final bool current;
 
@@ -27,7 +27,7 @@ class Tile extends StatelessWidget {
 
   NeumorphicStyle _style(final BuildContext context) {
     switch (match) {
-      case TileMatchData.blank:
+      case TileMatchState.blank:
         return NeumorphicStyle(
           boxShape: _boxShape(context),
           intensity: 0.65,
@@ -37,7 +37,7 @@ class Tile extends StatelessWidget {
           surfaceIntensity:
               NeumorphicTheme.isUsingDark(context) ? 0.008 : 0.018,
         );
-      case TileMatchData.wrong:
+      case TileMatchState.wrong:
         return NeumorphicStyle(
           boxShape: _boxShape(context),
           color: NeumorphicTheme.disabledColor(context),
@@ -46,7 +46,7 @@ class Tile extends StatelessWidget {
           shape: NeumorphicShape.concave,
           lightSource: lightSource,
         );
-      case TileMatchData.miss:
+      case TileMatchState.miss:
         return NeumorphicStyle(
           boxShape: _boxShape(context),
           color: NeumorphicTheme.variantColor(context),
@@ -55,7 +55,7 @@ class Tile extends StatelessWidget {
           shape: NeumorphicShape.concave,
           lightSource: lightSource,
         );
-      case TileMatchData.match:
+      case TileMatchState.match:
         return NeumorphicStyle(
           boxShape: _boxShape(context),
           color: NeumorphicTheme.accentColor(context),
@@ -85,7 +85,7 @@ class Tile extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline4?.copyWith(
                           fontWeight: FontWeight.w500,
                           fontFamily: 'Poppins',
-                          color: match != TileMatchData.blank
+                          color: match != TileMatchState.blank
                               ? NeumorphicTheme.baseColor(context)
                               : NeumorphicTheme.defaultTextColor(context),
                         ),
