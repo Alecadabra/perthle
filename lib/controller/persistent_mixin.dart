@@ -12,13 +12,9 @@ mixin PersistentMixin<State> on BlocBase<State> {
     storage.load(key).then(
       (final Map<String, dynamic>? json) {
         if (json != null) {
-          try {
-            final State? loadedState = fromJson(json);
-            if (loadedState != null) {
-              emit(loadedState);
-            }
-          } catch (_) {
-            rethrow; // TODO Don't throw
+          final State? loadedState = fromJson(json);
+          if (loadedState != null) {
+            emit(loadedState);
           }
         }
       },
