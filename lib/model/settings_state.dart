@@ -1,7 +1,8 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 @immutable
-class SettingsState {
+class SettingsState extends Equatable {
   const SettingsState({
     this.hardMode = false,
     this.lightEmojis = false,
@@ -37,4 +38,7 @@ class SettingsState {
       themeMode: themeMode ?? this.themeMode,
     );
   }
+
+  @override
+  List<Object?> get props => [hardMode, lightEmojis, themeMode];
 }

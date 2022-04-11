@@ -152,7 +152,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
       List<List<TileMatchState>> newMatches = [
         for (List<TileMatchState> row in state.board.matches) [...row],
       ];
-      Map<LetterState, TileMatchState> newKeys = state.keyboard.keys;
+      Map<LetterState, TileMatchState> newKeys = Map.of(state.keyboard.keys);
 
       void revealPass({
         required final TileMatchState match,
@@ -201,7 +201,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
         (final match) => match == TileMatchState.match,
       )) {
         add(const GameCompletionEvent(WordleCompletionState.won));
-      } else if (state.currRow == state.board.height) {
+      } else if (state.currRow == state.board.height - 1) {
         add(const GameCompletionEvent(WordleCompletionState.lost));
       }
 

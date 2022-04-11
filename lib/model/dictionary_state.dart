@@ -1,11 +1,12 @@
 import 'dart:collection';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 /// Immutable state holding a set of valid english words. Implementation is a
 /// hash set so that `dictionary.contains` is constant time.
 @immutable
-class DictionaryState {
+class DictionaryState extends Equatable {
   const DictionaryState({
     required final HashSet dictionary,
   }) : _dictionary = dictionary;
@@ -21,4 +22,7 @@ class DictionaryState {
 
   /// Key used to reference the [dictionary] in [toJson].
   static const String jsonKey = 'dictionary';
+
+  @override
+  List<Object?> get props => [_dictionary];
 }

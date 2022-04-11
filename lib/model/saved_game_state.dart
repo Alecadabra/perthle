@@ -1,11 +1,12 @@
 import 'dart:collection';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
 /// Immutable storage for a particular completed wordle game.
 @immutable
-class SavedGameState {
+class SavedGameState extends Equatable {
   const SavedGameState({
     required this.gameNum,
     required final List<List<TileMatchState>> matches,
@@ -82,4 +83,7 @@ class SavedGameState {
       ],
     };
   }
+
+  @override
+  List<Object?> get props => [gameNum, _matches];
 }

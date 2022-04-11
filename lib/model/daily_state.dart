@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:perthle/model/game_mode_state.dart';
 
@@ -5,7 +6,7 @@ import 'package:perthle/model/game_mode_state.dart';
 /// Statically holds the lists that words are taken from, and the logic to
 /// resolve the properties.
 @immutable
-class DailyState {
+class DailyState extends Equatable {
   const DailyState({
     required this.gameNum,
     required this.word,
@@ -26,6 +27,9 @@ class DailyState {
         return 'Perthl$_special';
     }
   }
+
+  @override
+  List<Object?> get props => [gameNum, word, gameMode];
 
   static const String _special = '\u{75}\u{73}\u0073\u0079';
 

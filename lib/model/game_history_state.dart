@@ -1,10 +1,11 @@
 import 'dart:collection';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:perthle/model/saved_game_state.dart';
 
 @immutable
-class GameHistoryState {
+class GameHistoryState extends Equatable {
   const GameHistoryState({
     required final Map<int, SavedGameState> savedGames,
   }) : _savedGames = savedGames;
@@ -26,4 +27,7 @@ class GameHistoryState {
         '${entry.key}': entry.value.toJson(),
     };
   }
+
+  @override
+  List<Object?> get props => [_savedGames];
 }

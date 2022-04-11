@@ -1,11 +1,12 @@
 import 'dart:collection';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
 @immutable
-class KeyboardState {
+class KeyboardState extends Equatable {
   const KeyboardState({
     required final Map<LetterState, TileMatchState> keys,
   }) : _keys = keys;
@@ -42,4 +43,7 @@ class KeyboardState {
         entry.key.letterString: entry.value.index,
     };
   }
+
+  @override
+  List<Object?> get props => [_keys];
 }

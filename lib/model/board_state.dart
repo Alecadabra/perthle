@@ -1,12 +1,13 @@
 import 'dart:collection';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
 /// Immutable state of the game board
 @immutable
-class BoardState {
+class BoardState extends Equatable {
   const BoardState({
     required this.width,
     required this.height,
@@ -97,4 +98,7 @@ class BoardState {
       ]
     };
   }
+
+  @override
+  List<Object?> get props => [width, height, _letters, _matches];
 }
