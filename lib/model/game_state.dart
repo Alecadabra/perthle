@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:perthle/model/board_state.dart';
 import 'package:perthle/model/keyboard_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/wordle_completion_state.dart';
 
+@immutable
 class GameState {
   GameState({
     required this.gameNum,
@@ -14,10 +16,12 @@ class GameState {
     this.currCol = 0,
     this.dictionaryLoaded = false,
   })  : completion = completion ?? WordleCompletionState.playing,
-        keyboard = keyboard ?? KeyboardState(),
-        board =
-            board ?? BoardState(width: word.length, height: word.length + 1);
-  @override
+        keyboard = keyboard ?? KeyboardState.empty(),
+        board = board ??
+            BoardState.empty(
+              width: word.length,
+              height: word.length + 1,
+            );
   GameState.fromJson(final Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],

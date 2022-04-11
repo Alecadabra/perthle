@@ -152,7 +152,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
       List<List<TileMatchState>> newMatches = [
         for (List<TileMatchState> row in state.board.matches) [...row],
       ];
-      KeyboardState newKeyboard = state.keyboard.clone();
+      Map<LetterState, TileMatchState> newKeys = state.keyboard.keys;
 
       void revealPass({
         required final TileMatchState match,
@@ -164,9 +164,9 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
           if (predicate(i, letterString)) {
             newMatches[state.currRow][i] = match;
-            if (newKeyboard[letter].precedence < match.precedence) {
+            if (newKeys[letter]!.precedence < match.precedence) {
               // Only update keyboard letters of higher precedence
-              newKeyboard[letter] = match;
+              newKeys[letter] = match;
             }
             indicies.remove(i);
             var effectiveWordList = effectiveWord.characters.toList();
@@ -207,7 +207,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
       emit(
         state.copyWith(
-          keyboard: newKeyboard,
+          keyboard: state.keyboard.copyWith(keys: newKeys),
           board: state.board.copyWith(matches: newMatches),
           currRow: state.currRow + 1,
           currCol: 0,

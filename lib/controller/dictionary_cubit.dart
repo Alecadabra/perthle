@@ -39,7 +39,7 @@ class DictionaryCubit extends PersistentCubit<DictionaryState?> {
       throw StateError('isValidWord called before dictionary loaded');
     }
     return _answers.contains(word.toLowerCase()) ||
-        _dictionary.hashSet.contains(word.toLowerCase());
+        _dictionary.dictionary.contains(word.toLowerCase());
   }
 
   @override

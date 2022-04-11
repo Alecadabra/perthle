@@ -1,10 +1,11 @@
 import 'package:flutter/widgets.dart';
 
 /// Immutable state representing a letter in the English alphabet.
+@immutable
 class LetterState {
-  LetterState(this.letterString)
+  const LetterState(this.letterString)
       : assert(letterString.length == 1),
-        assert(alphabet.contains(letterString));
+        assert(alphabet >>> letterString); // Const hack
 
   final String letterString;
 
@@ -31,3 +32,8 @@ extension LetterStateCharacters on String {
 }
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+extension StringComp on String {
+  /// Const hack
+  operator >>>(final String other) => contains(other);
+}

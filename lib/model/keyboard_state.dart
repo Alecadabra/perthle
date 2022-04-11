@@ -1,15 +1,21 @@
+import 'dart:collection';
+
 import 'package:flutter/widgets.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
+@immutable
 class KeyboardState {
-  KeyboardState({
-    final Map<LetterState, TileMatchState>? keys,
-  }) : _keys = keys ??
-            {
-              for (String chars in 'QWERTYUIOPASDFGHJKLZXCVBNM'.characters)
-                LetterState(chars): TileMatchState.blank,
-            };
+  const KeyboardState({
+    required final Map<LetterState, TileMatchState> keys,
+  }) : _keys = keys;
+  KeyboardState.empty()
+      : this(
+          keys: {
+            for (String chars in 'QWERTYUIOPASDFGHJKLZXCVBNM'.characters)
+              LetterState(chars): TileMatchState.blank,
+          },
+        );
   KeyboardState.fromJson(final Map<String, dynamic> json)
       : this(
           keys: {
@@ -20,26 +26,20 @@ class KeyboardState {
         );
 
   final Map<LetterState, TileMatchState> _keys;
+  UnmodifiableMapView<LetterState, TileMatchState> get keys =>
+      UnmodifiableMapView(Map.of(_keys));
 
   TileMatchState operator [](final LetterState letter) {
     return _keys[letter]!;
   }
 
-  void operator []=(final LetterState letter, final TileMatchState match) {
-    _keys[letter] = match;
-  }
-
-  KeyboardState clone() => KeyboardState(
-        keys: {
-          for (MapEntry<LetterState, TileMatchState> entry in _keys.entries)
-            entry.key: entry.value,
-        },
-      );
+  KeyboardState copyWith({final Map<LetterState, TileMatchState>? keys}) =>
+      KeyboardState(keys: keys ?? this.keys);
 
   Map<String, dynamic> toJson() {
     return {
-      for (LetterState letter in _keys.keys)
-        letter.letterString: this[letter].index,
+      for (MapEntry<LetterState, TileMatchState> entry in _keys.entries)
+        entry.key.letterString: entry.value.index,
     };
   }
 }

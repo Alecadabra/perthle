@@ -1,5 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:perthle/model/game_mode_state.dart';
 
+/// Immutable state containing today's perthle's number, word, and mode.
+/// Statically holds the lists that words are taken from, and the logic to
+/// resolve the properties.
+@immutable
 class DailyState {
   const DailyState({
     required this.gameNum,

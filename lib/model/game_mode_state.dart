@@ -1,1 +1,5 @@
-enum GameModeState { perthle, perthlonger, special }
+enum GameModeState {
+  perthle,
+  perthlonger,
+  special,
+}

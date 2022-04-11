@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+@immutable
 class SettingsState {
   const SettingsState({
     this.hardMode = false,

@@ -1,27 +1,29 @@
+import 'dart:collection';
+
+import 'package:flutter/foundation.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
-/// Mutable state of the wordle game board, usually 5x6.
+/// Immutable state of the game board
+@immutable
 class BoardState {
-  BoardState({
+  const BoardState({
     required this.width,
     required this.height,
-    final List<List<LetterState?>>? letters,
-    final List<List<TileMatchState>>? matches,
-  })  : letters = letters ??
-            [
-              for (int i = 0; i < height; i++)
-                [
-                  for (int j = 0; j < width; j++) null,
-                ],
-            ],
-        matches = matches ??
-            [
-              for (int i = 0; i < height; i++)
-                [
-                  for (int j = 0; j < width; j++) TileMatchState.blank,
-                ],
-            ];
+    required final List<List<LetterState?>> letters,
+    required final List<List<TileMatchState>> matches,
+  })  : _letters = letters,
+        _matches = matches;
+  BoardState.empty({
+    required final int width,
+    required final int height,
+  }) : this(
+          width: width,
+          height: height,
+          letters: List.filled(height, List.filled(width, null)),
+          matches:
+              List.filled(height, List.filled(width, TileMatchState.blank)),
+        );
   BoardState.fromJson(final Map<String, dynamic> json)
       : this(
           width: json['width'],
@@ -47,9 +49,21 @@ class BoardState {
   final int width;
   final int height;
 
-  final List<List<LetterState?>> letters;
+  final List<List<LetterState?>> _letters;
+  UnmodifiableListView<UnmodifiableListView<LetterState?>> get letters =>
+      UnmodifiableListView(
+        [
+          for (List<LetterState?> row in _letters) UnmodifiableListView(row),
+        ],
+      );
 
-  final List<List<TileMatchState>> matches;
+  final List<List<TileMatchState>> _matches;
+  UnmodifiableListView<UnmodifiableListView<TileMatchState>> get matches =>
+      UnmodifiableListView(
+        [
+          for (List<TileMatchState> row in _matches) UnmodifiableListView(row),
+        ],
+      );
 
   BoardState copyWith({
     final int? width,
@@ -70,13 +84,13 @@ class BoardState {
       'width': width,
       'height': height,
       'letters': [
-        for (List<LetterState?> row in letters)
+        for (List<LetterState?> row in _letters)
           [
             for (LetterState? letter in row) letter?.letterString,
           ],
       ],
       'matches': [
-        for (List<TileMatchState> row in matches)
+        for (List<TileMatchState> row in _matches)
           [
             for (TileMatchState match in row) match.index,
           ],

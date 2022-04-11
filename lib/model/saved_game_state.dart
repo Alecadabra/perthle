@@ -1,8 +1,15 @@
+import 'dart:collection';
+
+import 'package:flutter/foundation.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
 /// Immutable storage for a particular completed wordle game.
+@immutable
 class SavedGameState {
-  const SavedGameState({required this.gameNum, required this.matches});
+  const SavedGameState({
+    required this.gameNum,
+    required final List<List<TileMatchState>> matches,
+  }) : _matches = matches;
   SavedGameState.fromJson(final Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],
@@ -16,13 +23,20 @@ class SavedGameState {
         );
 
   final int gameNum;
-  final List<List<TileMatchState>> matches;
+
+  final List<List<TileMatchState>> _matches;
+  UnmodifiableListView<UnmodifiableListView<TileMatchState>> get matches =>
+      UnmodifiableListView(
+        [
+          for (List<TileMatchState> row in _matches) UnmodifiableListView(row),
+        ],
+      );
 
   String shareableString(final bool lightEmojis) {
-    int maxAttempts = matches.length;
+    int maxAttempts = _matches.length;
     int? usedAttempts; // Init to null
-    for (int i = matches.length - 1; i >= 0; i--) {
-      if (matches[i].every(
+    for (int i = _matches.length - 1; i >= 0; i--) {
+      if (_matches[i].every(
         (final TileMatchState match) => match == TileMatchState.match,
       )) {
         usedAttempts = i + 1;
@@ -31,9 +45,9 @@ class SavedGameState {
     }
 
     // Matches matrix with blank rows removed
-    List<List<TileMatchState>> attempts = matches.sublist(
+    List<List<TileMatchState>> attempts = _matches.sublist(
       0,
-      usedAttempts ?? matches.length,
+      usedAttempts ?? _matches.length,
     );
 
     return 'Perthle $gameNum ${usedAttempts ?? 'X'}/$maxAttempts\n\n' +
@@ -61,7 +75,7 @@ class SavedGameState {
     return {
       'gameNum': gameNum,
       'matches': [
-        for (List<TileMatchState> row in matches)
+        for (List<TileMatchState> row in _matches)
           [
             for (TileMatchState match in row) match.index,
           ],
