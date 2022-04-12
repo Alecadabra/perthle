@@ -3,6 +3,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/dictionary_cubit.dart';
 import 'package:perthle/controller/game_bloc.dart';
+import 'package:perthle/controller/history_cubit.dart';
 import 'package:perthle/controller/local_storage_controller.dart';
 import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/model/settings_state.dart';
@@ -35,11 +36,17 @@ class PerthleApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (final context) => DailyCubit(),
+            lazy: false,
           ),
           BlocProvider(
             create: (final context) => DictionaryCubit(
               dailyCubit: DailyCubit.of(context),
             ),
+            lazy: false,
+          ),
+          BlocProvider(
+            create: (final context) => SettingsCubit(storage: storage),
+            lazy: false,
           ),
           BlocProvider(
             create: (final context) => GameBloc(
@@ -47,9 +54,14 @@ class PerthleApp extends StatelessWidget {
               dailyCubit: DailyCubit.of(context),
               dictionaryCubit: DictionaryCubit.of(context),
             ),
+            lazy: false,
           ),
           BlocProvider(
-            create: (final context) => SettingsCubit(storage: storage),
+            create: (final context) => HistoryCubit(
+              gameBloc: GameBloc.of(context),
+              storage: storage,
+            ),
+            lazy: false,
           ),
         ],
         child: BlocBuilder<SettingsCubit, SettingsState>(
