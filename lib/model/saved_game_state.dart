@@ -15,10 +15,9 @@ class SavedGameState extends Equatable {
       : this(
           gameNum: json['gameNum'],
           matches: [
-            for (int i = 0; i < json['matches'][0].length; i++)
+            for (List<int> row in json['matches'])
               [
-                for (int j = 0; j < json['matches'].length; j++)
-                  TileMatchState.values[json['matches'][i][j]],
+                for (int idx in row) TileMatchState.values[idx],
               ],
           ],
         );
