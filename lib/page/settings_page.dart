@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/settings_cubit.dart';
-import 'package:perthle/controller/shake_controller.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
@@ -22,15 +21,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage>
     with SingleTickerProviderStateMixin {
   final LightSource lightSource = LightSource.bottomLeft;
-  late final ShakeController shake;
 
   static const double _maxWidth = 620;
-
-  @override
-  void initState() {
-    shake = ShakeController(vsync: this);
-    super.initState();
-  }
 
   @override
   Widget build(final BuildContext context) {
@@ -38,7 +30,6 @@ class _SettingsPageState extends State<SettingsPage>
       appBar: PerthleAppBar(
         title: 'Settings',
         lightSource: lightSource,
-        shaker: shake,
       ),
       body: SizedBox(
         width: _maxWidth,

@@ -79,15 +79,7 @@ class _WordlePageState extends State<WordlePage>
         }
       },
       child: PerthleScaffold(
-        appBar: BlocBuilder<DailyCubit, DailyState>(
-          builder: (final context, final daily) {
-            return PerthleAppBar(
-              title: '${daily.gameModeString} ${daily.gameNum}',
-              lightSource: _lightSource,
-              shaker: shaker,
-            );
-          },
-        ),
+        appBar: _ShakingAppBar(lightSource: _lightSource),
         body: Column(
           children: [
             // Board
@@ -121,6 +113,76 @@ class _WordlePageState extends State<WordlePage>
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ShakingAppBar extends StatefulWidget {
+  const _ShakingAppBar({
+    final Key? key,
+    required this.lightSource,
+  }) : super(key: key);
+
+  final LightSource lightSource;
+
+  @override
+  State<_ShakingAppBar> createState() => _ShakingAppBarState();
+}
+
+class _ShakingAppBarState extends State<_ShakingAppBar>
+    with SingleTickerProviderStateMixin {
+  double get offset => animation.value;
+
+  double get progress => offset / maxOffset;
+
+  static double maxOffset = 24.0;
+
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 500),
+    vsync: this,
+  );
+
+  late final Animation<double> animation = Tween(begin: 0.0, end: maxOffset)
+      .chain(CurveTween(curve: Curves.elasticIn))
+      .animate(_controller)
+    ..addStatusListener(
+      (final status) {
+        if (status == AnimationStatus.completed) {
+          _controller.reverse();
+        }
+      },
+    );
+
+  void shake() {
+    _controller.forward(from: 0.0);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    return BlocBuilder<DailyCubit, DailyState>(
+      builder: (final context, final daily) {
+        return AnimatedBuilder(
+          animation: _controller,
+          builder: (final context, final child) {
+            return Container(
+              padding: EdgeInsets.only(
+                left: offset + 24,
+                right: 24 - offset,
+              ),
+              child: PerthleAppBar(
+                title: '${daily.gameModeString} ${daily.gameNum}',
+                lightSource: widget.lightSource,
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
