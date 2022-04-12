@@ -88,6 +88,14 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   @override
   String get key => 'current_game';
 
+  @override
+  bool persistWhen(final GameState current, final GameState next) {
+    // Only save when going to a new row via enter
+    return current != next &&
+        (current.currRow != next.currRow ||
+            current.completion != next.completion);
+  }
+
   static GameBloc of(final BuildContext context) =>
       BlocProvider.of<GameBloc>(context);
 

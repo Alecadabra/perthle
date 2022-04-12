@@ -8,6 +8,8 @@ mixin PersistentMixin<State> on BlocBase<State> {
   StorageController get storage;
   String get key;
 
+  bool persistWhen(final State current, final State next) => current != next;
+
   void persist() {
     storage.load(key).then(
       (final Map<String, dynamic>? json) {
@@ -24,7 +26,7 @@ mixin PersistentMixin<State> on BlocBase<State> {
   @override
   void onChange(final Change<State> change) {
     super.onChange(change);
-    if (change.currentState != change.nextState) {
+    if (persistWhen(change.currentState, change.nextState)) {
       storage.save(key, toJson(change.nextState)).then((final _) {});
     }
   }
