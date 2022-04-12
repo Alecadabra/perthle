@@ -62,12 +62,14 @@ class KeyboardEnterButton extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return BlocBuilder<GameBloc, GameState>(
+        buildWhen: (final previous, final current) =>
+            previous.canEnter != current.canEnter,
         builder: (final context, final gameData) {
-      return KeyboardIconButton(
-        icon: const Icon(Icons.keyboard_return_outlined),
-        onPressed:
-            gameData.canEnter ? () => GameBloc.of(context).enter() : null,
-      );
-    });
+          return KeyboardIconButton(
+            icon: const Icon(Icons.keyboard_return_outlined),
+            onPressed:
+                gameData.canEnter ? () => GameBloc.of(context).enter() : null,
+          );
+        });
   }
 }

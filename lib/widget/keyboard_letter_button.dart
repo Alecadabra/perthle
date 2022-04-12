@@ -82,6 +82,9 @@ class KeyboardLetterButton extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return BlocBuilder<GameBloc, GameState>(
+      buildWhen: (final previous, final current) =>
+          previous.canType != current.canType ||
+          previous.keyboard[letter] != current.keyboard[letter],
       builder: (final context, final gameData) {
         bool canType = gameData.canType;
         TileMatchState tileMatch = gameData.keyboard[letter];

@@ -10,44 +10,46 @@ class WordleBoard extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return BlocBuilder<GameBloc, GameState>(
-        builder: (final context, final wordle) {
+        builder: (final context, final gameState) {
       final EdgeInsets padding = EdgeInsets.all(
-        MediaQuery.of(context).size.height / 15 / wordle.word.length,
+        MediaQuery.of(context).size.height / 15 / gameState.word.length,
       );
 
       return AspectRatio(
-        aspectRatio: wordle.board.width / wordle.board.height,
+        aspectRatio: gameState.board.width / gameState.board.height,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            for (var i = 0; i < wordle.board.height; i++)
+            for (var i = 0; i < gameState.board.height; i++)
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    for (var j = 0; j < wordle.board.width; j++)
+                    for (var j = 0; j < gameState.board.width; j++)
                       Expanded(
                         child: Padding(
                           padding: padding,
                           child: Tile(
-                            match: wordle.board.matches[i][j],
-                            letter: wordle.board.letters[i][j],
+                            match: gameState.board.matches[i][j],
+                            letter: gameState.board.letters[i][j],
                             lightSource: LightSource(
-                              wordle.currCol == wordle.board.width ||
-                                      !wordle.inProgress
+                              gameState.currCol == gameState.board.width ||
+                                      !gameState.inProgress
                                   ? 0
-                                  : (wordle.currCol - j) / wordle.board.width,
-                              !wordle.inProgress
+                                  : (gameState.currCol - j) /
+                                      gameState.board.width,
+                              !gameState.inProgress
                                   ? 0
-                                  : (wordle.currRow - i) / wordle.board.height,
+                                  : (gameState.currRow - i) /
+                                      gameState.board.height,
                             ),
-                            current: wordle.inProgress &&
-                                    j == wordle.currCol &&
-                                    i == wordle.currRow ||
-                                wordle.currCol == wordle.board.width &&
-                                    i == wordle.currRow,
+                            current: gameState.inProgress &&
+                                    j == gameState.currCol &&
+                                    i == gameState.currRow ||
+                                gameState.currCol == gameState.board.width &&
+                                    i == gameState.currRow,
                           ),
                         ),
                       ),
