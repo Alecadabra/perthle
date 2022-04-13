@@ -12,14 +12,14 @@ class SharePanel extends StatelessWidget {
     required final WordleController wordleController,
     required this.daily,
     required this.lightEmojis,
-  })  : savedGameState = SavedGameData(
+  })  : savedGame = SavedGameData(
           gameNum: daily.gameNum,
           matches: wordleController.board.matches,
         ),
         super(key: key);
 
   final DailyController daily;
-  final SavedGameData savedGameState;
+  final SavedGameData savedGame;
   final bool lightEmojis;
 
   @override
@@ -39,7 +39,7 @@ class SharePanel extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              if (!savedGameState.matches.any(
+              if (!savedGame.matches.any(
                 (final row) => row.every(
                   (final match) => match == TileMatchData.match,
                 ),
@@ -53,7 +53,10 @@ class SharePanel extends StatelessWidget {
                 ),
               Expanded(
                 flex: 10,
-                child: Text(savedGameState.shareableString(lightEmojis)),
+                child: Text(savedGame.shareableString(
+                  daily.gameModeString,
+                  lightEmojis,
+                )),
               ),
               const Spacer(),
               Expanded(
@@ -67,8 +70,12 @@ class SharePanel extends StatelessWidget {
                         child: const Text('Share'),
                         onPressed: () {
                           Share.share(
-                            savedGameState.shareableString(lightEmojis),
-                            subject: 'Perthle ${savedGameState.gameNum}',
+                            savedGame.shareableString(
+                              daily.gameModeString,
+                              lightEmojis,
+                            ),
+                            subject:
+                                '${daily.gameModeString} ${savedGame.gameNum}',
                           );
                         },
                       ),
@@ -82,7 +89,10 @@ class SharePanel extends StatelessWidget {
                           child: const Icon(Icons.copy_outlined, size: 18),
                           onPressed: () => Clipboard.setData(
                             ClipboardData(
-                              text: savedGameState.shareableString(lightEmojis),
+                              text: savedGame.shareableString(
+                                daily.gameModeString,
+                                lightEmojis,
+                              ),
                             ),
                           ),
                         ),

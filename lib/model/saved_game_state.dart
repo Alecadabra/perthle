@@ -18,7 +18,7 @@ class SavedGameData {
   final int gameNum;
   final List<List<TileMatchData>> matches;
 
-  String shareableString(final bool lightEmojis) {
+  String shareableString(final String gameModeString, final bool lightEmojis) {
     int maxAttempts = matches.length;
     int? usedAttempts; // Init to null
     for (int i = matches.length - 1; i >= 0; i--) {
@@ -36,7 +36,7 @@ class SavedGameData {
       usedAttempts ?? matches.length,
     );
 
-    return 'Perthle $gameNum ${usedAttempts ?? 'X'}/$maxAttempts\n\n' +
+    return '$gameModeString $gameNum ${usedAttempts ?? 'X'}/$maxAttempts\n\n' +
         attempts.map(
           (final List<TileMatchData> attempt) {
             return attempt.map(
