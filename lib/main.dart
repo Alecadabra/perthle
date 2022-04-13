@@ -18,11 +18,15 @@ main() {
 class PerthleApp extends StatelessWidget {
   PerthleApp({final Key? key}) : super(key: key);
 
-  static const TextTheme _textTheme = TextTheme(
-    bodyMedium: TextStyle(fontFamily: 'Poppins'),
-    bodyLarge: TextStyle(fontFamily: 'Poppins'),
-    labelLarge: TextStyle(fontFamily: 'Poppins'),
-  );
+  TextTheme _textTheme(final bool dark) => const TextTheme(
+        bodyMedium: TextStyle(fontFamily: 'Poppins'),
+        bodyLarge: TextStyle(fontFamily: 'Poppins'),
+        labelLarge: TextStyle(fontFamily: 'Poppins'),
+      ).apply(
+        bodyColor: dark
+            ? NeumorphicColors.darkDefaultTextColor
+            : NeumorphicColors.defaultTextColor,
+      );
   static const Color _matchGreen = Color(0xFF8FDA93);
   static const Color _missYellow = Color(0xFFDBC381);
 
@@ -71,23 +75,27 @@ class PerthleApp extends StatelessWidget {
             return NeumorphicApp(
               title: 'Perthle',
               themeMode: settings.themeMode,
-              theme: const NeumorphicThemeData(
-                textTheme: _textTheme,
-                defaultTextColor: Color(0xC3363A3F),
-                disabledColor: Color(0xFFACACAC),
+              theme: NeumorphicThemeData(
+                textTheme: _textTheme(false),
+                defaultTextColor: const Color(0xC3363A3F),
+                disabledColor: const Color(0xFFACACAC),
                 accentColor: _matchGreen,
                 variantColor: _missYellow,
+                depth: 6,
+                intensity: 0.65,
               ),
-              darkTheme: const NeumorphicThemeData.dark(
-                textTheme: _textTheme,
-                baseColor: Color(0xFF32353A),
-                shadowLightColor: Color(0xFF8F8F8F),
-                shadowDarkColor: Color(0xC5000000),
-                shadowDarkColorEmboss: Color(0xff000000),
-                shadowLightColorEmboss: Color(0xB9FFFFFF),
-                defaultTextColor: Color(0x92DDE6E8),
+              darkTheme: NeumorphicThemeData.dark(
+                textTheme: _textTheme(true),
+                baseColor: const Color(0xFF32353A),
+                shadowLightColor: const Color(0xFF8F8F8F),
+                shadowDarkColor: const Color(0xC5000000),
+                shadowDarkColorEmboss: const Color(0xff000000),
+                shadowLightColorEmboss: const Color(0xB9FFFFFF),
+                defaultTextColor: const Color(0x92DDE6E8),
                 accentColor: _matchGreen,
                 variantColor: _missYellow,
+                depth: 3,
+                intensity: 0.35,
               ),
               home: const StartPage(),
             );
