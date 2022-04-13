@@ -25,7 +25,7 @@ class PerthleApp extends StatelessWidget {
       ).apply(
         bodyColor: dark
             ? NeumorphicColors.darkDefaultTextColor
-            : NeumorphicColors.defaultTextColor,
+            : const Color(0xFF525252),
       );
   static const Color _matchGreen = Color(0xFF8FDA93);
   static const Color _missYellow = Color(0xFFDBC381);
