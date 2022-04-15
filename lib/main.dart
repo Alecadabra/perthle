@@ -9,7 +9,7 @@ import 'package:perthle/controller/local_storage_controller.dart';
 import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/controller/shake_cubit.dart';
 import 'package:perthle/model/settings_state.dart';
-import 'package:perthle/page/start_page.dart';
+import 'package:perthle/widget/perthle_navigator.dart';
 import 'package:perthle/widget/inherited_storage_controller.dart';
 
 main() {
@@ -105,7 +105,7 @@ class PerthleApp extends StatelessWidget {
                 depth: 3,
                 intensity: 0.35,
               ),
-              home: StartPage(),
+              home: const PerthleNavigator(),
             );
           },
         ),

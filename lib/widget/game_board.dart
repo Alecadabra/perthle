@@ -3,10 +3,10 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/wordle_completion_state.dart';
-import 'package:perthle/widget/tile.dart';
+import 'package:perthle/widget/board_tile.dart';
 
-class WordleBoard extends StatelessWidget {
-  const WordleBoard({final Key? key}) : super(key: key);
+class GameBoard extends StatelessWidget {
+  const GameBoard({final Key? key}) : super(key: key);
 
   @override
   Widget build(final BuildContext context) {
@@ -33,7 +33,7 @@ class WordleBoard extends StatelessWidget {
                         Expanded(
                           child: Padding(
                             padding: padding,
-                            child: Tile(
+                            child: BoardTile(
                               match: gameState.board.matches[i][j],
                               letter: gameState.board.letters[i][j],
                               lightSource: LightSource(

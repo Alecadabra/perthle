@@ -12,17 +12,17 @@ import 'package:perthle/model/wordle_completion_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/share_panel.dart';
-import 'package:perthle/widget/wordle_board.dart';
-import 'package:perthle/widget/wordle_keyboard.dart';
+import 'package:perthle/widget/game_board.dart';
+import 'package:perthle/widget/game_keyboard.dart';
 
-class WordlePage extends StatefulWidget {
-  const WordlePage({final Key? key}) : super(key: key);
+class GamePage extends StatefulWidget {
+  const GamePage({final Key? key}) : super(key: key);
 
   @override
-  State<WordlePage> createState() => _WordlePageState();
+  State<GamePage> createState() => _GamePageState();
 }
 
-class _WordlePageState extends State<WordlePage>
+class _GamePageState extends State<GamePage>
     with SingleTickerProviderStateMixin {
   static const double _maxKeyboardWidth = 600;
 
@@ -68,7 +68,7 @@ class _WordlePageState extends State<WordlePage>
         body: Column(
           children: [
             // Board
-            const Expanded(flex: 12, child: WordleBoard()),
+            const Expanded(flex: 12, child: GameBoard()),
 
             // Board-Keyboard gap
             const Spacer(flex: 2),
@@ -84,7 +84,7 @@ class _WordlePageState extends State<WordlePage>
                     return AnimatedSwitcher(
                       duration: const Duration(milliseconds: 400),
                       child: gameData.completion.isPlaying
-                          ? const WordleKeyboard()
+                          ? const GameKeyboard()
                           : const SharePanel(),
                     );
                   },

@@ -3,8 +3,8 @@ import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/widget/keyboard_icon_button.dart';
 import 'package:perthle/widget/keyboard_letter_button.dart';
 
-class WordleKeyboard extends StatelessWidget {
-  const WordleKeyboard({final Key? key}) : super(key: key);
+class GameKeyboard extends StatelessWidget {
+  const GameKeyboard({final Key? key}) : super(key: key);
 
   @override
   Widget build(final BuildContext context) {

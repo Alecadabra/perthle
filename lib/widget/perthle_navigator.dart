@@ -1,25 +1,19 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/page/settings_page.dart';
-import 'package:perthle/page/wordle_page.dart';
+import 'package:perthle/page/game_page.dart';
 
-class StartPage extends StatelessWidget {
-  StartPage({final Key? key}) : super(key: key);
-
-  final PerthleNavigator _navigator = PerthleNavigator(
-    pageController: PageController(),
-  );
+class PerthleNavigator extends StatelessWidget {
+  const PerthleNavigator({final Key? key}) : super(key: key);
 
   @override
   Widget build(final BuildContext context) {
     return Container(
       color: NeumorphicTheme.baseColor(context),
       child: PageView(
-        scrollBehavior: const PerthleScrollBehavior(),
-        controller: _navigator.pageController,
+        scrollBehavior: const _PerthleScrollBehavior(),
         children: const [
-          WordlePage(),
+          GamePage(),
           SettingsPage(),
         ],
       ),
@@ -27,8 +21,8 @@ class StartPage extends StatelessWidget {
   }
 }
 
-class PerthleScrollBehavior extends ScrollBehavior {
-  const PerthleScrollBehavior() : super(androidOverscrollIndicator: null);
+class _PerthleScrollBehavior extends ScrollBehavior {
+  const _PerthleScrollBehavior() : super(androidOverscrollIndicator: null);
 
   @override
   Set<PointerDeviceKind> get dragDevices => PointerDeviceKind.values.toSet();

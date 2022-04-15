@@ -2,8 +2,8 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
-class Tile extends StatelessWidget {
-  const Tile({
+class BoardTile extends StatelessWidget {
+  const BoardTile({
     final Key? key,
     required this.match,
     this.letter,
