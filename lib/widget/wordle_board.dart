@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/model/game_state.dart';
+import 'package:perthle/model/wordle_completion_state.dart';
 import 'package:perthle/widget/tile.dart';
 
 class WordleBoard extends StatelessWidget {
@@ -36,16 +37,16 @@ class WordleBoard extends StatelessWidget {
                             letter: gameState.board.letters[i][j],
                             lightSource: LightSource(
                               gameState.currCol == gameState.board.width ||
-                                      !gameState.inProgress
+                                      !gameState.completion.isPlaying
                                   ? 0
                                   : (gameState.currCol - j) /
                                       gameState.board.width,
-                              !gameState.inProgress
+                              !gameState.completion.isPlaying
                                   ? 0
                                   : (gameState.currRow - i) /
                                       gameState.board.height,
                             ),
-                            current: gameState.inProgress &&
+                            current: gameState.completion.isPlaying &&
                                     j == gameState.currCol &&
                                     i == gameState.currRow ||
                                 gameState.currCol == gameState.board.width &&

@@ -7,6 +7,7 @@ import 'package:perthle/controller/persistent_cubit.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
+import 'package:perthle/model/wordle_completion_state.dart';
 
 class HistoryCubit extends PersistentCubit<HistoryState> {
   HistoryCubit({
@@ -17,7 +18,7 @@ class HistoryCubit extends PersistentCubit<HistoryState> {
           storage: storage,
         ) {
     gameSubscription = gameBloc.stream.listen((final gameState) {
-      if (!gameState.inProgress) {
+      if (!gameState.completion.isPlaying) {
         Map<int, SavedGameState> newMap = Map.of(state.savedGames);
         newMap[gameState.gameNum] = gameState.toSavedGame();
         emit(

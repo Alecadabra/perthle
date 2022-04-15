@@ -33,7 +33,7 @@ class SharePanel extends StatelessWidget {
             children: [
               BlocBuilder<GameBloc, GameState>(
                 builder: (final context, final game) {
-                  if (game.completion == WordleCompletionState.won) {
+                  if (game.completion.isWon) {
                     return const SizedBox.shrink();
                   } else {
                     return Expanded(

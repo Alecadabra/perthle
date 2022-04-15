@@ -8,6 +8,7 @@ import 'package:perthle/controller/shake_controller.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/wordle_completion_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/share_panel.dart';
@@ -38,10 +39,12 @@ class _WordlePageState extends State<WordlePage>
   LightSource get _lightSource {
     GameState gameData = GameBloc.of(context).state;
     return LightSource(
-      gameData.currCol == gameData.board.width || !gameData.inProgress
+      gameData.currCol == gameData.board.width || !gameData.completion.isPlaying
           ? 0
           : gameData.currCol / gameData.board.width,
-      !gameData.inProgress ? 0 : gameData.currRow / gameData.board.height,
+      !gameData.completion.isPlaying
+          ? 0
+          : gameData.currRow / gameData.board.height,
     );
   }
 
@@ -99,7 +102,7 @@ class _WordlePageState extends State<WordlePage>
                   builder: (final context, final gameData) {
                     return AnimatedSwitcher(
                       duration: const Duration(milliseconds: 400),
-                      child: gameData.inProgress
+                      child: gameData.completion.isPlaying
                           ? const WordleKeyboard()
                           : const SharePanel(),
                     );

@@ -208,9 +208,9 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
       if (newMatches[state.currRow].every(
         (final match) => match == TileMatchState.match,
       )) {
-        add(const GameCompletionEvent(WordleCompletionState.won));
+        add(const GameCompletionEvent(GameCompletionState.won));
       } else if (state.currRow == state.board.height - 1) {
-        add(const GameCompletionEvent(WordleCompletionState.lost));
+        add(const GameCompletionEvent(GameCompletionState.lost));
       }
 
       emit(

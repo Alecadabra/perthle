@@ -40,7 +40,7 @@ class GameEnterEvent extends GameEvent {
 
 class GameCompletionEvent extends GameEvent {
   const GameCompletionEvent(this.completion) : super();
-  final WordleCompletionState completion;
+  final GameCompletionState completion;
 
   @override
   List<Object?> get props => [completion];

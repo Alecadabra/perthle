@@ -10,13 +10,13 @@ class GameState extends Equatable {
   GameState({
     required this.gameNum,
     required this.word,
-    final WordleCompletionState? completion,
+    final GameCompletionState? completion,
     final KeyboardState? keyboard,
     final BoardState? board,
     this.currRow = 0,
     this.currCol = 0,
     this.dictionaryLoaded = false,
-  })  : completion = completion ?? WordleCompletionState.playing,
+  })  : completion = completion ?? GameCompletionState.playing,
         keyboard = keyboard ?? KeyboardState.empty(),
         board = board ??
             BoardState.empty(
@@ -27,7 +27,7 @@ class GameState extends Equatable {
       : this(
           gameNum: json['gameNum'],
           word: json['word'],
-          completion: WordleCompletionState.values[json['completion']],
+          completion: GameCompletionState.values[json['completion']],
           keyboard: KeyboardState.fromJson(json['keyboard']),
           board: BoardState.fromJson(json['board']),
           currRow: json['currRow'],
@@ -37,8 +37,7 @@ class GameState extends Equatable {
   final int gameNum;
   final String word;
 
-  final WordleCompletionState completion;
-  bool get inProgress => completion == WordleCompletionState.playing;
+  final GameCompletionState completion;
 
   final KeyboardState keyboard;
   final BoardState board;
@@ -48,17 +47,16 @@ class GameState extends Equatable {
 
   final bool dictionaryLoaded;
 
-  int get _width => board.width;
-  int get _height => board.height;
-
-  bool get canType => currCol < _width && currRow < _height && inProgress;
-  bool get canBackspace => currCol != 0 && inProgress;
-  bool get canEnter => currCol >= _width && inProgress && dictionaryLoaded;
+  bool get canType =>
+      currCol < board.width && currRow < board.height && completion.isPlaying;
+  bool get canBackspace => currCol != 0 && completion.isPlaying;
+  bool get canEnter =>
+      currCol >= board.width && completion.isPlaying && dictionaryLoaded;
 
   GameState copyWith({
     final int? gameNum,
     final String? word,
-    final WordleCompletionState? completion,
+    final GameCompletionState? completion,
     final KeyboardState? keyboard,
     final BoardState? board,
     final int? currRow,
