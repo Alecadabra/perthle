@@ -1,7 +1,7 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-class PerthleAppBar extends StatelessWidget {
-  const PerthleAppBar({
+class PerthleAppbar extends StatelessWidget {
+  const PerthleAppbar({
     final Key? key,
     required this.title,
     required this.lightSource,

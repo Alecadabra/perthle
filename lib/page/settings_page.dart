@@ -17,7 +17,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return PerthleScaffold(
-      appBar: PerthleAppBar(
+      appBar: PerthleAppbar(
         title: 'Settings',
         lightSource: lightSource,
       ),
