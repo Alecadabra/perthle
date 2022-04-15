@@ -9,12 +9,12 @@ class LocalStorageController extends StorageController {
 
   @override
   Future<void> save(final String key, final Map<String, dynamic> data) async {
-    window.localStorage[key] = _encoder.convert(data);
+    window.localStorage['$key.json'] = _encoder.convert(data);
   }
 
   @override
   Future<Map<String, dynamic>?> load(final String key) async {
-    final String? string = window.localStorage[key];
+    final String? string = window.localStorage['$key.json'];
     final Map<String, dynamic>? data =
         string == null ? null : _decoder.convert(string);
     return data;
