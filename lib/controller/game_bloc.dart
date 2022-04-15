@@ -6,11 +6,11 @@ import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/dictionary_cubit.dart';
 import 'package:perthle/controller/game_event.dart';
 import 'package:perthle/controller/persistent_bloc.dart';
+import 'package:perthle/controller/shake_cubit.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/dictionary_state.dart';
 import 'package:perthle/model/game_state.dart';
-import 'package:perthle/model/keyboard_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 import 'package:perthle/model/wordle_completion_state.dart';
@@ -22,6 +22,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     required final StorageController storage,
     required this.dailyCubit,
     required this.dictionaryCubit,
+    required this.shakeCubit,
   }) : super(
           storage: storage,
           initialState: GameState(
@@ -49,6 +50,8 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
   final DictionaryCubit dictionaryCubit;
   late StreamSubscription<DictionaryState?> dictionarySubscription;
+
+  final ShakeCubit shakeCubit;
 
   // final bool hardMode; TODO Hard mode
 
@@ -221,6 +224,9 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
           currCol: 0,
         ),
       );
+    } else {
+      // Invalid word
+      shakeCubit.shake();
     }
   }
 
