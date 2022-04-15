@@ -4,21 +4,12 @@ import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/page/settings_page.dart';
 import 'package:perthle/page/wordle_page.dart';
 
-class StartPage extends StatefulWidget {
-  const StartPage({final Key? key}) : super(key: key);
+class StartPage extends StatelessWidget {
+  StartPage({final Key? key}) : super(key: key);
 
-  @override
-  State<StartPage> createState() => _StartPageState();
-}
-
-class _StartPageState extends State<StartPage> {
-  late PerthleNavigator _navigator;
-
-  @override
-  void initState() {
-    _navigator = PerthleNavigator(pageController: PageController());
-    super.initState();
-  }
+  final PerthleNavigator _navigator = PerthleNavigator(
+    pageController: PageController(),
+  );
 
   @override
   Widget build(final BuildContext context) {
@@ -27,9 +18,9 @@ class _StartPageState extends State<StartPage> {
       child: PageView(
         scrollBehavior: const PerthleScrollBehavior(),
         controller: _navigator.pageController,
-        children: [
-          WordlePage(navigator: _navigator),
-          SettingsPage(navigator: _navigator),
+        children: const [
+          WordlePage(),
+          SettingsPage(),
         ],
       ),
     );

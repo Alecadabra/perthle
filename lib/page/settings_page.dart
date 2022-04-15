@@ -1,27 +1,15 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({
-    final Key? key,
-    required this.navigator,
-  }) : super(key: key);
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({final Key? key}) : super(key: key);
 
-  final PerthleNavigator navigator;
-
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage>
-    with SingleTickerProviderStateMixin {
   final LightSource lightSource = LightSource.topLeft;
 
   static const double _maxWidth = 620;

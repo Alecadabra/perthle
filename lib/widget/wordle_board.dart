@@ -16,48 +16,50 @@ class WordleBoard extends StatelessWidget {
         MediaQuery.of(context).size.height / 15 / gameState.word.length,
       );
 
-      return AspectRatio(
-        aspectRatio: gameState.board.width / gameState.board.height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (var i = 0; i < gameState.board.height; i++)
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    for (var j = 0; j < gameState.board.width; j++)
-                      Expanded(
-                        child: Padding(
-                          padding: padding,
-                          child: Tile(
-                            match: gameState.board.matches[i][j],
-                            letter: gameState.board.letters[i][j],
-                            lightSource: LightSource(
-                              gameState.currCol == gameState.board.width ||
-                                      !gameState.completion.isPlaying
-                                  ? 0
-                                  : (gameState.currCol - j) /
-                                      gameState.board.width,
-                              !gameState.completion.isPlaying
-                                  ? 0
-                                  : (gameState.currRow - i) /
-                                      gameState.board.height,
+      return RepaintBoundary(
+        child: AspectRatio(
+          aspectRatio: gameState.board.width / gameState.board.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var i = 0; i < gameState.board.height; i++)
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (var j = 0; j < gameState.board.width; j++)
+                        Expanded(
+                          child: Padding(
+                            padding: padding,
+                            child: Tile(
+                              match: gameState.board.matches[i][j],
+                              letter: gameState.board.letters[i][j],
+                              lightSource: LightSource(
+                                gameState.currCol == gameState.board.width ||
+                                        !gameState.completion.isPlaying
+                                    ? 0
+                                    : (gameState.currCol - j) /
+                                        gameState.board.width,
+                                !gameState.completion.isPlaying
+                                    ? 0
+                                    : (gameState.currRow - i) /
+                                        gameState.board.height,
+                              ),
+                              current: gameState.completion.isPlaying &&
+                                      j == gameState.currCol &&
+                                      i == gameState.currRow ||
+                                  gameState.currCol == gameState.board.width &&
+                                      i == gameState.currRow,
                             ),
-                            current: gameState.completion.isPlaying &&
-                                    j == gameState.currCol &&
-                                    i == gameState.currRow ||
-                                gameState.currCol == gameState.board.width &&
-                                    i == gameState.currRow,
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       );
     });

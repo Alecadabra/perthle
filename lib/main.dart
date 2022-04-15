@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_cubit.dart';
@@ -11,6 +12,7 @@ import 'package:perthle/page/start_page.dart';
 import 'package:perthle/widget/inherited_storage_controller.dart';
 
 main() {
+  // debugRepaintRainbowEnabled = true;
   WidgetsFlutterBinding.ensureInitialized();
   runApp(PerthleApp());
 }
@@ -97,7 +99,7 @@ class PerthleApp extends StatelessWidget {
                 depth: 3,
                 intensity: 0.35,
               ),
-              home: const StartPage(),
+              home: StartPage(),
             );
           },
         ),

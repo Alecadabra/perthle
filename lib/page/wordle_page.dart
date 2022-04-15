@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/game_bloc.dart';
-import 'package:perthle/controller/perthle_page_controller.dart';
 import 'package:perthle/controller/shake_controller.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/daily_state.dart';
@@ -16,12 +15,7 @@ import 'package:perthle/widget/wordle_board.dart';
 import 'package:perthle/widget/wordle_keyboard.dart';
 
 class WordlePage extends StatefulWidget {
-  const WordlePage({
-    final Key? key,
-    required this.navigator,
-  }) : super(key: key);
-
-  final PerthleNavigator navigator;
+  const WordlePage({final Key? key}) : super(key: key);
 
   @override
   State<WordlePage> createState() => _WordlePageState();
@@ -35,18 +29,6 @@ class _WordlePageState extends State<WordlePage>
   late final ShakeController shaker;
 
   late FocusNode rootFocus;
-
-  LightSource get _lightSource {
-    GameState gameData = GameBloc.of(context).state;
-    return LightSource(
-      gameData.currCol == gameData.board.width || !gameData.completion.isPlaying
-          ? 0
-          : gameData.currCol / gameData.board.width,
-      !gameData.completion.isPlaying
-          ? 0
-          : gameData.currRow / gameData.board.height,
-    );
-  }
 
   @override
   void initState() {
@@ -82,7 +64,21 @@ class _WordlePageState extends State<WordlePage>
         }
       },
       child: PerthleScaffold(
-        appBar: _ShakingAppBar(lightSource: _lightSource),
+        appBar: RepaintBoundary(
+          child: BlocBuilder<GameBloc, GameState>(
+              builder: (final context, final gameData) {
+            LightSource lightSource = LightSource(
+              gameData.currCol == gameData.board.width ||
+                      !gameData.completion.isPlaying
+                  ? 0
+                  : gameData.currCol / gameData.board.width,
+              !gameData.completion.isPlaying
+                  ? 0
+                  : gameData.currRow / gameData.board.height,
+            );
+            return _ShakingAppBar(lightSource: lightSource);
+          }),
+        ),
         body: Column(
           children: [
             // Board
