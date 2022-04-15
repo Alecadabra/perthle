@@ -7,9 +7,9 @@ import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/settings_state.dart';
+import 'package:perthle/model/wordle_completion_state.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:perthle/model/saved_game_state.dart';
-import 'package:perthle/model/tile_match_state.dart';
 
 class SharePanel extends StatelessWidget {
   const SharePanel({final Key? key}) : super(key: key);
@@ -29,92 +29,109 @@ class SharePanel extends StatelessWidget {
         color: NeumorphicTheme.baseColor(context),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: BlocBuilder<GameBloc, GameState>(
-            builder: (final context, final gameData) {
-              SavedGameState savedGameState = gameData.toSavedGame();
-              return Column(
-                children: [
-                  if (!savedGameState.matches.any(
-                    (final row) => row.every(
-                      (final match) => match == TileMatchState.match,
-                    ),
-                  ))
-                    Expanded(
+          child: Column(
+            children: [
+              BlocBuilder<GameBloc, GameState>(
+                builder: (final context, final game) {
+                  if (game.completion == WordleCompletionState.won) {
+                    return const SizedBox.shrink();
+                  } else {
+                    return Expanded(
                       flex: 2,
                       child: BlocBuilder<DailyCubit, DailyState>(
-                          builder: (final context, final daily) {
-                        return Text(
-                          daily.word,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        );
-                      }),
-                    ),
-                  Expanded(
-                    flex: 10,
-                    child: BlocBuilder<SettingsCubit, SettingsState>(
-                      buildWhen: (final previous, final current) =>
-                          previous.lightEmojis == current.lightEmojis,
-                      builder: (final context, final settings) => Text(
-                        savedGameState.shareableString(settings.lightEmojis),
+                        builder: (final context, final daily) {
+                          return Text(
+                            daily.word,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
+              Expanded(
+                flex: 10,
+                child: _SharableStringBuilder(
+                  builder: (final context, final sharableString) {
+                    return Text(sharableString);
+                  },
+                ),
+              ),
+              const Spacer(),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      flex: 20,
+                      child: _SharableStringBuilder(
+                        builder: (final context, final sharableString) {
+                          return OutlinedButton(
+                            child: const Text('Share'),
+                            onPressed: () => Share.share(sharableString),
+                          );
+                        },
                       ),
                     ),
-                  ),
-                  const Spacer(),
-                  Expanded(
-                    flex: 2,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          flex: 20,
-                          child: BlocBuilder<SettingsCubit, SettingsState>(
-                              buildWhen: (final previous, final current) =>
-                                  previous.lightEmojis == current.lightEmojis,
-                              builder: (final context, final settings) {
-                                return OutlinedButton(
-                                  child: const Text('Share'),
-                                  onPressed: () {
-                                    Share.share(
-                                      savedGameState.shareableString(
-                                          settings.lightEmojis),
-                                      subject:
-                                          'Perthle ${savedGameState.gameNum}',
-                                    );
-                                  },
-                                );
-                              }),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      flex: 8,
+                      child: Tooltip(
+                        message: 'Copy to Clipboard',
+                        child: _SharableStringBuilder(
+                          builder: (final context, final sharableString) {
+                            return OutlinedButton(
+                              child: const Icon(Icons.copy_outlined, size: 18),
+                              onPressed: () => Clipboard.setData(
+                                ClipboardData(text: sharableString),
+                              ),
+                            );
+                          },
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          flex: 8,
-                          child: Tooltip(
-                            message: 'Copy to Clipboard',
-                            child: BlocBuilder<SettingsCubit, SettingsState>(
-                                buildWhen: (final previous, final current) =>
-                                    previous.lightEmojis == current.lightEmojis,
-                                builder: (final context, final settings) {
-                                  return OutlinedButton(
-                                    child: const Icon(Icons.copy_outlined,
-                                        size: 18),
-                                    onPressed: () => Clipboard.setData(
-                                      ClipboardData(
-                                        text: savedGameState.shareableString(
-                                            settings.lightEmojis),
-                                      ),
-                                    ),
-                                  );
-                                }),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              );
-            },
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _SharableStringBuilder extends StatelessWidget {
+  const _SharableStringBuilder({
+    final Key? key,
+    required this.builder,
+  }) : super(key: key);
+
+  final Widget Function(BuildContext context, String sharableString) builder;
+
+  @override
+  Widget build(final BuildContext context) {
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      buildWhen: (final previous, final current) =>
+          previous.lightEmojis == current.lightEmojis,
+      builder: (final context, final settings) {
+        return BlocBuilder<DailyCubit, DailyState>(
+          builder: (final context, final daily) {
+            return BlocBuilder<GameBloc, GameState>(
+              builder: (final context, final game) {
+                final SavedGameState savedGame = game.toSavedGame();
+                final String sharableString = savedGame.shareableString(
+                  daily.gameModeString,
+                  settings.lightEmojis,
+                );
+                return builder(context, sharableString);
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

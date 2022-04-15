@@ -32,7 +32,7 @@ class SavedGameState extends Equatable {
         ],
       );
 
-  String shareableString(final bool lightEmojis) {
+  String shareableString(final String gameModeString, final bool lightEmojis) {
     int maxAttempts = _matches.length;
     int? usedAttempts; // Init to null
     for (int i = _matches.length - 1; i >= 0; i--) {
@@ -50,7 +50,7 @@ class SavedGameState extends Equatable {
       usedAttempts ?? _matches.length,
     );
 
-    return 'Perthle $gameNum ${usedAttempts ?? 'X'}/$maxAttempts\n\n' +
+    return '$gameModeString $gameNum ${usedAttempts ?? 'X'}/$maxAttempts\n\n' +
         attempts.map(
           (final List<TileMatchState> attempt) {
             return attempt.map(
