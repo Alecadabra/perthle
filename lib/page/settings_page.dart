@@ -39,7 +39,7 @@ class SettingsPage extends StatelessWidget {
                   selectedIndex: settings.themeMode.index,
                   thumb: Neumorphic(
                     style: NeumorphicStyle(
-                        shape: NeumorphicShape.convex,
+                        shape: NeumorphicShape.concave,
                         lightSource: lightSource),
                   ),
                   children: ThemeMode.values.map(
@@ -64,36 +64,39 @@ class SettingsPage extends StatelessWidget {
             _SettingsRow(
               name: 'Emoji style',
               builder: (final context, final settings) {
-                NeumorphicRadio radioForEmoji(
-                  final String emoji,
-                  final bool isLight,
-                ) {
-                  return NeumorphicRadio<bool>(
-                    style: NeumorphicRadioStyle(
-                      shape: NeumorphicShape.concave,
+                NeumorphicButton radioForEmoji({
+                  required final String emoji,
+                  required final bool isLight,
+                }) {
+                  bool selected = settings.lightEmojis == isLight;
+                  double depth = NeumorphicTheme.depth(context) ?? 6;
+                  return NeumorphicButton(
+                    style: NeumorphicStyle(
                       boxShape: const NeumorphicBoxShape.circle(),
                       lightSource: lightSource,
+                      depth: selected ? depth : 0 - depth,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
+                    minDistance: selected ? depth / 3 : -depth / 3,
+                    pressed: selected,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
                       child: Text(emoji),
                     ),
-                    value: isLight,
-                    groupValue: settings.lightEmojis,
-                    onChanged: (final bool? newValue) {
-                      if (newValue == isLight) {
-                        HapticFeedback.heavyImpact();
-                        SettingsCubit.of(context).edit(lightEmojis: newValue);
-                      }
+                    onPressed: () {
+                      // _Actually_ using XOR for boolean logic whaaaaaaaat??!!
+                      SettingsCubit.of(context).edit(
+                        lightEmojis: isLight ^ selected,
+                      );
                     },
                   );
                 }
 
                 return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    radioForEmoji('⬜', true),
-                    const SizedBox(width: 16),
-                    radioForEmoji('⬛', false),
+                    radioForEmoji(emoji: '⬜', isLight: true),
+                    const SizedBox(width: 4),
+                    radioForEmoji(emoji: '⬛', isLight: false),
                   ],
                 );
               },
@@ -102,6 +105,7 @@ class SettingsPage extends StatelessWidget {
             _SettingsRow(
               name: 'Open source',
               child: NeumorphicButton(
+                tooltip: 'Go to the Perthle GitHub repository',
                 onPressed: () async {
                   const String url = 'https://github.com/Alecadabra/perthle';
                   if (await canLaunch(url)) {
@@ -139,11 +143,17 @@ class _SettingsHeading extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(left: 23, top: 36, bottom: 2),
       alignment: Alignment.bottomLeft,
-      child: Text(text.toUpperCase(),
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.apply(fontWeightDelta: 2)),
+      child: Text(
+        text.toUpperCase(),
+        style: Theme.of(context).textTheme.bodyMedium?.apply(
+              fontWeightDelta: 2,
+              color: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.color
+                  ?.withAlpha(0xaa),
+            ),
+      ),
     );
   }
 }
