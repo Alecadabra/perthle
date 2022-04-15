@@ -1,15 +1,10 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/game_bloc.dart';
-import 'package:perthle/controller/shake_controller.dart';
-import 'package:perthle/controller/shake_cubit.dart';
 import 'package:perthle/model/game_state.dart';
-import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/wordle_completion_state.dart';
-import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/shaking_perthle_appbar.dart';
 import 'package:perthle/widget/share_panel.dart';
@@ -23,11 +18,8 @@ class GamePage extends StatefulWidget {
   State<GamePage> createState() => _GamePageState();
 }
 
-class _GamePageState extends State<GamePage>
-    with SingleTickerProviderStateMixin {
+class _GamePageState extends State<GamePage> {
   static const double _maxKeyboardWidth = 600;
-
-  late final ShakeController shaker;
 
   late FocusNode rootFocus;
 
@@ -35,13 +27,11 @@ class _GamePageState extends State<GamePage>
   void initState() {
     super.initState();
     rootFocus = FocusNode();
-    shaker = ShakeController(vsync: this);
   }
 
   @override
   void dispose() {
     rootFocus.dispose();
-    shaker.dispose();
     super.dispose();
   }
 
