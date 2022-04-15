@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/page/history_page.dart';
 import 'package:perthle/page/settings_page.dart';
 import 'package:perthle/page/game_page.dart';
 
@@ -12,7 +13,9 @@ class PerthleNavigator extends StatelessWidget {
       color: NeumorphicTheme.baseColor(context),
       child: PageView(
         scrollBehavior: const _PerthleScrollBehavior(),
+        controller: PageController(initialPage: 1),
         children: const [
+          HistoryPage(),
           GamePage(),
           SettingsPage(),
         ],
