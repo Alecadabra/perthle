@@ -8,45 +8,47 @@ class GameKeyboard extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (var letter in 'QWERTYUIOP'.letters)
-                KeyboardLetterButton(letter: letter),
-            ],
+    return RepaintBoundary(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (var letter in 'QWERTYUIOP'.letters)
+                  KeyboardLetterButton(letter: letter),
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Spacer(flex: 5),
-              for (var letter in 'ASDFGHJKL'.letters)
-                KeyboardLetterButton(letter: letter),
-              const Spacer(flex: 5),
-            ],
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Spacer(flex: 5),
+                for (var letter in 'ASDFGHJKL'.letters)
+                  KeyboardLetterButton(letter: letter),
+                const Spacer(flex: 5),
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const KeyboardEnterButton(),
-              for (var letter in 'ZXCVBNM'.letters)
-                KeyboardLetterButton(letter: letter),
-              const KeyboardBackspaceButton(),
-            ],
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const KeyboardEnterButton(),
+                for (var letter in 'ZXCVBNM'.letters)
+                  KeyboardLetterButton(letter: letter),
+                const KeyboardBackspaceButton(),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

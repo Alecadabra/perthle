@@ -11,32 +11,16 @@ import 'package:perthle/widget/share_panel.dart';
 import 'package:perthle/widget/game_board.dart';
 import 'package:perthle/widget/game_keyboard.dart';
 
-class GamePage extends StatefulWidget {
+class GamePage extends StatelessWidget {
   const GamePage({final Key? key}) : super(key: key);
 
-  @override
-  State<GamePage> createState() => _GamePageState();
-}
+  // final FocusNode rootFocus = FocusNode();
 
-class _GamePageState extends State<GamePage> {
   static const double _maxKeyboardWidth = 600;
-
-  late FocusNode rootFocus;
-
-  @override
-  void initState() {
-    super.initState();
-    rootFocus = FocusNode();
-  }
-
-  @override
-  void dispose() {
-    rootFocus.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(final BuildContext context) {
+    final FocusNode rootFocus = FocusNode();
     FocusScope.of(context).requestFocus(rootFocus);
     return KeyboardListener(
       autofocus: true,
