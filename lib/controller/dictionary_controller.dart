@@ -12,7 +12,7 @@ class DictionaryController {
 
   bool isLoaded = false;
 
-  final HashSet<String> _answers = HashSet.of(DailyController.answers);
+  final HashSet<String> _answers = HashSet.of(DailyController.allAnswers);
 
   late HashSet<String> _dictionary;
 

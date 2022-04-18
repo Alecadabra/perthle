@@ -42,13 +42,12 @@ class StartPage extends StatelessWidget {
                     controller: _navigator.pageController,
                     children: [
                       WordlePage(
-                        word: daily.word,
-                        gameNum: daily.gameNum,
+                        daily: daily,
                         gameState: gameDataSnapshot.data,
                         settings: settings,
                         navigator: _navigator,
                       ),
-                      SettingsPage(navigator: _navigator),
+                      // SettingsPage(navigator: _navigator),
                     ],
                   ),
                 )

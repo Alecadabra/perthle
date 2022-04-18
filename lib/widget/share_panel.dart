@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/controller/daily_controller.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:perthle/controller/wordle_controller.dart';
 import 'package:perthle/model/saved_game_state.dart';
@@ -9,17 +10,16 @@ class SharePanel extends StatelessWidget {
   SharePanel({
     final Key? key,
     required final WordleController wordleController,
-    required final int gameNum,
-    required this.word,
+    required this.daily,
     required this.lightEmojis,
   })  : savedGameState = SavedGameData(
-          gameNum: gameNum,
+          gameNum: daily.gameNum,
           matches: wordleController.board.matches,
         ),
         super(key: key);
 
+  final DailyController daily;
   final SavedGameData savedGameState;
-  final String word;
   final bool lightEmojis;
 
   @override
@@ -47,7 +47,7 @@ class SharePanel extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Text(
-                    word,
+                    daily.word,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
