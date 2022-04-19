@@ -5,7 +5,7 @@ on:
       - main
 jobs:
   build_web:
-    name: Build Flutter (Web)
+    name: Build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -20,7 +20,7 @@ jobs:
         name: web-build
         path: build/web
   deploy_web:
-    name: Deploy Web to Firebase Hosting
+    name: Deploy Preview
     needs: build_web
     runs-on: ubuntu-latest
     steps:
