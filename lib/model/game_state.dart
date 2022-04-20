@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:perthle/model/board_state.dart';
 import 'package:perthle/model/keyboard_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
-import 'package:perthle/model/wordle_completion_state.dart';
+import 'package:perthle/model/game_completion_state.dart';
 
 @immutable
 class GameState extends Equatable {

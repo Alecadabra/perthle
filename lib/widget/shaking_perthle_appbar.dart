@@ -5,7 +5,7 @@ import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/controller/shake_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_state.dart';
-import 'package:perthle/model/wordle_completion_state.dart';
+import 'package:perthle/model/game_completion_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 
 class ShakingPerthleAppbar extends StatefulWidget {

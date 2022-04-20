@@ -13,7 +13,7 @@ import 'package:perthle/model/dictionary_state.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
-import 'package:perthle/model/wordle_completion_state.dart';
+import 'package:perthle/model/game_completion_state.dart';
 
 typedef GameEmitter = Emitter<GameState>;
 

@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/model/game_state.dart';
-import 'package:perthle/model/wordle_completion_state.dart';
+import 'package:perthle/model/game_completion_state.dart';
 import 'package:perthle/widget/board_tile.dart';
 
 class GameBoard extends StatelessWidget {

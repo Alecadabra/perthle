@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/letter_state.dart';
-import 'package:perthle/model/wordle_completion_state.dart';
+import 'package:perthle/model/game_completion_state.dart';
 
 abstract class GameEvent extends Equatable {
   const GameEvent();

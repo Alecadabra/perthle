@@ -4,7 +4,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
-import 'package:perthle/model/wordle_completion_state.dart';
+import 'package:perthle/model/game_completion_state.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/shaking_perthle_appbar.dart';
 import 'package:perthle/widget/share_panel.dart';

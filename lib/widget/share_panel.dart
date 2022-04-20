@@ -7,7 +7,7 @@ import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/settings_state.dart';
-import 'package:perthle/model/wordle_completion_state.dart';
+import 'package:perthle/model/game_completion_state.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:perthle/model/saved_game_state.dart';
 
