@@ -117,18 +117,13 @@ class _SharableStringBuilder extends StatelessWidget {
       buildWhen: (final previous, final current) =>
           previous.lightEmojis == current.lightEmojis,
       builder: (final context, final settings) {
-        return BlocBuilder<DailyCubit, DailyState>(
-          builder: (final context, final daily) {
-            return BlocBuilder<GameBloc, GameState>(
-              builder: (final context, final game) {
-                final SavedGameState savedGame = game.toSavedGame();
-                final String sharableString = savedGame.shareableString(
-                  daily.gameModeString,
-                  settings.lightEmojis,
-                );
-                return builder(context, sharableString);
-              },
+        return BlocBuilder<GameBloc, GameState>(
+          builder: (final context, final game) {
+            final SavedGameState savedGame = game.toSavedGame();
+            final String sharableString = savedGame.shareableString(
+              settings.lightEmojis,
             );
+            return builder(context, sharableString);
           },
         );
       },

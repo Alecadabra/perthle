@@ -2,15 +2,18 @@ import 'dart:collection';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:perthle/controller/daily_cubit.dart';
+import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
 /// Immutable storage for a particular completed wordle game.
 @immutable
 class SavedGameState extends Equatable {
   const SavedGameState({
-    required this.gameNum,
+    required final int gameNum,
     required final List<List<TileMatchState>> matches,
-  }) : _matches = matches;
+  })  : _gameNum = gameNum,
+        _matches = matches;
   SavedGameState.fromJson(final Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],
@@ -22,9 +25,14 @@ class SavedGameState extends Equatable {
           ],
         );
 
-  final int gameNum;
+  // State
+
+  final int _gameNum;
 
   final List<List<TileMatchState>> _matches;
+
+  // Getters
+
   UnmodifiableListView<UnmodifiableListView<TileMatchState>> get matches =>
       UnmodifiableListView(
         [
@@ -32,48 +40,51 @@ class SavedGameState extends Equatable {
         ],
       );
 
-  String shareableString(final String gameModeString, final bool lightEmojis) {
-    int maxAttempts = _matches.length;
-    int? usedAttempts; // Init to null
-    for (int i = _matches.length - 1; i >= 0; i--) {
-      if (_matches[i].every(
-        (final TileMatchState match) => match == TileMatchState.match,
-      )) {
-        usedAttempts = i + 1;
-        break; // TODO Cleaner algorithm
-      }
-    }
+  DailyState get dailyState => DailyState(
+        gameNum: _gameNum,
+        word: DailyCubit.wordForGameNum(_gameNum),
+        gameMode: DailyCubit.gameModeForGameNum(_gameNum),
+      );
 
-    // Matches matrix with blank rows removed
-    List<List<TileMatchState>> attempts = _matches.sublist(
-      0,
-      usedAttempts ?? _matches.length,
-    );
+  List<List<TileMatchState>> get attempts => _matches
+      .where(
+        (final List<TileMatchState> row) => !row.every(
+            (final TileMatchState matchState) =>
+                matchState == TileMatchState.blank),
+      )
+      .toList();
 
-    return '$gameModeString $gameNum ${usedAttempts ?? 'X'}/$maxAttempts\n\n' +
-        attempts.map(
-          (final List<TileMatchState> attempt) {
-            return attempt.map(
-              (final TileMatchState match) {
-                switch (match) {
-                  case TileMatchState.match:
-                    return '🟩';
-                  case TileMatchState.miss:
-                    return '🟨';
-                  case TileMatchState.wrong:
-                    return lightEmojis ? '⬜' : '⬛';
-                  case TileMatchState.blank:
-                    throw StateError('Blank match impossible');
-                }
-              },
-            ).join();
-          },
-        ).join('\n');
-  }
+  bool get won => attempts.last.every(
+        (final TileMatchState matchState) => matchState == TileMatchState.match,
+      );
+
+  String get title => '${dailyState.gameModeString} $_gameNum '
+      '${won ? attempts.length : 'X'}/${_matches.length}';
+
+  String shareableString(final bool lightEmojis) =>
+      '$title\n\n' +
+      attempts.map(
+        (final List<TileMatchState> attempt) {
+          return attempt.map(
+            (final TileMatchState match) {
+              switch (match) {
+                case TileMatchState.match:
+                  return '🟩';
+                case TileMatchState.miss:
+                  return '🟨';
+                case TileMatchState.wrong:
+                  return lightEmojis ? '⬜' : '⬛';
+                case TileMatchState.blank:
+                  throw StateError('Blank match impossible');
+              }
+            },
+          ).join();
+        },
+      ).join('\n');
 
   Map<String, dynamic> toJson() {
     return {
-      'gameNum': gameNum,
+      'gameNum': _gameNum,
       'matches': [
         for (List<TileMatchState> row in _matches)
           [
@@ -84,5 +95,5 @@ class SavedGameState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [gameNum, _matches];
+  List<Object?> get props => [_gameNum, _matches];
 }

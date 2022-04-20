@@ -9,6 +9,7 @@ import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
+import 'package:perthle/widget/saved_game_tile.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({final Key? key}) : super(key: key);
@@ -70,9 +71,9 @@ class _HistoryPageState extends State<HistoryPage> {
               builder: (final context, history) {
                 history = HistoryState(
                     savedGames: List.generate(
-                        30,
+                        100,
                         (final idx) =>
-                            SavedGameState(gameNum: idx, matches: const [
+                            SavedGameState(gameNum: idx + 1, matches: const [
                               [
                                 TileMatchState.match,
                                 TileMatchState.wrong,
@@ -105,7 +106,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: ListView.builder(
                       controller: scroll,
                       padding: const EdgeInsets.all(_listPadding),
-                      // itemCount: history.savedGames.length,
+                      itemCount: 100, //history.savedGames.length,
                       itemBuilder: (final context, final idx) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(
@@ -113,16 +114,10 @@ class _HistoryPageState extends State<HistoryPage> {
                           ),
                           child: SizedBox(
                             height: _childInnerHeight,
-                            child: Neumorphic(
-                              style: NeumorphicStyle(
-                                depth: _visibility(idx) * 5,
-                              ),
-                              padding: const EdgeInsets.all(8),
-                              child: AnimatedOpacity(
-                                opacity: _visibility(idx),
-                                duration: Duration.zero,
-                                child: Center(child: Text('😶‍🌫️')),
-                              ),
+                            child: SavedGameTile(
+                              savedGame:
+                                  history.savedGames.values.toList()[idx],
+                              visibility: _visibility(idx),
                             ),
                           ),
                         );

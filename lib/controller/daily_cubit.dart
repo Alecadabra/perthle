@@ -53,35 +53,41 @@ class DailyCubit extends Cubit<DailyState> {
     }
   }
 
+  static GameModeState gameModeForGameNum(final int gameNum) =>
+      gameModeForDateTime(dateTimeForGameNum(gameNum));
+
+  static DateTime dateTimeForGameNum(final int gameNum) =>
+      DateTime.fromMillisecondsSinceEpoch(_startTimestamp)
+          .add(Duration(days: gameNum));
+
   static int gameNumForDateTime(final DateTime time) => time
       .difference(DateTime.fromMillisecondsSinceEpoch(_startTimestamp))
       .inDays;
 
-  static String wordForDateTime(final DateTime time) => wordForGame(
-        gameNumForDateTime(time),
-        gameModeForDateTime(time),
-      );
+  static String wordForDateTime(final DateTime time) =>
+      wordForGameNum(gameNumForDateTime(time));
 
-  static String wordForGame(final int game, final GameModeState gameMode) {
-    if (game <= _originalListSize) {
+  static String wordForGameNum(final int gameNum) {
+    GameModeState gameMode = gameModeForGameNum(gameNum);
+    if (gameNum <= _originalListSize) {
       // Original Perthle
-      return DailyState.answers[game - 1].toUpperCase();
+      return DailyState.answers[gameNum - 1].toUpperCase();
     } else {
       if (gameMode == GameModeState.perthle) {
         // Perthle
-        int index = game - _originalListSize - 1;
+        int index = gameNum - _originalListSize - 1;
         int length = DailyState.answers.length;
         int seed = index ~/ length;
         var list = DailyState.answers.toList()..shuffle(Random(seed));
         return list[index % length].toUpperCase();
       } else if (gameMode == GameModeState.perthlonger) {
         // Perthlonger
-        int index = (game - _originalListSize - 1) ~/ 7;
+        int index = (gameNum - _originalListSize - 1) ~/ 7;
         return DailyState.longAnswers[index % DailyState.longAnswers.length]
             .toUpperCase();
       } else {
         // Special
-        int index = (game - _originalListSize - 1) ~/ 7;
+        int index = (gameNum - _originalListSize - 1) ~/ 7;
         return '${DailyState.specialAnswers[index % DailyState.specialAnswers.length]}$_special'
             .toUpperCase();
       }
