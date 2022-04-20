@@ -30,13 +30,17 @@ class _HistoryPageState extends State<HistoryPage> {
   static const double _childPadding = 10;
   static const double _childInnerHeight = 100;
 
-  double _visibility(final int idx) {
-    double val = max(
-      0,
-      -((_childHeight * idx - pixels) / _childHeight - 1.5).abs() + 2,
-    );
+  static const double _listPadding = 30;
 
-    return min(1, sqrt(val));
+  double _visibility(final int idx) {
+    var x = (_childHeight * idx - pixels + _listPadding) /
+        (viewportDimension - _childHeight);
+
+    // y = -(2x - 1)^6 + 1
+    double y = -pow(2 * x - 1, 6) + 1;
+
+    return max(0, min(1, y));
+    // return sqrt(max(0, val));
   }
 
   @override
@@ -61,7 +65,7 @@ class _HistoryPageState extends State<HistoryPage> {
         children: [
           const Spacer(),
           Expanded(
-            flex: 4,
+            flex: 21,
             child: BlocBuilder<HistoryCubit, HistoryState>(
               builder: (final context, history) {
                 history = HistoryState(
@@ -100,9 +104,8 @@ class _HistoryPageState extends State<HistoryPage> {
                     behavior: const _HistoryScrollBehaviour(),
                     child: ListView.builder(
                       controller: scroll,
-                      padding: const EdgeInsets.all(30),
-                      addAutomaticKeepAlives: false,
-                      itemCount: history.savedGames.length,
+                      padding: const EdgeInsets.all(_listPadding),
+                      // itemCount: history.savedGames.length,
                       itemBuilder: (final context, final idx) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(
@@ -112,13 +115,13 @@ class _HistoryPageState extends State<HistoryPage> {
                             height: _childInnerHeight,
                             child: Neumorphic(
                               style: NeumorphicStyle(
-                                depth: _visibility(idx) * 10,
+                                depth: _visibility(idx) * 5,
                               ),
                               padding: const EdgeInsets.all(8),
                               child: AnimatedOpacity(
                                 opacity: _visibility(idx),
                                 duration: Duration.zero,
-                                child: Text('${_visibility(idx)}'),
+                                child: Center(child: Text('😶‍🌫️')),
                               ),
                             ),
                           ),
