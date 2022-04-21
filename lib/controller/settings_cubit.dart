@@ -12,11 +12,13 @@ class SettingsCubit extends PersistentCubit<SettingsState> {
     final bool? hardMode,
     final bool? lightEmojis,
     final ThemeMode? themeMode,
+    final bool? historyShowWords,
   }) {
     SettingsState data = state.copyWith(
       hardMode: hardMode,
       lightEmojis: lightEmojis,
       themeMode: themeMode,
+      historyShowWords: historyShowWords,
     );
     emit(data);
     return data;

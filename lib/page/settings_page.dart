@@ -39,15 +39,23 @@ class SettingsPage extends StatelessWidget {
                   selectedIndex: settings.themeMode.index,
                   thumb: Neumorphic(
                     style: NeumorphicStyle(
-                        shape: NeumorphicShape.concave,
-                        lightSource: lightSource),
+                      shape: NeumorphicShape.concave,
+                      lightSource: lightSource,
+                      color: NeumorphicTheme.accentColor(context),
+                    ),
                   ),
                   children: ThemeMode.values.map(
                     (final themeMode) {
                       final firstLetter = themeMode.name[0].toUpperCase();
                       final rest = themeMode.name.substring(1);
                       return ToggleElement(
-                        foreground: Center(child: Text('$firstLetter$rest')),
+                        foreground: Center(
+                            child: Text(
+                          '$firstLetter$rest',
+                          style: Theme.of(context).textTheme.bodyMedium?.apply(
+                                color: NeumorphicTheme.baseColor(context),
+                              ),
+                        )),
                         background: Center(child: Text('$firstLetter$rest')),
                       );
                     },
@@ -74,10 +82,13 @@ class SettingsPage extends StatelessWidget {
                     style: NeumorphicStyle(
                       boxShape: const NeumorphicBoxShape.circle(),
                       lightSource: lightSource,
-                      depth: selected ? depth : 0 - depth,
+                      depth: selected ? 0 - depth : depth,
+                      color: selected
+                          ? NeumorphicTheme.accentColor(context)
+                          : NeumorphicTheme.baseColor(context),
                     ),
-                    minDistance: selected ? depth / 3 : -depth / 3,
-                    pressed: selected,
+                    minDistance: selected ? -depth / 3 : depth / 3,
+                    pressed: !selected,
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       child: Text(emoji),
@@ -98,6 +109,18 @@ class SettingsPage extends StatelessWidget {
                     const SizedBox(width: 4),
                     radioForEmoji(emoji: '⬛', isLight: false),
                   ],
+                );
+              },
+            ),
+            const _SettingsHeading('History'),
+            _SettingsRow(
+              name: 'Show answers',
+              builder: (final context, final settings) {
+                return NeumorphicSwitch(
+                  value: settings.historyShowWords,
+                  onChanged: (final bool newValue) {
+                    SettingsCubit.of(context).edit(historyShowWords: newValue);
+                  },
                 );
               },
             ),
@@ -125,7 +148,7 @@ class SettingsPage extends StatelessWidget {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -171,7 +194,7 @@ class _SettingsRow extends StatelessWidget {
 
   final String name;
   final Widget? child;
-  final Widget Function(BuildContext, SettingsState)? builder;
+  final Widget Function(BuildContext context, SettingsState settings)? builder;
 
   @override
   Widget build(final BuildContext context) {
