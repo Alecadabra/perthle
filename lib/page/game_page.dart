@@ -6,15 +6,13 @@ import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
+import 'package:perthle/widget/saved_game_tile.dart';
 import 'package:perthle/widget/shaking_perthle_appbar.dart';
-import 'package:perthle/widget/share_panel.dart';
 import 'package:perthle/widget/game_board.dart';
 import 'package:perthle/widget/game_keyboard.dart';
 
 class GamePage extends StatelessWidget {
   const GamePage({final Key? key}) : super(key: key);
-
-  // final FocusNode rootFocus = FocusNode();
 
   static const double _maxKeyboardWidth = 600;
 
@@ -60,8 +58,18 @@ class GamePage extends StatelessWidget {
                       duration: const Duration(milliseconds: 400),
                       child: gameData.completion.isPlaying
                           ? const GameKeyboard()
-                          : const SharePanel(),
+                          : Container(
+                              height: 150,
+                              padding: const EdgeInsets.all(24),
+                              child: SavedGameTile(
+                                savedGame: gameData.toSavedGame(),
+                                showWord: gameData.completion.isLost,
+                              ),
+                            ),
                     );
+                  },
+                  buildWhen: (final a, final b) {
+                    return a.completion != b.completion;
                   },
                 ),
               ),

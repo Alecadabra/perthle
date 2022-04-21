@@ -114,7 +114,7 @@ class SettingsPage extends StatelessWidget {
             ),
             const _SettingsHeading('History'),
             _SettingsRow(
-              name: 'Show answers',
+              name: 'Show past answers',
               builder: (final context, final settings) {
                 return NeumorphicSwitch(
                   value: settings.historyShowWords,

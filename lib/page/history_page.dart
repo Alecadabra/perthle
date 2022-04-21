@@ -4,8 +4,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/history_cubit.dart';
+import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
+import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
@@ -16,45 +18,29 @@ class HistoryPage extends StatefulWidget {
 
   static const LightSource lightSource = LightSource.topRight;
 
+  static const double childHeight = childPadding * 2 + childInnerHeight;
+  static const double childPadding = 16;
+  static const double childInnerHeight = 100;
+
+  static const double listPadding = childInnerHeight;
+
   @override
   State<HistoryPage> createState() => _HistoryPageState();
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  late ScrollController scroll;
-
-  double pixels = 0;
-  double maxScrollExtent = 0;
-  double viewportDimension = 0;
-
-  static const double _childHeight = _childPadding * 2 + _childInnerHeight;
-  static const double _childPadding = 10;
-  static const double _childInnerHeight = 100;
-
-  static const double _listPadding = 30;
-
-  double _visibility(final int idx) {
-    var x = (_childHeight * idx - pixels + _listPadding) /
-        (viewportDimension - _childHeight);
-
-    // y = -(2x - 1)^6 + 1
-    double y = -pow(2 * x - 1, 6) + 1;
-
-    return max(0, min(1, y));
-    // return sqrt(max(0, val));
-  }
+  late _HistoryScrollController scroll;
 
   @override
   void initState() {
-    scroll = ScrollController();
-    scroll.addListener(() {
-      setState(() {
-        pixels = scroll.position.pixels;
-        maxScrollExtent = scroll.position.maxScrollExtent;
-        viewportDimension = scroll.position.viewportDimension;
-      });
-    });
+    scroll = _HistoryScrollController()..addListener(() => setState(() {}));
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    scroll.dispose();
+    super.dispose();
   }
 
   @override
@@ -68,77 +54,42 @@ class _HistoryPageState extends State<HistoryPage> {
           Expanded(
             flex: 21,
             child: BlocBuilder<HistoryCubit, HistoryState>(
-              builder: (final context, history) {
-                history = HistoryState(
-                    savedGames: List.generate(
-                        100,
-                        (final idx) =>
-                            SavedGameState(gameNum: idx + 1, matches: const [
-                              [
-                                TileMatchState.match,
-                                TileMatchState.wrong,
-                                TileMatchState.wrong,
-                                TileMatchState.miss
-                              ],
-                              [
-                                TileMatchState.match,
-                                TileMatchState.wrong,
-                                TileMatchState.wrong,
-                                TileMatchState.miss
-                              ],
-                              [
-                                TileMatchState.match,
-                                TileMatchState.wrong,
-                                TileMatchState.wrong,
-                                TileMatchState.miss
-                              ],
-                              [
-                                TileMatchState.match,
-                                TileMatchState.wrong,
-                                TileMatchState.wrong,
-                                TileMatchState.miss
-                              ],
-                            ])).asMap());
+              builder: (final context, final history) {
+                List<SavedGameState> historyList =
+                    history.savedGames.values.toList().reversed.toList();
                 return SizedBox(
                   width: 600,
                   child: ScrollConfiguration(
                     behavior: const _HistoryScrollBehaviour(),
                     child: ListView.builder(
                       controller: scroll,
-                      padding: const EdgeInsets.all(_listPadding),
-                      itemCount: 100, //history.savedGames.length,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: HistoryPage.listPadding,
+                        horizontal: 16,
+                      ),
+                      itemCount: historyList.length,
                       itemBuilder: (final context, final idx) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(
-                            vertical: _childPadding,
+                            vertical: HistoryPage.childPadding,
                           ),
                           child: SizedBox(
-                            height: _childInnerHeight,
-                            child: SavedGameTile(
-                              savedGame:
-                                  history.savedGames.values.toList()[idx],
-                              visibility: _visibility(idx),
+                            height: HistoryPage.childInnerHeight,
+                            child: BlocBuilder<SettingsCubit, SettingsState>(
+                              builder: (final context, final settings) {
+                                return SavedGameTile(
+                                  savedGame: historyList[idx],
+                                  showWord: settings.historyShowWords,
+                                  visibility: scroll.visibilityForIdx(idx),
+                                );
+                              },
+                              buildWhen: (final a, final b) {
+                                return a.historyShowWords != b.historyShowWords;
+                              },
                             ),
                           ),
                         );
                       },
-                      // children: [
-                      //   ...history.savedGames.values
-                      //       .map(
-                      //         (final savedGame) {
-                      //           return Padding(
-                      //             padding: const EdgeInsets.only(bottom: 16),
-                      //             child: Neumorphic(
-                      //               padding: EdgeInsets.all(max(0, offset)),
-                      //               child: Text(savedGame.shareableString(
-                      //                   'Perthle', true)),
-                      //             ),
-                      //           );
-                      //         },
-                      //       )
-                      //       .toList()
-                      //       .reversed
-                      // ],
                     ),
                   ),
                 );
@@ -170,5 +121,19 @@ class _HistoryScrollBehaviour extends ScrollBehavior {
     final ScrollableDetails details,
   ) {
     return child;
+  }
+}
+
+class _HistoryScrollController extends ScrollController {
+  double visibilityForIdx(final int idx) {
+    var x = (HistoryPage.childHeight * idx -
+            position.pixels +
+            HistoryPage.listPadding) /
+        (position.viewportDimension - HistoryPage.childHeight);
+
+    // y = -(2x - 1)^6 + 1
+    double y = -pow(2 * x - 1, 6) + 1;
+
+    return max(0, min(1, y));
   }
 }

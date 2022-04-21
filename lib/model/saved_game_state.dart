@@ -61,9 +61,7 @@ class SavedGameState extends Equatable {
   String get title => '${dailyState.gameModeString} $_gameNum '
       '${won ? attempts.length : 'X'}/${_matches.length}';
 
-  String shareableString(final bool lightEmojis) =>
-      '$title\n\n' +
-      attempts.map(
+  String boardEmojis(final bool lightEmojis) => attempts.map(
         (final List<TileMatchState> attempt) {
           return attempt.map(
             (final TileMatchState match) {
@@ -81,6 +79,9 @@ class SavedGameState extends Equatable {
           ).join();
         },
       ).join('\n');
+
+  String shareableString(final bool lightEmojis) =>
+      '$title\n\n${boardEmojis(lightEmojis)}';
 
   Map<String, dynamic> toJson() {
     return {
