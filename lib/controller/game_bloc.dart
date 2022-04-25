@@ -53,8 +53,6 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
   final ShakeCubit shakeCubit;
 
-  // final bool hardMode; TODO Hard mode
-
   void type(final LetterState letter) {
     if (state.canType) {
       add(GameLetterTypeEvent(letter));
