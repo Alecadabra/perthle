@@ -8,6 +8,7 @@ import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/settings_state.dart';
+import 'package:perthle/widget/history_stats.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/saved_game_tile.dart';
@@ -47,18 +48,19 @@ class _HistoryPageState extends State<HistoryPage> {
     return PerthleScaffold(
       appBar: const PerthleAppbar(
           title: 'History', lightSource: HistoryPage.lightSource),
-      body: Column(
-        children: [
-          const Spacer(),
-          Expanded(
-            flex: 21,
-            child: BlocBuilder<HistoryCubit, HistoryState>(
-              builder: (final context, final history) {
-                List<SavedGameState> historyList =
-                    history.savedGames.values.toList().reversed.toList();
-                return SizedBox(
-                  width: 600,
-                  child: ScrollConfiguration(
+      body: SizedBox(
+        width: 600,
+        child: Column(
+          children: [
+            const Spacer(),
+            const HistoryStats(),
+            Expanded(
+              flex: 21,
+              child: BlocBuilder<HistoryCubit, HistoryState>(
+                builder: (final context, final history) {
+                  List<SavedGameState> historyList =
+                      history.savedGames.values.toList().reversed.toList();
+                  return ScrollConfiguration(
                     behavior: const _HistoryScrollBehaviour(),
                     child: ListView.builder(
                       controller: scroll,
@@ -90,13 +92,13 @@ class _HistoryPageState extends State<HistoryPage> {
                         );
                       },
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-          const Spacer(),
-        ],
+            const Spacer(),
+          ],
+        ),
       ),
     );
   }

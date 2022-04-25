@@ -34,7 +34,7 @@ class SavedGameTile extends StatelessWidget {
           child: AspectRatio(
             aspectRatio: 5 / 6,
             child: AnimatedOpacity(
-              opacity: -pow(visibility - 1, 4) + 1,
+              opacity: -pow(visibility - 1, 2) + 1,
               duration: Duration.zero,
               child: FittedBox(
                 child: BlocBuilder<SettingsCubit, SettingsState>(
@@ -107,8 +107,9 @@ class SavedGameTile extends StatelessWidget {
                                 textAlign: TextAlign.center,
                               ),
                             ),
-                            onPressed: () => Share.share(
+                            onPressed: () async => await Share.share(
                               savedGame.shareableString(settings.lightEmojis),
+                              subject: savedGame.title,
                             ),
                           ),
                         ),
@@ -128,7 +129,8 @@ class SavedGameTile extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            onPressed: () => Clipboard.setData(
+                            tooltip: 'Copy to Clipboard',
+                            onPressed: () async => await Clipboard.setData(
                               ClipboardData(
                                 text: savedGame.shareableString(
                                   settings.lightEmojis,
