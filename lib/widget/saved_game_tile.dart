@@ -102,6 +102,9 @@ class SavedGameTile extends StatelessWidget {
                         Expanded(
                           flex: 13,
                           child: NeumorphicButton(
+                            duration: visibility < 0.5
+                                ? Duration.zero
+                                : Neumorphic.DEFAULT_DURATION,
                             style: NeumorphicStyle(
                               depth: _depth,
                               lightSource: lightSource,
@@ -124,6 +127,9 @@ class SavedGameTile extends StatelessWidget {
                         Expanded(
                           flex: 5,
                           child: NeumorphicButton(
+                            duration: visibility < 0.5
+                                ? Duration.zero
+                                : Neumorphic.DEFAULT_DURATION,
                             style: NeumorphicStyle(
                               depth: _depth,
                               lightSource: lightSource,
