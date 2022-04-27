@@ -13,22 +13,55 @@ import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/saved_game_tile.dart';
 
-class HistoryPage extends StatefulWidget {
+class HistoryPage extends StatelessWidget {
   const HistoryPage({final Key? key}) : super(key: key);
 
   static const LightSource lightSource = LightSource.topRight;
 
-  static const double childHeight = childPadding * 2 + childInnerHeight;
+  static const double childHeight =
+      childPadding * 2 + childInnerHeight + childSeparatorHeight;
   static const double childPadding = 16;
   static const double childInnerHeight = 100;
+  static const double childSeparatorHeight = 16;
 
   static const double listPadding = childInnerHeight;
 
   @override
-  State<HistoryPage> createState() => _HistoryPageState();
+  Widget build(final BuildContext context) {
+    return PerthleScaffold(
+      appBar: const PerthleAppbar(
+          title: 'History', lightSource: HistoryPage.lightSource),
+      body: SizedBox(
+        width: 600,
+        child: Column(
+          children: const [
+            Spacer(),
+            HistoryStats(),
+            Expanded(
+              flex: 21,
+              child: _HistoryList(lightSource: lightSource),
+            ),
+            Spacer(),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class _HistoryPageState extends State<HistoryPage> {
+class _HistoryList extends StatefulWidget {
+  const _HistoryList({
+    final Key? key,
+    required this.lightSource,
+  }) : super(key: key);
+
+  final LightSource lightSource;
+
+  @override
+  State<_HistoryList> createState() => _HistoryListState();
+}
+
+class _HistoryListState extends State<_HistoryList> {
   late _HistoryScrollController scroll;
 
   @override
@@ -45,61 +78,45 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(final BuildContext context) {
-    return PerthleScaffold(
-      appBar: const PerthleAppbar(
-          title: 'History', lightSource: HistoryPage.lightSource),
-      body: SizedBox(
-        width: 600,
-        child: Column(
-          children: [
-            const Spacer(),
-            const HistoryStats(),
-            Expanded(
-              flex: 21,
-              child: BlocBuilder<HistoryCubit, HistoryState>(
-                builder: (final context, final history) {
-                  List<SavedGameState> historyList =
-                      history.savedGames.values.toList().reversed.toList();
-                  return ScrollConfiguration(
-                    behavior: const _HistoryScrollBehaviour(),
-                    child: ListView.builder(
-                      controller: scroll,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: HistoryPage.listPadding,
-                        horizontal: 16,
+    return BlocBuilder<HistoryCubit, HistoryState>(
+      builder: (final context, final history) {
+        List<SavedGameState> historyList =
+            history.savedGames.values.toList().reversed.toList();
+        return BlocBuilder<SettingsCubit, SettingsState>(
+          builder: (final context, final settings) {
+            return ScrollConfiguration(
+              behavior: const _HistoryScrollBehaviour(),
+              child: ListView.builder(
+                controller: scroll,
+                padding: const EdgeInsets.symmetric(
+                  vertical: HistoryPage.listPadding,
+                  horizontal: 16,
+                ),
+                itemCount: historyList.length,
+                itemBuilder: (final context, final idx) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: HistoryPage.childPadding,
+                    ),
+                    child: SizedBox(
+                      height: HistoryPage.childInnerHeight,
+                      child: SavedGameTile(
+                        savedGame: historyList[idx],
+                        showWord: settings.historyShowWords,
+                        visibility: scroll.visibilityForIdx(idx),
+                        lightSource: widget.lightSource,
                       ),
-                      itemCount: historyList.length,
-                      itemBuilder: (final context, final idx) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: HistoryPage.childPadding,
-                          ),
-                          child: SizedBox(
-                            height: HistoryPage.childInnerHeight,
-                            child: BlocBuilder<SettingsCubit, SettingsState>(
-                              builder: (final context, final settings) {
-                                return SavedGameTile(
-                                  savedGame: historyList[idx],
-                                  showWord: settings.historyShowWords,
-                                  visibility: scroll.visibilityForIdx(idx),
-                                );
-                              },
-                              buildWhen: (final a, final b) {
-                                return a.historyShowWords != b.historyShowWords;
-                              },
-                            ),
-                          ),
-                        );
-                      },
                     ),
                   );
                 },
               ),
-            ),
-            const Spacer(),
-          ],
-        ),
-      ),
+            );
+          },
+          buildWhen: (final a, final b) {
+            return a.historyShowWords != b.historyShowWords;
+          },
+        );
+      },
     );
   }
 }

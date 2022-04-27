@@ -14,11 +14,13 @@ class SavedGameTile extends StatelessWidget {
     required this.savedGame,
     required this.showWord,
     this.visibility = 1,
+    this.lightSource = LightSource.topLeft,
   }) : super(key: key);
 
   final SavedGameState savedGame;
   final bool showWord;
   final double visibility;
+  final LightSource lightSource;
 
   double get _depth => visibility * 4;
 
@@ -30,7 +32,7 @@ class SavedGameTile extends StatelessWidget {
         Neumorphic(
           duration: Duration.zero,
           padding: const EdgeInsets.all(8),
-          style: NeumorphicStyle(depth: _depth),
+          style: NeumorphicStyle(depth: _depth, lightSource: lightSource),
           child: AspectRatio(
             aspectRatio: 5 / 6,
             child: AnimatedOpacity(
@@ -60,7 +62,10 @@ class SavedGameTile extends StatelessWidget {
                 flex: 2,
                 child: Neumorphic(
                   duration: Duration.zero,
-                  style: NeumorphicStyle(depth: _depth),
+                  style: NeumorphicStyle(
+                    depth: _depth,
+                    lightSource: lightSource,
+                  ),
                   child: AnimatedOpacity(
                     opacity: visibility,
                     duration: Duration.zero,
@@ -90,7 +95,6 @@ class SavedGameTile extends StatelessWidget {
               const Spacer(),
               Expanded(
                 flex: 2,
-                // TODO These buttons dont depress on the game page
                 child: BlocBuilder<SettingsCubit, SettingsState>(
                   builder: (final context, final settings) {
                     return Row(
@@ -98,7 +102,10 @@ class SavedGameTile extends StatelessWidget {
                         Expanded(
                           flex: 13,
                           child: NeumorphicButton(
-                            style: NeumorphicStyle(depth: _depth),
+                            style: NeumorphicStyle(
+                              depth: _depth,
+                              lightSource: lightSource,
+                            ),
                             child: AnimatedOpacity(
                               opacity: visibility,
                               duration: Duration.zero,
@@ -117,7 +124,10 @@ class SavedGameTile extends StatelessWidget {
                         Expanded(
                           flex: 5,
                           child: NeumorphicButton(
-                            style: NeumorphicStyle(depth: _depth),
+                            style: NeumorphicStyle(
+                              depth: _depth,
+                              lightSource: lightSource,
+                            ),
                             child: AnimatedOpacity(
                               opacity: visibility,
                               duration: Duration.zero,
