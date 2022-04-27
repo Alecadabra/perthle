@@ -72,7 +72,7 @@ class BoardTile extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 1.0,
       child: Neumorphic(
-        duration: const Duration(milliseconds: 400),
+        duration: const Duration(milliseconds: 350),
         style: _style(context),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
