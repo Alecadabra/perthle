@@ -37,6 +37,8 @@ class HistoryStats extends StatelessWidget {
             if (gameNum - 1 == lastWonGame) {
               currStreak++;
               longestStreak = max(longestStreak, currStreak);
+            } else {
+              currStreak = 1;
             }
             lastWonGame = gameNum;
           } else {
@@ -76,7 +78,8 @@ class _Stat extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            name.toUpperCase(),
+            name.toUpperCase().split(' ').join('\n'),
+            textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.apply(
                   fontWeightDelta: 2,
                   color: Theme.of(context)
