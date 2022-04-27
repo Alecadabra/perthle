@@ -1,11 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/controller/history_cubit.dart';
 import 'package:perthle/model/history_state.dart';
-import 'package:perthle/model/saved_game_state.dart';
 
 class HistoryStats extends StatelessWidget {
   const HistoryStats({final Key? key}) : super(key: key);
@@ -14,46 +10,14 @@ class HistoryStats extends StatelessWidget {
   Widget build(final BuildContext context) {
     return BlocBuilder<HistoryCubit, HistoryState>(
       builder: (final context, final history) {
-        final games = history.savedGames.values.toList()
-          ..sort(
-            (final SavedGameState a, final SavedGameState b) {
-              return a.dailyState.gameNum.compareTo(b.dailyState.gameNum);
-            },
-          );
-
-        final gamesPlayed = games.length;
-        final winPercentage = (games.where((final game) => game.won).length /
-                max(1, gamesPlayed)) *
-            100;
-        int longestStreak = 0;
-        int currStreak = 0;
-        int? lastWonGame;
-        for (final game in games) {
-          final gameNum = game.dailyState.gameNum;
-
-          if (game.won) {
-            longestStreak = max(1, longestStreak);
-            currStreak = max(1, currStreak);
-            if (gameNum - 1 == lastWonGame) {
-              currStreak++;
-              longestStreak = max(longestStreak, currStreak);
-            } else {
-              currStreak = 1;
-            }
-            lastWonGame = gameNum;
-          } else {
-            currStreak = 0;
-            lastWonGame = null;
-          }
-        }
-
+        final stats = history.historyStats;
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _Stat(name: 'Games Played', value: '$gamesPlayed'),
-            _Stat(name: 'Win Percentage', value: '$winPercentage%'),
-            _Stat(name: 'Current Streak', value: '$currStreak'),
-            _Stat(name: 'Longest Streak', value: '$longestStreak'),
+            _Stat(name: 'Games Played', value: '${stats.gamesPlayed}'),
+            _Stat(name: 'Win Percentage', value: '${stats.winPercentage}%'),
+            _Stat(name: 'Current Streak', value: '${stats.currStreak}'),
+            _Stat(name: 'Longest Streak', value: '${stats.longestStreak}'),
           ],
         );
       },
