@@ -19,7 +19,11 @@ class GamePage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final FocusNode rootFocus = FocusNode();
-    FocusScope.of(context).requestFocus(rootFocus);
+    // Hack to only focus during the game, otherwise the neumorphic share
+    // buttons don't behave
+    if (GameBloc.of(context).state.completion.isPlaying) {
+      FocusScope.of(context).requestFocus(rootFocus);
+    }
     return KeyboardListener(
       autofocus: true,
       focusNode: rootFocus,
