@@ -5,6 +5,7 @@ import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
+import 'package:perthle/widget/daily_countdown.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/saved_game_tile.dart';
 import 'package:perthle/widget/shaking_perthle_appbar.dart';
@@ -62,12 +63,23 @@ class GamePage extends StatelessWidget {
                       duration: const Duration(milliseconds: 400),
                       child: gameData.completion.isPlaying
                           ? const GameKeyboard()
-                          : Container(
-                              height: 150,
+                          : Padding(
                               padding: const EdgeInsets.all(24),
-                              child: SavedGameTile(
-                                savedGame: gameData.toSavedGame(),
-                                showWord: gameData.completion.isLost,
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    flex: 5,
+                                    child: SavedGameTile(
+                                      savedGame: gameData.toSavedGame(),
+                                      showWord: gameData.completion.isLost,
+                                    ),
+                                  ),
+                                  const Spacer(flex: 2),
+                                  const Expanded(
+                                    flex: 3,
+                                    child: DailyCountdown(),
+                                  )
+                                ],
                               ),
                             ),
                     );

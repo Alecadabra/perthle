@@ -18,11 +18,9 @@ class HistoryPage extends StatelessWidget {
 
   static const LightSource lightSource = LightSource.topRight;
 
-  static const double childHeight =
-      childPadding * 2 + childInnerHeight + childSeparatorHeight;
+  static const double childHeight = childPadding * 2 + childInnerHeight;
   static const double childPadding = 16;
   static const double childInnerHeight = 100;
-  static const double childSeparatorHeight = 16;
 
   static const double listPadding = childInnerHeight;
 
@@ -144,6 +142,7 @@ class _HistoryScrollBehaviour extends ScrollBehavior {
 
 class _HistoryScrollController extends ScrollController {
   double visibilityForIdx(final int idx) {
+    // Where this item is in the viewport, 0 is the top, 1 is the bottom
     var x = (HistoryPage.childHeight * idx -
             position.pixels +
             HistoryPage.listPadding) /
@@ -152,6 +151,7 @@ class _HistoryScrollController extends ScrollController {
     // y = -(2x - 1)^6 + 1
     double y = -pow(2 * x - 1, 6) + 1;
 
+    // Clamp to [0, 1]
     return max(0, min(1, y));
   }
 }
