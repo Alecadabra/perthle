@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/gestures.dart';
@@ -12,6 +13,7 @@ import 'package:perthle/widget/history_stats.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/saved_game_tile.dart';
+import 'package:share_plus/share_plus.dart';
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({final Key? key}) : super(key: key);
@@ -27,8 +29,41 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return PerthleScaffold(
-      appBar: const PerthleAppbar(
-          title: 'History', lightSource: HistoryPage.lightSource),
+      appBar: GestureDetector(
+        child: const PerthleAppbar(
+            title: 'History', lightSource: HistoryPage.lightSource),
+        // Hacky temporary data export
+        onLongPress: () {
+          ScaffoldMessenger.of(context).showMaterialBanner(
+            MaterialBanner(
+              backgroundColor: NeumorphicTheme.baseColor(context),
+              elevation: 0,
+              content: const Text('📤 Download History?'),
+              leading: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).clearMaterialBanners();
+                },
+              ),
+              actions: [
+                TextButton(
+                  child: const Text('DOWNLOAD'),
+                  onPressed: () async {
+                    final history = HistoryCubit.of(context);
+                    final json = history.toJson(history.state);
+                    final stringified =
+                        const JsonEncoder.withIndent('  ').convert(json);
+
+                    await Share.share(stringified, subject: 'saved_games.json');
+
+                    ScaffoldMessenger.of(context).clearMaterialBanners();
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
       body: SizedBox(
         width: 600,
         child: Column(

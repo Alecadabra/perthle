@@ -3,10 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/settings_cubit.dart';
-import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/settings_state.dart';
-import 'package:perthle/model/tile_match_state.dart';
-import 'package:perthle/widget/board_tile.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -158,9 +155,9 @@ class SettingsPage extends StatelessWidget {
               child: NeumorphicButton(
                 tooltip: 'View open source licenses',
                 onPressed: () async {
-                  HapticFeedback.heavyImpact();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
+                  await HapticFeedback.heavyImpact();
+                  await Navigator.of(context).push(
+                    CupertinoPageRoute(
                       builder: (final context) => const _PerthleLicensePage(),
                     ),
                   );
