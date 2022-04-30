@@ -1,8 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/settings_cubit.dart';
+import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/settings_state.dart';
+import 'package:perthle/model/tile_match_state.dart';
+import 'package:perthle/widget/board_tile.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -149,6 +153,35 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
             ),
+            _SettingsRow(
+              name: 'Licenses',
+              child: NeumorphicButton(
+                tooltip: 'View open source licenses',
+                onPressed: () async {
+                  HapticFeedback.heavyImpact();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (final context) => const _PerthleLicensePage(),
+                    ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.policy,
+                      color: NeumorphicTheme.defaultTextColor(context),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Icon(
+                      Icons.chevron_right,
+                      color: NeumorphicTheme.defaultTextColor(context),
+                      size: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -208,6 +241,40 @@ class _SettingsRow extends StatelessWidget {
               ? child!
               : BlocBuilder<SettingsCubit, SettingsState>(builder: builder!),
         ],
+      ),
+    );
+  }
+}
+
+class _PerthleLicensePage extends StatelessWidget {
+  const _PerthleLicensePage({final Key? key}) : super(key: key);
+
+  @override
+  Widget build(final BuildContext context) {
+    final neuTheme = NeumorphicTheme.of(context)!.current!;
+    return Theme(
+      data: ThemeData(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: MaterialColor(
+            neuTheme.accentColor.value,
+            {
+              50: neuTheme.accentColor,
+              for (int i = 100; i <= 900; i += 100) i: neuTheme.accentColor,
+            },
+          ),
+          brightness: NeumorphicTheme.isUsingDark(context)
+              ? Brightness.dark
+              : Brightness.light,
+          cardColor: neuTheme.baseColor,
+          primaryColorDark: neuTheme.accentColor,
+          backgroundColor: neuTheme.baseColor,
+        ),
+        textTheme: neuTheme.textTheme,
+      ),
+      child: const LicensePage(
+        applicationName: 'Perthle',
+        applicationLegalese: 'Perthle by Alec Maughan, a respectful homage '
+            'to Wordle by Josh Wardle',
       ),
     );
   }
