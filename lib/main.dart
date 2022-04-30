@@ -25,30 +25,31 @@ class PerthleApp extends StatelessWidget {
     final textColor =
         dark ? NeumorphicColors.darkDefaultTextColor : const Color(0xFF525252);
     return TextTheme(
-        bodyMedium: TextStyle(
-          fontFamily: 'Poppins',
-          color: textColor,
-        ),
-        bodyLarge: TextStyle(
-          fontFamily: 'Poppins',
-          color: textColor,
-        ),
-        labelLarge: TextStyle(
-          fontFamily: 'Poppins',
-          color: textColor,
-        ),
-        headlineMedium: TextStyle(
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.w600,
-          color: textColor.withAlpha(0xaa),
-          fontSize: 14,
-          letterSpacing: 0.15,
-        ),
-        displaySmall: TextStyle(
-          fontFamily: 'Poppins',
-          fontSize: 28,
-          fontWeight: FontWeight.w500,
-        ));
+      bodyMedium: TextStyle(
+        fontFamily: 'Poppins',
+        color: textColor,
+      ),
+      bodyLarge: TextStyle(
+        fontFamily: 'Poppins',
+        color: textColor,
+      ),
+      labelLarge: TextStyle(
+        fontFamily: 'Poppins',
+        color: textColor,
+      ),
+      headlineMedium: TextStyle(
+        fontFamily: 'Poppins',
+        fontWeight: FontWeight.w600,
+        color: textColor.withAlpha(0xaa),
+        fontSize: 14,
+        letterSpacing: 0.15,
+      ),
+      displaySmall: const TextStyle(
+        fontFamily: 'Poppins',
+        fontSize: 28,
+        fontWeight: FontWeight.w500,
+      ),
+    );
   }
 
   static const Color _matchGreen = Color(0xFF8FDA93);
