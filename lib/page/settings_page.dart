@@ -201,14 +201,7 @@ class _SettingsHeading extends StatelessWidget {
       alignment: Alignment.bottomLeft,
       child: Text(
         text.toUpperCase(),
-        style: Theme.of(context).textTheme.bodyMedium?.apply(
-              fontWeightDelta: 2,
-              color: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.color
-                  ?.withAlpha(0xaa),
-            ),
+        style: Theme.of(context).textTheme.headlineMedium,
       ),
     );
   }

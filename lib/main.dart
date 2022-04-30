@@ -13,23 +13,40 @@ import 'package:perthle/widget/perthle_navigator.dart';
 import 'package:perthle/widget/inherited_storage_controller.dart';
 
 main() {
-  setUrlStrategy(PathUrlStrategy());
   WidgetsFlutterBinding.ensureInitialized();
+  setUrlStrategy(PathUrlStrategy());
   runApp(PerthleApp());
 }
 
 class PerthleApp extends StatelessWidget {
   PerthleApp({final Key? key}) : super(key: key);
 
-  TextTheme _textTheme(final bool dark) => const TextTheme(
-        bodyMedium: TextStyle(fontFamily: 'Poppins'),
-        bodyLarge: TextStyle(fontFamily: 'Poppins'),
-        labelLarge: TextStyle(fontFamily: 'Poppins'),
-      ).apply(
-        bodyColor: dark
-            ? NeumorphicColors.darkDefaultTextColor
-            : const Color(0xFF525252),
-      );
+  TextTheme _textTheme(final bool dark) {
+    final textColor =
+        dark ? NeumorphicColors.darkDefaultTextColor : const Color(0xFF525252);
+    return TextTheme(
+      bodyMedium: TextStyle(
+        fontFamily: 'Poppins',
+        color: textColor,
+      ),
+      bodyLarge: TextStyle(
+        fontFamily: 'Poppins',
+        color: textColor,
+      ),
+      labelLarge: TextStyle(
+        fontFamily: 'Poppins',
+        color: textColor,
+      ),
+      headlineMedium: TextStyle(
+        fontFamily: 'Poppins',
+        fontWeight: FontWeight.w600,
+        color: textColor.withAlpha(0xaa),
+        fontSize: 14,
+        letterSpacing: 0.15,
+      ),
+    );
+  }
+
   static const Color _matchGreen = Color(0xFF8FDA93);
   static const Color _missYellow = Color(0xFFDBC381);
 

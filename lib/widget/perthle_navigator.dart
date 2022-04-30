@@ -1,8 +1,12 @@
 import 'package:flutter/gestures.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/controller/history_cubit.dart';
+import 'package:perthle/model/history_state.dart';
 import 'package:perthle/page/history_page.dart';
 import 'package:perthle/page/settings_page.dart';
 import 'package:perthle/page/game_page.dart';
+import 'package:perthle/page/welcome_page.dart';
 
 class PerthleNavigator extends StatelessWidget {
   const PerthleNavigator({final Key? key}) : super(key: key);
@@ -11,14 +15,23 @@ class PerthleNavigator extends StatelessWidget {
   Widget build(final BuildContext context) {
     return Container(
       color: NeumorphicTheme.baseColor(context),
-      child: PageView(
-        scrollBehavior: const _PerthleScrollBehavior(),
-        controller: PageController(initialPage: 1),
-        children: const [
-          HistoryPage(),
-          GamePage(),
-          SettingsPage(),
-        ],
+      child: BlocConsumer<HistoryCubit, HistoryState>(
+        listener: (final context, final history) {},
+        builder: (final context, final history) {
+          return PageView(
+            scrollBehavior: const _PerthleScrollBehavior(),
+            controller: PageController(
+              initialPage: history.savedGames.isEmpty ? 0 : 1,
+            ),
+            children: [
+              history.savedGames.isEmpty
+                  ? const WelcomePage()
+                  : const HistoryPage(),
+              const GamePage(),
+              const SettingsPage(),
+            ],
+          );
+        },
       ),
     );
   }
