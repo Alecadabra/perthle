@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/dictionary_cubit.dart';
 import 'package:perthle/controller/game_bloc.dart';
@@ -12,7 +13,7 @@ import 'package:perthle/widget/perthle_navigator.dart';
 import 'package:perthle/widget/inherited_storage_controller.dart';
 
 main() {
-  // debugRepaintRainbowEnabled = true;
+  setUrlStrategy(PathUrlStrategy());
   WidgetsFlutterBinding.ensureInitialized();
   runApp(PerthleApp());
 }
