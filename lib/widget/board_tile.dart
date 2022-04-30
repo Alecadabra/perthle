@@ -7,8 +7,8 @@ class BoardTile extends StatelessWidget {
     final Key? key,
     required this.match,
     this.letter,
-    required this.lightSource,
-    required this.current,
+    this.lightSource = LightSource.topLeft,
+    this.current = false,
   }) : super(key: key);
 
   final TileMatchState match;
@@ -82,9 +82,7 @@ class BoardTile extends StatelessWidget {
                   child: Text(
                     letter.toString(),
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline4?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Poppins',
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
                           color: match != TileMatchState.blank
                               ? NeumorphicTheme.baseColor(context)
                               : NeumorphicTheme.defaultTextColor(context),
