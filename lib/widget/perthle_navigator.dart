@@ -15,14 +15,11 @@ class PerthleNavigator extends StatelessWidget {
   Widget build(final BuildContext context) {
     return Container(
       color: NeumorphicTheme.baseColor(context),
-      child: BlocConsumer<HistoryCubit, HistoryState>(
-        listener: (final context, final history) {},
+      child: BlocBuilder<HistoryCubit, HistoryState>(
         builder: (final context, final history) {
           return PageView(
             scrollBehavior: const _PerthleScrollBehavior(),
-            controller: PageController(
-              initialPage: history.savedGames.isEmpty ? 0 : 1,
-            ),
+            controller: PageController(initialPage: 1),
             children: [
               history.savedGames.isEmpty
                   ? const WelcomePage()
