@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/history_cubit.dart';
@@ -31,38 +33,9 @@ class HistoryPage extends StatelessWidget {
     return PerthleScaffold(
       appBar: GestureDetector(
         child: const PerthleAppbar(
-            title: 'History', lightSource: HistoryPage.lightSource),
-        // Hacky temporary data export
-        onLongPress: () {
-          ScaffoldMessenger.of(context).showMaterialBanner(
-            MaterialBanner(
-              backgroundColor: NeumorphicTheme.baseColor(context),
-              elevation: 0,
-              content: const Text('📤 Download History?'),
-              leading: IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).clearMaterialBanners();
-                },
-              ),
-              actions: [
-                TextButton(
-                  child: const Text('DOWNLOAD'),
-                  onPressed: () async {
-                    final history = HistoryCubit.of(context);
-                    final json = history.toJson(history.state);
-                    final stringified =
-                        const JsonEncoder.withIndent('  ').convert(json);
-
-                    await Share.share(stringified, subject: 'saved_games.json');
-
-                    ScaffoldMessenger.of(context).clearMaterialBanners();
-                  },
-                ),
-              ],
-            ),
-          );
-        },
+          title: 'History',
+          lightSource: HistoryPage.lightSource,
+        ),
       ),
       body: SizedBox(
         width: 600,
@@ -117,32 +90,34 @@ class _HistoryListState extends State<_HistoryList> {
             history.savedGamesList.reversed.toList(growable: false);
         return BlocBuilder<SettingsCubit, SettingsState>(
           builder: (final context, final settings) {
-            return PerthleScrollConfiguration(
-              child: ListView.builder(
-                controller: scroll,
-                padding: const EdgeInsets.symmetric(
-                  vertical: HistoryPage.listPadding,
-                  horizontal: 16,
-                ),
-                itemCount: historyList.length,
-                itemBuilder: (final context, final idx) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: HistoryPage.childPadding,
-                    ),
-                    child: SizedBox(
-                      height: HistoryPage.childInnerHeight,
-                      child: SavedGameTile(
-                        savedGame: historyList[idx],
-                        showWord: settings.historyShowWords,
-                        visibility: scroll.visibilityForIdx(idx),
-                        lightSource: widget.lightSource,
+            return LayoutBuilder(builder: (final context, final _) {
+              return PerthleScrollConfiguration(
+                child: ListView.builder(
+                  controller: scroll,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: HistoryPage.listPadding,
+                    horizontal: 16,
+                  ),
+                  itemCount: historyList.length,
+                  itemBuilder: (final context, final idx) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: HistoryPage.childPadding,
                       ),
-                    ),
-                  );
-                },
-              ),
-            );
+                      child: SizedBox(
+                        height: HistoryPage.childInnerHeight,
+                        child: SavedGameTile(
+                          savedGame: historyList[idx],
+                          showWord: settings.historyShowWords,
+                          visibility: scroll.visibilityForIdx(idx),
+                          lightSource: widget.lightSource,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            });
           },
           buildWhen: (final a, final b) {
             return a.historyShowWords != b.historyShowWords;
