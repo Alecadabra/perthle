@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/controller/history_cubit.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/page/history_page.dart';
@@ -8,8 +9,45 @@ import 'package:perthle/page/settings_page.dart';
 import 'package:perthle/page/game_page.dart';
 import 'package:perthle/page/welcome_page.dart';
 
-class PerthleNavigator extends StatelessWidget {
+class PerthleNavigator extends StatefulWidget {
   const PerthleNavigator({final Key? key}) : super(key: key);
+
+  @override
+  State<PerthleNavigator> createState() => _PerthleNavigatorState();
+}
+
+class _PerthleNavigatorState extends State<PerthleNavigator> {
+  late PageController controller;
+
+  @override
+  void initState() {
+    controller = PageController(initialPage: 1);
+    // Go to page one after a delay if they haven't played before
+    WidgetsBinding.instance?.addPostFrameCallback(
+      (final _) => Future.delayed(const Duration(milliseconds: 500)).then(
+        (final _) {
+          final history = HistoryCubit.of(context).state;
+          final game = GameBloc.of(context).state;
+          if (history.savedGames.isEmpty && game.currRow == 0) {
+            if (controller.hasClients) {
+              return controller.animateToPage(
+                0,
+                duration: const Duration(milliseconds: 1400),
+                curve: Curves.easeInOutQuart,
+              );
+            }
+          }
+        },
+      ),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -19,11 +57,12 @@ class PerthleNavigator extends StatelessWidget {
         builder: (final context, final history) {
           return PageView(
             scrollBehavior: const _PerthleScrollBehavior(),
-            controller: PageController(initialPage: 1),
+            controller: controller,
             children: [
-              history.savedGames.isEmpty
-                  ? const WelcomePage()
-                  : const HistoryPage(),
+              if (history.savedGames.isEmpty)
+                const WelcomePage()
+              else
+                const HistoryPage(),
               const GamePage(),
               const SettingsPage(),
             ],
