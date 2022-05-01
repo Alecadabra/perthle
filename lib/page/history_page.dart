@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/history_cubit.dart';
@@ -12,6 +11,7 @@ import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/history_stats.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
+import 'package:perthle/widget/perthle_scroll_configuration.dart';
 import 'package:perthle/widget/saved_game_tile.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -114,11 +114,10 @@ class _HistoryListState extends State<_HistoryList> {
     return BlocBuilder<HistoryCubit, HistoryState>(
       builder: (final context, final history) {
         List<SavedGameState> historyList =
-            history.savedGames.values.toList().reversed.toList();
+            history.savedGamesList.reversed.toList(growable: false);
         return BlocBuilder<SettingsCubit, SettingsState>(
           builder: (final context, final settings) {
-            return ScrollConfiguration(
-              behavior: const _HistoryScrollBehaviour(),
+            return PerthleScrollConfiguration(
               child: ListView.builder(
                 controller: scroll,
                 padding: const EdgeInsets.symmetric(
@@ -151,27 +150,6 @@ class _HistoryListState extends State<_HistoryList> {
         );
       },
     );
-  }
-}
-
-class _HistoryScrollBehaviour extends ScrollBehavior {
-  const _HistoryScrollBehaviour() : super(androidOverscrollIndicator: null);
-
-  @override
-  Set<PointerDeviceKind> get dragDevices => PointerDeviceKind.values.toSet();
-
-  @override
-  ScrollPhysics getScrollPhysics(final BuildContext context) {
-    return const BouncingScrollPhysics();
-  }
-
-  @override
-  Widget buildScrollbar(
-    final BuildContext context,
-    final Widget child,
-    final ScrollableDetails details,
-  ) {
-    return child;
   }
 }
 
