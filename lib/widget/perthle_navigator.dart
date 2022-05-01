@@ -51,9 +51,8 @@ class _PerthleNavigatorState extends State<PerthleNavigator> {
 
   @override
   Widget build(final BuildContext context) {
-    return Container(
-      color: NeumorphicTheme.baseColor(context),
-      child: BlocBuilder<HistoryCubit, HistoryState>(
+    return Scaffold(
+      body: BlocBuilder<HistoryCubit, HistoryState>(
         builder: (final context, final history) {
           return PageView(
             scrollBehavior: const _PerthleScrollBehavior(),
