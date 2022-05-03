@@ -15,7 +15,7 @@ void main() {
     'Counter increments smoke test',
     (final WidgetTester tester) async {
       // Build our app and trigger a frame.
-      await tester.pumpWidget(PerthleApp());
+      await tester.pumpWidget(const PerthleApp());
 
       // Verify that our counter starts at 0.
       expect(find.text('0'), findsOneWidget);

@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/history_cubit.dart';
@@ -15,7 +12,6 @@ import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/perthle_scroll_configuration.dart';
 import 'package:perthle/widget/saved_game_tile.dart';
-import 'package:share_plus/share_plus.dart';
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({final Key? key}) : super(key: key);

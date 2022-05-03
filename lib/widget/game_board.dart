@@ -10,58 +10,63 @@ class GameBoard extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return BlocBuilder<GameBloc, GameState>(
-        builder: (final context, final gameState) {
-      final EdgeInsets padding = EdgeInsets.all(
-        MediaQuery.of(context).size.height / 15 / gameState.word.length,
-      );
-
-      return RepaintBoundary(
-        child: AspectRatio(
-          aspectRatio: gameState.board.width / gameState.board.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (var i = 0; i < gameState.board.height; i++)
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      for (var j = 0; j < gameState.board.width; j++)
-                        Expanded(
-                          child: Padding(
-                            padding: padding,
-                            child: BoardTile(
-                              match: gameState.board.matches[i][j],
-                              letter: gameState.board.letters[i][j],
-                              lightSource: LightSource(
-                                gameState.currCol == gameState.board.width ||
-                                        !gameState.completion.isPlaying
-                                    ? 0
-                                    : (gameState.currCol - j) /
-                                        gameState.board.width,
-                                !gameState.completion.isPlaying
-                                    ? 0
-                                    : (gameState.currRow - i) /
-                                        gameState.board.height,
-                              ),
-                              current: gameState.completion.isPlaying &&
-                                      j == gameState.currCol &&
-                                      i == gameState.currRow ||
-                                  gameState.currCol == gameState.board.width &&
-                                      i == gameState.currRow,
+    return RepaintBoundary(
+      child: BlocBuilder<GameBloc, GameState>(
+        builder: (final context, final outGame) {
+          return AspectRatio(
+            aspectRatio: outGame.board.width / outGame.board.height,
+            child: Column(
+              children: [
+                const Spacer(),
+                for (var i = 0; i < outGame.board.height; i++) ...[
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        const Spacer(),
+                        for (var j = 0; j < outGame.board.width; j++) ...[
+                          Expanded(
+                            flex: 2,
+                            child: BlocBuilder<GameBloc, GameState>(
+                              builder: (final context, final inGame) {
+                                return BoardTile(
+                                  match: inGame.board.matches[i][j],
+                                  letter: inGame.board.letters[i][j],
+                                  lightSource: LightSource(
+                                    inGame.currCol == inGame.board.width ||
+                                            !inGame.completion.isPlaying
+                                        ? 0
+                                        : (inGame.currCol - j) /
+                                            inGame.board.width,
+                                    !inGame.completion.isPlaying
+                                        ? 0
+                                        : (inGame.currRow - i) /
+                                            inGame.board.height,
+                                  ),
+                                  current: inGame.completion.isPlaying &&
+                                          j == inGame.currCol &&
+                                          i == inGame.currRow ||
+                                      inGame.currCol == inGame.board.width &&
+                                          i == inGame.currRow,
+                                );
+                              },
                             ),
                           ),
-                        ),
-                    ],
+                          const Spacer(),
+                        ],
+                      ],
+                    ),
                   ),
-                ),
-            ],
-          ),
-        ),
-      );
-    });
+                  const Spacer(),
+                ],
+              ],
+            ),
+          );
+        },
+        buildWhen: (final a, final b) {
+          return a.gameNum != b.gameNum;
+        },
+      ),
+    );
   }
 }

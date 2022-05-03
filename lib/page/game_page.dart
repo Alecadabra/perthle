@@ -49,7 +49,7 @@ class GamePage extends StatelessWidget {
             const Expanded(flex: 12, child: GameBoard()),
 
             // Board-Keyboard gap
-            const Spacer(flex: 2),
+            const Spacer(),
 
             // Keyboard / Stats switcher
             Expanded(

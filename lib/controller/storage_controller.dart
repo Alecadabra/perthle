@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:perthle/widget/inherited_storage_controller.dart';
+import 'package:provider/provider.dart';
 
 abstract class StorageController {
   const StorageController();
@@ -8,9 +8,10 @@ abstract class StorageController {
 
   Future<Map<String, dynamic>?> load(final String key);
 
-  /// Retrieves a StorageController from the nearest InheritedStorageController
-  /// in the widget tree, if there is one
-  static StorageController of(final BuildContext context) => context
-      .dependOnInheritedWidgetOfExactType<InheritedStorageController>()!
-      .storageController;
+  static StorageController of(
+    final BuildContext context, {
+    final bool listen = false,
+  }) {
+    return Provider.of<StorageController>(context, listen: listen);
+  }
 }
