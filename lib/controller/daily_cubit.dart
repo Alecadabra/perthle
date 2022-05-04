@@ -1,6 +1,4 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_mode_state.dart';
@@ -37,14 +35,15 @@ class DailyCubit extends Cubit<DailyState> {
     );
   }
 
-  static const int _startTimestamp = 1645718400000;
+  // Perthle 1, 00:00:00, in milliseconds since unix epoch
+  static const int epoch = 1645718400000;
 
-  static const int _originalListSize = 35;
-
-  static const String _special = '\u{75}\u{73}\u0073\u0079';
+  // The last game num for the volumes of Perthle answers
+  static const int _lastVolOne = 35;
+  static const int _lastVolTwo = 70;
 
   static GameModeState gameModeForDateTime(final DateTime time) {
-    if (time.weekday < 6 || gameNumForDateTime(time) <= _originalListSize) {
+    if (time.weekday < 6 || gameNumForDateTime(time) <= _lastVolOne) {
       return GameModeState.perthle;
     } else if (time.weekday == 6) {
       return GameModeState.perthlonger;
@@ -57,38 +56,42 @@ class DailyCubit extends Cubit<DailyState> {
       gameModeForDateTime(dateTimeForGameNum(gameNum));
 
   static DateTime dateTimeForGameNum(final int gameNum) =>
-      DateTime.fromMillisecondsSinceEpoch(_startTimestamp)
-          .add(Duration(days: gameNum));
+      DateTime.fromMillisecondsSinceEpoch(epoch).add(Duration(days: gameNum));
 
-  static int gameNumForDateTime(final DateTime time) => time
-      .difference(DateTime.fromMillisecondsSinceEpoch(_startTimestamp))
-      .inDays;
+  static int gameNumForDateTime(final DateTime time) =>
+      time.difference(DateTime.fromMillisecondsSinceEpoch(epoch)).inDays;
 
   static String wordForDateTime(final DateTime time) =>
       wordForGameNum(gameNumForDateTime(time));
 
   static String wordForGameNum(final int gameNum) {
-    GameModeState gameMode = gameModeForGameNum(gameNum);
-    if (gameNum <= _originalListSize) {
-      // Original Perthle
-      return DailyState.answers[gameNum - 1].toUpperCase();
+    if (gameNum <= _lastVolOne) {
+      // Perthle Volume 1
+      return DailyState.perthleVolOne[gameNum - 1].toUpperCase();
     } else {
+      final gameMode = gameModeForGameNum(gameNum);
       if (gameMode == GameModeState.perthle) {
-        // Perthle
-        int index = gameNum - _originalListSize - 1;
-        int length = DailyState.answers.length;
-        int seed = index ~/ length;
-        var list = DailyState.answers.toList()..shuffle(Random(seed));
-        return list[index % length].toUpperCase();
+        if (gameNum <= _lastVolTwo) {
+          // Perthle Volume 2
+          int index = gameNum - _lastVolOne - 1;
+          var list = DailyState.perthleVolTwo;
+          return list[index % list.length].toUpperCase();
+        } else {
+          // Perthle Volume 3
+          int index = gameNum - _lastVolTwo - 1;
+          var list = DailyState.perthleVolThree;
+          return list[index % list.length].toUpperCase();
+        }
       } else if (gameMode == GameModeState.perthlonger) {
         // Perthlonger
-        int index = (gameNum - _originalListSize - 1) ~/ 7;
+        int index = (gameNum - _lastVolOne - 1) ~/ 7;
         return DailyState.longAnswers[index % DailyState.longAnswers.length]
             .toUpperCase();
       } else {
         // Special
-        int index = (gameNum - _originalListSize - 1) ~/ 7;
-        return '${DailyState.specialAnswers[index % DailyState.specialAnswers.length]}$_special'
+        int index = (gameNum - _lastVolOne - 1) ~/ 7;
+        return DailyState
+            .specialAnswers[index % DailyState.specialAnswers.length]
             .toUpperCase();
       }
     }
