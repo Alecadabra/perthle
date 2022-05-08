@@ -6,12 +6,14 @@ import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/dictionary_cubit.dart';
 import 'package:perthle/controller/game_event.dart';
 import 'package:perthle/controller/persistent_bloc.dart';
-import 'package:perthle/controller/shake_cubit.dart';
+import 'package:perthle/controller/settings_cubit.dart';
+import 'package:perthle/controller/messenger_cubit.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/dictionary_state.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
 
@@ -22,12 +24,14 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     required final StorageController storage,
     required this.dailyCubit,
     required this.dictionaryCubit,
-    required this.shakeCubit,
+    required this.messengerCubit,
+    required this.settingsCubit,
   }) : super(
           storage: storage,
           initialState: GameState(
             gameNum: dailyCubit.state.gameNum,
             word: dailyCubit.state.word,
+            hardMode: settingsCubit.state.hardMode,
           ),
         ) {
     dailySubscription = dailyCubit.stream.listen(
@@ -36,12 +40,16 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     dictionarySubscription = dictionaryCubit.stream.listen(
       (final dictionary) => add(GameDictionaryLoadedEvent(dictionary != null)),
     );
+    settingsSubscription = settingsCubit.stream.listen(
+      (final settings) => add(GameHardModeToggleEvent(settings.hardMode)),
+    );
 
     on<GameNewDailyEvent>(_newDaily);
     on<GameLetterTypeEvent>(_letterType);
     on<GameBackspaceEvent>(_backspace);
     on<GameEnterEvent>(_enter);
     on<GameCompletionEvent>(_completion);
+    on<GameHardModeToggleEvent>(_hardModeToggle);
     on<GameDictionaryLoadedEvent>(_dictionaryLoaded);
   }
 
@@ -51,7 +59,10 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   final DictionaryCubit dictionaryCubit;
   late StreamSubscription<DictionaryState?> dictionarySubscription;
 
-  final ShakeCubit shakeCubit;
+  final SettingsCubit settingsCubit;
+  late StreamSubscription<SettingsState> settingsSubscription;
+
+  final MessengerCubit messengerCubit;
 
   void type(final LetterState letter) {
     if (state.canType) {
@@ -69,9 +80,10 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     if (state.canEnter) {
       add(
         GameEnterEvent(
-          dictionaryCubit.isValidWord(
+          validWord: dictionaryCubit.isValidWord(
             state.board.letters[state.currRow].join(),
           ),
+          satisfiesHardMode: state.satisfiesHardMode,
         ),
       );
     }
@@ -154,7 +166,55 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   }
 
   void _enter(final GameEnterEvent event, final GameEmitter emit) {
-    if (event.validWord) {
+    if (!event.satisfiesHardMode) {
+      // Hard mode is on and this doesn't satisfy it
+      final enteredLetters = state.board.letters[state.currRow];
+      final missingLetters = state.keyboard.keys.entries
+          .where((final entry) => entry.value.isMatch || entry.value.isMiss)
+          .map((final entry) => entry.key)
+          .where((final letter) => !enteredLetters.contains(letter));
+      if (missingLetters.isNotEmpty) {
+        messengerCubit.send(
+          '${enteredLetters.join()} doesn\'t contain '
+          '${missingLetters.join(', ')}',
+        );
+      } else {
+        final expectedMask = state.board.letters
+            .sublist(0, state.currCol)
+            .map(
+              (final row) => row
+                  .map(
+                    (final letter) =>
+                        state.keyboard[letter!].isMatch ? letter : null,
+                  )
+                  .toList(),
+            )
+            .reduce(
+              (final a, final b) => [
+                for (int i = 0; i < a.length; i++)
+                  a[i] != null || b[i] != null ? a[i] : null,
+              ],
+            );
+        final actualMask = state.board.letters[state.currRow]
+            .map(
+              (final letter) => state.keyboard[letter!].isMatch ? letter : null,
+            )
+            .toList();
+        final missedLetters = [
+          for (int i = 0; i < expectedMask.length; i++)
+            expectedMask[i] != actualMask[i] ? expectedMask[i] : null,
+        ].where((final letter) => letter != null);
+        messengerCubit.send(
+          '${enteredLetters.join()} doesn\'t have '
+          '${missedLetters.join(', ')} in their known places',
+        );
+      }
+    } else if (!event.validWord) {
+      // Invalid word
+      messengerCubit.send(
+        '${state.board.letters[state.currRow].join()} is not a word',
+      );
+    } else {
       List<int> indicies = List.generate(state.board.width, (final i) => i);
       String effectiveWord = state.word;
 
@@ -222,14 +282,20 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
           currCol: 0,
         ),
       );
-    } else {
-      // Invalid word
-      shakeCubit.shake();
     }
   }
 
   void _completion(final GameCompletionEvent event, final GameEmitter emit) {
     emit(state.copyWith(completion: event.completion));
+  }
+
+  void _hardModeToggle(
+    final GameHardModeToggleEvent event,
+    final GameEmitter emit,
+  ) {
+    if (state.canToggleHardMode) {
+      emit(state.copyWith(hardMode: event.hardMode));
+    }
   }
 
   void _dictionaryLoaded(

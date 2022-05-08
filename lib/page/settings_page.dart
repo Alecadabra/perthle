@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/controller/settings_cubit.dart';
+import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
@@ -113,6 +115,35 @@ class SettingsPage extends StatelessWidget {
                 );
               },
             ),
+            const _SettingsHeading('Game'),
+            BlocBuilder<GameBloc, GameState>(
+              builder: (final context, final game) {
+                return _SettingsRow(
+                  name: 'Hard mode',
+                  description: game.canToggleHardMode
+                      ? 'Revealed hints must be used in guesses'
+                      : 'Cannot enable when game has already started',
+                  builder: (final context, final settings) {
+                    return NeumorphicSwitch(
+                      style: NeumorphicSwitchStyle(
+                        thumbDepth: game.canToggleHardMode
+                            ? NeumorphicTheme.depth(context)
+                            : -NeumorphicTheme.depth(context)!,
+                      ),
+                      value: settings.hardMode,
+                      onChanged: (final bool newValue) {
+                        if (game.canToggleHardMode) {
+                          SettingsCubit.of(context).edit(hardMode: newValue);
+                        }
+                      },
+                    );
+                  },
+                );
+              },
+              buildWhen: (final a, final b) {
+                return a.canToggleHardMode != b.canToggleHardMode;
+              },
+            ),
             const _SettingsHeading('History'),
             _SettingsRow(
               name: 'Show past answers',
@@ -208,6 +239,7 @@ class _SettingsRow extends StatelessWidget {
   const _SettingsRow({
     final Key? key,
     required this.name,
+    this.description,
     this.builder,
     this.child,
   })  : assert(
@@ -216,6 +248,7 @@ class _SettingsRow extends StatelessWidget {
         super(key: key);
 
   final String name;
+  final String? description;
   final Widget? child;
   final Widget Function(BuildContext context, SettingsState settings)? builder;
 
@@ -226,7 +259,17 @@ class _SettingsRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: Text(name)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(name),
+              if (description != null)
+                Text(
+                  description!,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+            ],
+          ),
           builder == null
               ? child!
               : BlocBuilder<SettingsCubit, SettingsState>(builder: builder!),

@@ -6,6 +6,7 @@ import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
 import 'package:perthle/widget/daily_countdown.dart';
+import 'package:perthle/widget/messenger_popup.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/saved_game_tile.dart';
 import 'package:perthle/widget/shaking_perthle_appbar.dart';
@@ -48,8 +49,8 @@ class GamePage extends StatelessWidget {
             // Board
             const Expanded(flex: 12, child: GameBoard()),
 
-            // Board-Keyboard gap
-            const Spacer(),
+            // Messenger
+            const Expanded(child: MessengerPopup()),
 
             // Keyboard / Stats switcher
             Expanded(

@@ -7,7 +7,7 @@ import 'package:perthle/controller/game_bloc.dart';
 import 'package:perthle/controller/history_cubit.dart';
 import 'package:perthle/controller/local_storage_controller.dart';
 import 'package:perthle/controller/settings_cubit.dart';
-import 'package:perthle/controller/shake_cubit.dart';
+import 'package:perthle/controller/messenger_cubit.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_navigator.dart';
@@ -130,7 +130,7 @@ class PerthleApp extends StatelessWidget {
           lazy: false,
         ),
         BlocProvider(
-          create: (final context) => ShakeCubit(),
+          create: (final context) => MessengerCubit(),
           lazy: false,
         ),
         BlocProvider(
@@ -138,7 +138,8 @@ class PerthleApp extends StatelessWidget {
             storage: StorageController.of(context),
             dailyCubit: DailyCubit.of(context),
             dictionaryCubit: DictionaryCubit.of(context),
-            shakeCubit: ShakeCubit.of(context),
+            messengerCubit: MessengerCubit.of(context),
+            settingsCubit: SettingsCubit.of(context),
           ),
           lazy: false,
         ),
