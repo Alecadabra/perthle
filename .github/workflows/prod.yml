@@ -21,7 +21,7 @@ jobs:
         path: build/web
   deploy-prod:
     name: Deploy to Prod
-    needs: build_web
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
