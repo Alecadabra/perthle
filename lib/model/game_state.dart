@@ -1,9 +1,11 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:perthle/model/board_state.dart';
 import 'package:perthle/model/keyboard_state.dart';
+import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
+import 'package:perthle/model/tile_match_state.dart';
 
 @immutable
 class GameState extends Equatable {
@@ -15,6 +17,7 @@ class GameState extends Equatable {
     final BoardState? board,
     this.currRow = 0,
     this.currCol = 0,
+    this.hardMode = false,
     this.dictionaryLoaded = false,
   })  : completion = completion ?? GameCompletionState.playing,
         keyboard = keyboard ?? KeyboardState.empty(),
@@ -34,6 +37,8 @@ class GameState extends Equatable {
           currCol: json['currCol'],
         );
 
+  // Immutable state
+
   final int gameNum;
   final String word;
 
@@ -45,13 +50,49 @@ class GameState extends Equatable {
   final int currRow;
   final int currCol;
 
+  final bool hardMode;
+
   final bool dictionaryLoaded;
 
-  bool get canType =>
+  // Action Getters
+
+  late final bool canType =
       currCol < board.width && currRow < board.height && completion.isPlaying;
-  bool get canBackspace => currCol != 0 && completion.isPlaying;
-  bool get canEnter =>
+
+  late final bool canBackspace = currCol != 0 && completion.isPlaying;
+
+  late final bool canEnter =
       currCol >= board.width && completion.isPlaying && dictionaryLoaded;
+
+  // Hard Mode Getters
+
+  late final bool canToggleHardMode = hardMode || currRow == 0;
+
+  late final bool satisfiesHardMode = _satisfiesHardMode;
+  bool get _satisfiesHardMode {
+    if (!hardMode || currRow == 0) {
+      return true;
+    }
+
+    bool isMiss(final LetterState letter) => keyboard[letter].isMiss;
+    bool isMatch(final LetterState letter) => keyboard[letter].isMatch;
+
+    final currGuess = board.letters[currRow].cast<LetterState>();
+    final prevGuess = board.letters[currRow - 1].cast<LetterState>();
+    final Iterable<LetterState> prevMisses = prevGuess.where(isMiss);
+    final List<LetterState?> prevOnlyMatches = prevGuess
+        .map((final letter) => isMatch(letter) ? letter : null)
+        .toList();
+    final List<LetterState?> currGuessOnlyMatches = currGuess
+        .map((final letter) => isMatch(letter) ? letter : null)
+        .toList();
+
+    return
+        // Contains all matches in the right spots
+        listEquals(prevOnlyMatches, currGuessOnlyMatches) &&
+            // Contains all misses
+            currGuess.toSet().containsAll(prevMisses);
+  }
 
   GameState copyWith({
     final int? gameNum,
@@ -61,6 +102,7 @@ class GameState extends Equatable {
     final BoardState? board,
     final int? currRow,
     final int? currCol,
+    final bool? hardMode,
     final bool? dictionaryLoaded,
   }) {
     return GameState(
@@ -71,12 +113,17 @@ class GameState extends Equatable {
       board: board ?? this.board,
       currRow: currRow ?? this.currRow,
       currCol: currCol ?? this.currCol,
+      hardMode: hardMode ?? this.hardMode,
       dictionaryLoaded: dictionaryLoaded ?? this.dictionaryLoaded,
     );
   }
 
   SavedGameState toSavedGame() {
-    return SavedGameState(gameNum: gameNum, matches: board.matches);
+    return SavedGameState(
+      gameNum: gameNum,
+      matches: board.matches,
+      hardMode: hardMode,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -91,6 +138,8 @@ class GameState extends Equatable {
     };
   }
 
+  // Equatable
+
   @override
   List<Object?> get props => [
         gameNum,
@@ -100,6 +149,7 @@ class GameState extends Equatable {
         board,
         currRow,
         currCol,
+        hardMode,
         dictionaryLoaded,
       ];
 }

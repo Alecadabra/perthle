@@ -2,10 +2,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/game_bloc.dart';
-import 'package:perthle/controller/shake_cubit.dart';
+import 'package:perthle/controller/messenger_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
+import 'package:perthle/model/messenger_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 
 class ShakingPerthleAppbar extends StatefulWidget {
@@ -51,7 +52,7 @@ class _ShakingPerthleAppbarState extends State<ShakingPerthleAppbar>
 
   @override
   Widget build(final BuildContext context) {
-    return BlocListener<ShakeCubit, int>(
+    return BlocListener<MessengerCubit, MessengerState>(
       listener: (final _, final __) => shake(),
       child: BlocBuilder<DailyCubit, DailyState>(
         builder: (final context, final daily) {

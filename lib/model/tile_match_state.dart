@@ -29,3 +29,10 @@ extension TileMatchStatePrecedence on TileMatchState {
     }
   }
 }
+
+extension TileMatchStateSugar on TileMatchState {
+  bool get isBlank => this == TileMatchState.blank;
+  bool get isWrong => this == TileMatchState.wrong;
+  bool get isMiss => this == TileMatchState.miss;
+  bool get isMatch => this == TileMatchState.match;
+}

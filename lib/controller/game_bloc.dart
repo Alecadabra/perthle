@@ -6,12 +6,14 @@ import 'package:perthle/controller/daily_cubit.dart';
 import 'package:perthle/controller/dictionary_cubit.dart';
 import 'package:perthle/controller/game_event.dart';
 import 'package:perthle/controller/persistent_bloc.dart';
-import 'package:perthle/controller/shake_cubit.dart';
+import 'package:perthle/controller/settings_cubit.dart';
+import 'package:perthle/controller/messenger_cubit.dart';
 import 'package:perthle/controller/storage_controller.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/dictionary_state.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
 
@@ -22,12 +24,14 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     required final StorageController storage,
     required this.dailyCubit,
     required this.dictionaryCubit,
-    required this.shakeCubit,
+    required this.messengerCubit,
+    required this.settingsCubit,
   }) : super(
           storage: storage,
           initialState: GameState(
             gameNum: dailyCubit.state.gameNum,
             word: dailyCubit.state.word,
+            hardMode: settingsCubit.state.hardMode,
           ),
         ) {
     dailySubscription = dailyCubit.stream.listen(
@@ -36,12 +40,16 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     dictionarySubscription = dictionaryCubit.stream.listen(
       (final dictionary) => add(GameDictionaryLoadedEvent(dictionary != null)),
     );
+    settingsSubscription = settingsCubit.stream.listen(
+      (final settings) => add(GameHardModeToggleEvent(settings.hardMode)),
+    );
 
     on<GameNewDailyEvent>(_newDaily);
     on<GameLetterTypeEvent>(_letterType);
     on<GameBackspaceEvent>(_backspace);
     on<GameEnterEvent>(_enter);
     on<GameCompletionEvent>(_completion);
+    on<GameHardModeToggleEvent>(_hardModeToggle);
     on<GameDictionaryLoadedEvent>(_dictionaryLoaded);
   }
 
@@ -51,7 +59,10 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   final DictionaryCubit dictionaryCubit;
   late StreamSubscription<DictionaryState?> dictionarySubscription;
 
-  final ShakeCubit shakeCubit;
+  final SettingsCubit settingsCubit;
+  late StreamSubscription<SettingsState> settingsSubscription;
+
+  final MessengerCubit messengerCubit;
 
   void type(final LetterState letter) {
     if (state.canType) {
@@ -69,9 +80,10 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     if (state.canEnter) {
       add(
         GameEnterEvent(
-          dictionaryCubit.isValidWord(
+          validWord: dictionaryCubit.isValidWord(
             state.board.letters[state.currRow].join(),
           ),
+          satisfiesHardMode: state.satisfiesHardMode,
         ),
       );
     }
@@ -109,52 +121,94 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   }
 
   void _letterType(final GameLetterTypeEvent event, final GameEmitter emit) {
-    if (state.canType) {
-      emit(
-        state.copyWith(
-          currCol: state.currCol + 1,
-          board: state.board.copyWith(
-            // The old letters board with the current spot set to the typed
-            // letter
-            letters: [
-              for (int i = 0; i < state.board.height; i++)
-                [
-                  for (int j = 0; j < state.board.width; j++)
-                    i == state.currRow && j == state.currCol
-                        ? event.letterData
-                        : state.board.letters[i][j],
-                ],
-            ],
-          ),
+    emit(
+      state.copyWith(
+        currCol: state.currCol + 1,
+        board: state.board.copyWith(
+          // The old letters board with the current spot set to the typed
+          // letter
+          letters: [
+            for (int i = 0; i < state.board.height; i++)
+              [
+                for (int j = 0; j < state.board.width; j++)
+                  i == state.currRow && j == state.currCol
+                      ? event.letterData
+                      : state.board.letters[i][j],
+              ],
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
 
   void _backspace(final GameBackspaceEvent event, final GameEmitter emit) {
-    if (state.canBackspace) {
-      emit(
-        state.copyWith(
-          currCol: state.currCol - 1,
-          board: state.board.copyWith(
-            // The old letters board with the previous spot replaced with null
-            letters: [
-              for (int i = 0; i < state.board.height; i++)
-                [
-                  for (int j = 0; j < state.board.width; j++)
-                    i == state.currRow && j == state.currCol - 1
-                        ? null
-                        : state.board.letters[i][j],
-                ],
-            ],
-          ),
+    emit(
+      state.copyWith(
+        currCol: state.currCol - 1,
+        board: state.board.copyWith(
+          // The old letters board with the previous spot replaced with null
+          letters: [
+            for (int i = 0; i < state.board.height; i++)
+              [
+                for (int j = 0; j < state.board.width; j++)
+                  i == state.currRow && j == state.currCol - 1
+                      ? null
+                      : state.board.letters[i][j],
+              ],
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
 
   void _enter(final GameEnterEvent event, final GameEmitter emit) {
-    if (event.validWord) {
+    if (!event.satisfiesHardMode) {
+      // Hard mode is on and this doesn't satisfy it
+      // Logic is mostly from GameState._satisfiesHardMode
+
+      bool isMiss(final LetterState letter) => state.keyboard[letter].isMiss;
+      bool isMatch(final LetterState letter) => state.keyboard[letter].isMatch;
+
+      final currGuess = state.board.letters[state.currRow].cast<LetterState>();
+      final prevGuess =
+          state.board.letters[state.currRow - 1].cast<LetterState>();
+      final missingLetters = prevGuess
+          .where((final letter) => isMatch(letter) || isMiss(letter))
+          .where((final letter) => !currGuess.contains(letter));
+
+      if (missingLetters.isNotEmpty) {
+        // There are any amount of missed letters
+        messengerCubit.send(
+          '${currGuess.join()} doesn\'t contain '
+          '${missingLetters.join(', ')}',
+        );
+      } else {
+        // All letters are present, but one or more are in the wrong spot
+        final List<LetterState?> prevOnlyMatches = prevGuess
+            .map((final letter) => isMatch(letter) ? letter : null)
+            .toList();
+        final List<LetterState?> currGuessOnlyMatches = currGuess
+            .map((final letter) => isMatch(letter) ? letter : null)
+            .toList();
+        final wrongPositionLetters = [
+          for (int i = 0; i < prevOnlyMatches.length; i++)
+            prevOnlyMatches[i] != currGuessOnlyMatches[i]
+                ? prevOnlyMatches[i]
+                : null,
+        ].where((final letter) => letter != null);
+        messengerCubit.send(
+          '${currGuess.join()} uses the wrong '
+          'position${wrongPositionLetters.length != 1 ? 's' : ''} for '
+          '${wrongPositionLetters.join(', ')}',
+        );
+      }
+    } else if (!event.validWord) {
+      // Invalid word
+      messengerCubit.send(
+        '${state.board.letters[state.currRow].join()} is not a word',
+      );
+    } else {
+      // Valid word
       List<int> indicies = List.generate(state.board.width, (final i) => i);
       String effectiveWord = state.word;
 
@@ -222,14 +276,18 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
           currCol: 0,
         ),
       );
-    } else {
-      // Invalid word
-      shakeCubit.shake();
     }
   }
 
   void _completion(final GameCompletionEvent event, final GameEmitter emit) {
     emit(state.copyWith(completion: event.completion));
+  }
+
+  void _hardModeToggle(
+    final GameHardModeToggleEvent event,
+    final GameEmitter emit,
+  ) {
+    emit(state.copyWith(hardMode: event.hardMode));
   }
 
   void _dictionaryLoaded(

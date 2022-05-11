@@ -1,12 +1,9 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
 /// Immutable state representing a letter in the English alphabet.
 @immutable
-class LetterState extends Equatable {
-  const LetterState(this.letterString)
-      : assert(letterString.length == 1),
-        assert(alphabet >>> letterString); // Const hack
+class LetterState {
+  LetterState(this.letterString) : assert(isValid(letterString));
 
   final String letterString;
 
@@ -24,9 +21,6 @@ class LetterState extends Equatable {
   static bool isValid(final String letterString) {
     return letterString.length == 1 && alphabet.contains(letterString);
   }
-
-  @override
-  List<Object?> get props => [letterString];
 }
 
 extension LetterStateCharacters on String {
@@ -36,8 +30,3 @@ extension LetterStateCharacters on String {
 }
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-extension StringComp on String {
-  /// Const hack
-  operator >>>(final String other) => contains(other);
-}

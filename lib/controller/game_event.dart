@@ -31,11 +31,15 @@ class GameBackspaceEvent extends GameEvent {
 }
 
 class GameEnterEvent extends GameEvent {
-  const GameEnterEvent(this.validWord) : super();
+  const GameEnterEvent({
+    required this.validWord,
+    required this.satisfiesHardMode,
+  }) : super();
   final bool validWord;
+  final bool satisfiesHardMode;
 
   @override
-  List<Object?> get props => [validWord];
+  List<Object?> get props => [validWord, satisfiesHardMode];
 }
 
 class GameCompletionEvent extends GameEvent {
@@ -44,6 +48,14 @@ class GameCompletionEvent extends GameEvent {
 
   @override
   List<Object?> get props => [completion];
+}
+
+class GameHardModeToggleEvent extends GameEvent {
+  const GameHardModeToggleEvent(this.hardMode) : super();
+  final bool hardMode;
+
+  @override
+  List<Object?> get props => [hardMode];
 }
 
 class GameDictionaryLoadedEvent extends GameEvent {
