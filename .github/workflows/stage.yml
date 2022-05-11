@@ -1,10 +1,10 @@
-name: Preview CD
+name: stage
 on:
   push:
     branches-ignore:
       - main
 jobs:
-  build_web:
+  build:
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -19,8 +19,8 @@ jobs:
       with:
         name: web-build
         path: build/web
-  deploy_web:
-    name: Deploy Preview
+  deploy_stage:
+    name: Deploy to Stage
     needs: build_web
     runs-on: ubuntu-latest
     steps:
