@@ -12,8 +12,10 @@ class SavedGameState extends Equatable {
   const SavedGameState({
     required final int gameNum,
     required final List<List<TileMatchState>> matches,
+    final bool? hardMode,
   })  : _gameNum = gameNum,
-        _matches = matches;
+        _matches = matches,
+        hardMode = hardMode ?? false;
   SavedGameState.fromJson(final Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],
@@ -23,6 +25,7 @@ class SavedGameState extends Equatable {
                 for (var idx in row) TileMatchState.values[idx as int],
               ],
           ],
+          hardMode: json['hardMode'],
         );
 
   // State
@@ -30,6 +33,8 @@ class SavedGameState extends Equatable {
   final int _gameNum;
 
   final List<List<TileMatchState>> _matches;
+
+  final bool hardMode;
 
   // Getters
 
@@ -59,7 +64,8 @@ class SavedGameState extends Equatable {
       );
 
   String get title => '${dailyState.gameModeString} $_gameNum '
-      '${won ? attempts.length : 'X'}/${_matches.length}';
+      '${won ? attempts.length : 'X'}/${_matches.length}'
+      '${hardMode ? '*' : ''}';
 
   String boardEmojis(final bool lightEmojis) => attempts.map(
         (final List<TileMatchState> attempt) {
@@ -92,9 +98,10 @@ class SavedGameState extends Equatable {
             for (TileMatchState match in row) match.index,
           ],
       ],
+      'hardMode': hardMode,
     };
   }
 
   @override
-  List<Object?> get props => [_gameNum, _matches];
+  List<Object?> get props => [_gameNum, _matches, hardMode];
 }

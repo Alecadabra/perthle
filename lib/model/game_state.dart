@@ -119,7 +119,11 @@ class GameState extends Equatable {
   }
 
   SavedGameState toSavedGame() {
-    return SavedGameState(gameNum: gameNum, matches: board.matches);
+    return SavedGameState(
+      gameNum: gameNum,
+      matches: board.matches,
+      hardMode: hardMode,
+    );
   }
 
   Map<String, dynamic> toJson() {
