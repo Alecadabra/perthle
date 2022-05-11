@@ -1,6 +1,6 @@
-# Perthle ![Favicon](web/favicon.png) 
+# Perthle [![Favicon](web/favicon.png)](https://perthle.web.app)
 
-[![CD](https://github.com/Alecadabra/perthle/actions/workflows/prod.yml/badge.svg)](https://github.com/Alecadabra/perthle/actions/workflows/prod.yml) [![Preview CD](https://github.com/Alecadabra/perthle/actions/workflows/stage.yml/badge.svg)](https://github.com/Alecadabra/perthle/actions/workflows/stage.yml)
+[![prod](https://github.com/Alecadabra/perthle/actions/workflows/prod.yml/badge.svg)](https://github.com/Alecadabra/perthle/actions/workflows/prod.yml) [![stage](https://github.com/Alecadabra/perthle/actions/workflows/stage.yml/badge.svg)](https://github.com/Alecadabra/perthle/actions/workflows/stage.yml)
 
 A Wordle clone I made for my friends where you guess inside joke words 🥰
 
