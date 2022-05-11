@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:perthle/model/board_state.dart';
 import 'package:perthle/model/keyboard_state.dart';
@@ -55,46 +54,64 @@ class GameState extends Equatable {
 
   final bool dictionaryLoaded;
 
-  // Getters
+  // Action Getters
 
-  bool get canType =>
+  late final bool canType =
       currCol < board.width && currRow < board.height && completion.isPlaying;
-  bool get canBackspace => currCol != 0 && completion.isPlaying;
-  bool get canEnter =>
+
+  late final bool canBackspace = currCol != 0 && completion.isPlaying;
+
+  late final bool canEnter =
       currCol >= board.width && completion.isPlaying && dictionaryLoaded;
-  bool get canToggleHardMode => hardMode || currRow == 0;
-  bool get satisfiesHardMode =>
-      !hardMode ||
-      (board.letters[currRow].toSet().containsAll(
-                keyboard.keys.entries
-                    .where((final e) => e.value.isMatch || e.value.isMiss)
-                    .map((final e) => e.key),
-              ) &&
-          listEquals(
-            currRow < 2
-                ? List<LetterState?>.filled(word.length, null)
-                : board.letters
-                    .sublist(0, currCol)
-                    .map(
-                      (final row) => row
-                          .map(
-                            (final letter) =>
-                                keyboard[letter!].isMatch ? letter : null,
-                          )
-                          .toList(),
-                    )
-                    .reduce(
-                      (final a, final b) => [
-                        for (int i = 0; i < a.length; i++)
-                          a[i] != null || b[i] != null ? a[i] : null,
-                      ],
-                    ),
-            board.letters[currRow]
-                .map(
-                  (final letter) => keyboard[letter!].isMatch ? letter : null,
-                )
-                .toList(),
-          ));
+
+  // Hard Mode Getters
+
+  late final bool canToggleHardMode = hardMode || currRow == 0;
+
+  late final bool satisfiesHardMode = _satisfiesHardMode;
+  bool get _satisfiesHardMode {
+    if (!hardMode) {
+      return true;
+    }
+
+    final Iterable<LetterState> previousMisses = keyboard.keys.entries
+        .where((final entry) => entry.value.isMatch || entry.value.isMiss)
+        .map((final e) => e.key);
+
+    final List<LetterState?> previousMatches = currRow <= 1
+        ? List.filled(word.length, null)
+        : board.letters
+            // Take only the previous rows
+            .sublist(0, currRow)
+            // Extract just the matches
+            .map(
+              (final row) => row
+                  .map(
+                    (final letter) => keyboard[letter!].isMatch ? letter : null,
+                  )
+                  .toList(),
+            )
+            // Intersection together
+            // L[0] ∩ L[1] ∩ ... ∩ L[n-1]
+            .reduce(
+              (final List<LetterState?> a, final List<LetterState?> b) => [
+                for (int i = 0; i < a.length; i++) b[i] ?? a[i],
+              ],
+            );
+
+    final List<LetterState?> currGuess = board.letters[currRow];
+    final List<LetterState?> currGuessMatches = currGuess
+        .map(
+          (final letter) => keyboard[letter!].isMatch ? letter : null,
+        )
+        .toList();
+
+    return
+        // Contains all matches in the right spots
+        listEquals(previousMatches, currGuessMatches) &&
+            // Contains all misses
+            currGuess.toSet().containsAll(previousMisses);
+  }
 
   GameState copyWith({
     final int? gameNum,

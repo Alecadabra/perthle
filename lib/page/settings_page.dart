@@ -71,6 +71,9 @@ class SettingsPage extends StatelessWidget {
                   },
                 );
               },
+              buildWhen: (final a, final b) {
+                return a.themeMode != b.themeMode;
+              },
             ),
             _SettingsRow(
               name: 'Emoji style',
@@ -114,28 +117,33 @@ class SettingsPage extends StatelessWidget {
                   ],
                 );
               },
+              buildWhen: (final a, final b) {
+                return a.lightEmojis != b.lightEmojis;
+              },
             ),
             const _SettingsHeading('Game'),
             BlocBuilder<GameBloc, GameState>(
               builder: (final context, final game) {
-                return _SettingsRow(
-                  name: 'Hard mode',
-                  description: game.canToggleHardMode
-                      ? 'Revealed hints must be used in guesses'
-                      : 'Cannot enable when game has already started',
+                return BlocBuilder<SettingsCubit, SettingsState>(
                   builder: (final context, final settings) {
-                    return NeumorphicSwitch(
-                      style: NeumorphicSwitchStyle(
-                        thumbDepth: game.canToggleHardMode
-                            ? NeumorphicTheme.depth(context)
-                            : -NeumorphicTheme.depth(context)!,
+                    return _SettingsRow(
+                      name: 'Hard mode',
+                      description: game.canToggleHardMode
+                          ? 'Revealed hints must be used in guesses'
+                          : 'Cannot enable when game has already started',
+                      child: NeumorphicSwitch(
+                        style: NeumorphicSwitchStyle(
+                          thumbDepth: game.canToggleHardMode
+                              ? NeumorphicTheme.depth(context)
+                              : -NeumorphicTheme.depth(context)!,
+                        ),
+                        value: settings.hardMode,
+                        onChanged: (final bool newValue) {
+                          if (game.canToggleHardMode) {
+                            SettingsCubit.of(context).edit(hardMode: newValue);
+                          }
+                        },
                       ),
-                      value: settings.hardMode,
-                      onChanged: (final bool newValue) {
-                        if (game.canToggleHardMode) {
-                          SettingsCubit.of(context).edit(hardMode: newValue);
-                        }
-                      },
                     );
                   },
                 );
@@ -154,6 +162,9 @@ class SettingsPage extends StatelessWidget {
                     SettingsCubit.of(context).edit(historyShowWords: newValue);
                   },
                 );
+              },
+              buildWhen: (final a, final b) {
+                return a.historyShowWords != b.historyShowWords;
               },
             ),
             const _SettingsHeading('Info'),
@@ -240,17 +251,20 @@ class _SettingsRow extends StatelessWidget {
     final Key? key,
     required this.name,
     this.description,
-    this.builder,
     this.child,
+    this.builder,
+    this.buildWhen,
   })  : assert(
           builder == null && child != null || builder != null && child == null,
         ),
+        assert(buildWhen == null || builder != null),
         super(key: key);
 
   final String name;
   final String? description;
   final Widget? child;
   final Widget Function(BuildContext context, SettingsState settings)? builder;
+  final bool Function(SettingsState a, SettingsState b)? buildWhen;
 
   @override
   Widget build(final BuildContext context) {
@@ -259,20 +273,26 @@ class _SettingsRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(name),
-              if (description != null)
-                Text(
-                  description!,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(name),
+                if (description != null)
+                  Text(
+                    description!,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+              ],
+            ),
           ),
-          builder == null
-              ? child!
-              : BlocBuilder<SettingsCubit, SettingsState>(builder: builder!),
+          if (child != null)
+            child!
+          else
+            BlocBuilder<SettingsCubit, SettingsState>(
+              builder: builder!,
+              buildWhen: buildWhen!,
+            ),
         ],
       ),
     );

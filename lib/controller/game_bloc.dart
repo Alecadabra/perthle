@@ -121,93 +121,98 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   }
 
   void _letterType(final GameLetterTypeEvent event, final GameEmitter emit) {
-    if (state.canType) {
-      emit(
-        state.copyWith(
-          currCol: state.currCol + 1,
-          board: state.board.copyWith(
-            // The old letters board with the current spot set to the typed
-            // letter
-            letters: [
-              for (int i = 0; i < state.board.height; i++)
-                [
-                  for (int j = 0; j < state.board.width; j++)
-                    i == state.currRow && j == state.currCol
-                        ? event.letterData
-                        : state.board.letters[i][j],
-                ],
-            ],
-          ),
+    emit(
+      state.copyWith(
+        currCol: state.currCol + 1,
+        board: state.board.copyWith(
+          // The old letters board with the current spot set to the typed
+          // letter
+          letters: [
+            for (int i = 0; i < state.board.height; i++)
+              [
+                for (int j = 0; j < state.board.width; j++)
+                  i == state.currRow && j == state.currCol
+                      ? event.letterData
+                      : state.board.letters[i][j],
+              ],
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
 
   void _backspace(final GameBackspaceEvent event, final GameEmitter emit) {
-    if (state.canBackspace) {
-      emit(
-        state.copyWith(
-          currCol: state.currCol - 1,
-          board: state.board.copyWith(
-            // The old letters board with the previous spot replaced with null
-            letters: [
-              for (int i = 0; i < state.board.height; i++)
-                [
-                  for (int j = 0; j < state.board.width; j++)
-                    i == state.currRow && j == state.currCol - 1
-                        ? null
-                        : state.board.letters[i][j],
-                ],
-            ],
-          ),
+    emit(
+      state.copyWith(
+        currCol: state.currCol - 1,
+        board: state.board.copyWith(
+          // The old letters board with the previous spot replaced with null
+          letters: [
+            for (int i = 0; i < state.board.height; i++)
+              [
+                for (int j = 0; j < state.board.width; j++)
+                  i == state.currRow && j == state.currCol - 1
+                      ? null
+                      : state.board.letters[i][j],
+              ],
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
 
   void _enter(final GameEnterEvent event, final GameEmitter emit) {
     if (!event.satisfiesHardMode) {
       // Hard mode is on and this doesn't satisfy it
-      final enteredLetters = state.board.letters[state.currRow];
+      final currGuess = state.board.letters[state.currRow];
       final missingLetters = state.keyboard.keys.entries
           .where((final entry) => entry.value.isMatch || entry.value.isMiss)
           .map((final entry) => entry.key)
-          .where((final letter) => !enteredLetters.contains(letter));
+          .where((final letter) => !currGuess.contains(letter));
       if (missingLetters.isNotEmpty) {
         messengerCubit.send(
-          '${enteredLetters.join()} doesn\'t contain '
+          '${currGuess.join()} doesn\'t contain '
           '${missingLetters.join(', ')}',
         );
       } else {
-        final expectedMask = state.board.letters
-            .sublist(0, state.currCol)
-            .map(
-              (final row) => row
-                  .map(
-                    (final letter) =>
-                        state.keyboard[letter!].isMatch ? letter : null,
-                  )
-                  .toList(),
-            )
-            .reduce(
-              (final a, final b) => [
-                for (int i = 0; i < a.length; i++)
-                  a[i] != null || b[i] != null ? a[i] : null,
-              ],
-            );
-        final actualMask = state.board.letters[state.currRow]
+        final previousMatches = state.currRow <= 1
+            ? List.filled(state.word.length, null)
+            : state.board.letters
+                // Take only the previous rows
+                .sublist(0, state.currRow)
+                // Extract just the matches
+                .map(
+                  (final row) => row
+                      .map(
+                        (final letter) =>
+                            state.keyboard[letter!].isMatch ? letter : null,
+                      )
+                      .toList(),
+                )
+                // Intersection together
+                // L[0] ∩ L[1] ∩ ... ∩ L[n-1]
+                .reduce(
+                  (final List<LetterState?> a, final List<LetterState?> b) => [
+                    for (int i = 0; i < a.length; i++) b[i] ?? a[i],
+                  ],
+                );
+        final currGuessMatches = state.board.letters[state.currRow]
             .map(
               (final letter) => state.keyboard[letter!].isMatch ? letter : null,
             )
             .toList();
         final missedLetters = [
-          for (int i = 0; i < expectedMask.length; i++)
-            expectedMask[i] != actualMask[i] ? expectedMask[i] : null,
+          for (int i = 0; i < previousMatches.length; i++)
+            previousMatches[i] != currGuessMatches[i]
+                ? previousMatches[i]
+                : null,
         ].where((final letter) => letter != null);
-        messengerCubit.send(
-          '${enteredLetters.join()} doesn\'t have '
-          '${missedLetters.join(', ')} in their known places',
-        );
+        messengerCubit.send('previous: $previousMatches,'
+            'curr: $currGuessMatches'
+            // '${currGuess.join()} uses the wrong '
+            // 'position${missedLetters.length != 1 ? 's' : ''} for '
+            // '${missedLetters.join(', ')}',
+            );
       }
     } else if (!event.validWord) {
       // Invalid word
@@ -215,6 +220,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
         '${state.board.letters[state.currRow].join()} is not a word',
       );
     } else {
+      // Valid word
       List<int> indicies = List.generate(state.board.width, (final i) => i);
       String effectiveWord = state.word;
 
@@ -293,9 +299,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     final GameHardModeToggleEvent event,
     final GameEmitter emit,
   ) {
-    if (state.canToggleHardMode) {
-      emit(state.copyWith(hardMode: event.hardMode));
-    }
+    emit(state.copyWith(hardMode: event.hardMode));
   }
 
   void _dictionaryLoaded(
