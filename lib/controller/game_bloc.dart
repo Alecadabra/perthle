@@ -41,7 +41,11 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
       (final dictionary) => add(GameDictionaryLoadedEvent(dictionary != null)),
     );
     settingsSubscription = settingsCubit.stream.listen(
-      (final settings) => add(GameHardModeToggleEvent(settings.hardMode)),
+      (final settings) {
+        if (state.completion.isPlaying) {
+          add(GameHardModeToggleEvent(settings.hardMode));
+        }
+      },
     );
 
     on<GameNewDailyEvent>(_newDaily);
