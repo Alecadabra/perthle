@@ -164,55 +164,43 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   void _enter(final GameEnterEvent event, final GameEmitter emit) {
     if (!event.satisfiesHardMode) {
       // Hard mode is on and this doesn't satisfy it
-      final currGuess = state.board.letters[state.currRow];
-      final missingLetters = state.keyboard.keys.entries
-          .where((final entry) => entry.value.isMatch || entry.value.isMiss)
-          .map((final entry) => entry.key)
+      // Logic is mostly from GameState._satisfiesHardMode
+
+      bool isMiss(final LetterState letter) => state.keyboard[letter].isMiss;
+      bool isMatch(final LetterState letter) => state.keyboard[letter].isMatch;
+
+      final currGuess = state.board.letters[state.currRow].cast<LetterState>();
+      final prevGuess =
+          state.board.letters[state.currRow - 1].cast<LetterState>();
+      final missingLetters = prevGuess
+          .where((final letter) => isMatch(letter) || isMiss(letter))
           .where((final letter) => !currGuess.contains(letter));
+
       if (missingLetters.isNotEmpty) {
+        // There are any amount of missed letters
         messengerCubit.send(
           '${currGuess.join()} doesn\'t contain '
           '${missingLetters.join(', ')}',
         );
       } else {
-        final previousMatches = state.currRow <= 1
-            ? List.filled(state.word.length, null)
-            : state.board.letters
-                // Take only the previous rows
-                .sublist(0, state.currRow)
-                // Extract just the matches
-                .map(
-                  (final row) => row
-                      .map(
-                        (final letter) =>
-                            state.keyboard[letter!].isMatch ? letter : null,
-                      )
-                      .toList(),
-                )
-                // Intersection together
-                // L[0] ∩ L[1] ∩ ... ∩ L[n-1]
-                .reduce(
-                  (final List<LetterState?> a, final List<LetterState?> b) => [
-                    for (int i = 0; i < a.length; i++) b[i] ?? a[i],
-                  ],
-                );
-        final currGuessMatches = state.board.letters[state.currRow]
-            .map(
-              (final letter) => state.keyboard[letter!].isMatch ? letter : null,
-            )
+        // All letters are present, but one or more are in the wrong spot
+        final List<LetterState?> prevOnlyMatches = prevGuess
+            .map((final letter) => isMatch(letter) ? letter : null)
             .toList();
-        final missedLetters = [
-          for (int i = 0; i < previousMatches.length; i++)
-            previousMatches[i] != currGuessMatches[i]
-                ? previousMatches[i]
+        final List<LetterState?> currGuessOnlyMatches = currGuess
+            .map((final letter) => isMatch(letter) ? letter : null)
+            .toList();
+        final wrongPositionLetters = [
+          for (int i = 0; i < prevOnlyMatches.length; i++)
+            prevOnlyMatches[i] != currGuessOnlyMatches[i]
+                ? prevOnlyMatches[i]
                 : null,
         ].where((final letter) => letter != null);
-        messengerCubit.send('previous: $previousMatches,'
-            'curr: $currGuessMatches'
-            // '${currGuess.join()} uses the wrong '
-            // 'position${missedLetters.length != 1 ? 's' : ''} for '
-            // '${missedLetters.join(', ')}',
-            );
+        messengerCubit.send(
+          '${currGuess.join()} uses the wrong '
+          'position${wrongPositionLetters.length != 1 ? 's' : ''} for '
+          '${wrongPositionLetters.join(', ')}',
+        );
       }
     } else if (!event.validWord) {
       // Invalid word

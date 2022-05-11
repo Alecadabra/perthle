@@ -70,47 +70,28 @@ class GameState extends Equatable {
 
   late final bool satisfiesHardMode = _satisfiesHardMode;
   bool get _satisfiesHardMode {
-    if (!hardMode) {
+    if (!hardMode || currRow == 0) {
       return true;
     }
 
-    final Iterable<LetterState> previousMisses = keyboard.keys.entries
-        .where((final entry) => entry.value.isMatch || entry.value.isMiss)
-        .map((final e) => e.key);
+    bool isMiss(final LetterState letter) => keyboard[letter].isMiss;
+    bool isMatch(final LetterState letter) => keyboard[letter].isMatch;
 
-    final List<LetterState?> previousMatches = currRow <= 1
-        ? List.filled(word.length, null)
-        : board.letters
-            // Take only the previous rows
-            .sublist(0, currRow)
-            // Extract just the matches
-            .map(
-              (final row) => row
-                  .map(
-                    (final letter) => keyboard[letter!].isMatch ? letter : null,
-                  )
-                  .toList(),
-            )
-            // Intersection together
-            // L[0] ∩ L[1] ∩ ... ∩ L[n-1]
-            .reduce(
-              (final List<LetterState?> a, final List<LetterState?> b) => [
-                for (int i = 0; i < a.length; i++) b[i] ?? a[i],
-              ],
-            );
-
-    final List<LetterState?> currGuess = board.letters[currRow];
-    final List<LetterState?> currGuessMatches = currGuess
-        .map(
-          (final letter) => keyboard[letter!].isMatch ? letter : null,
-        )
+    final currGuess = board.letters[currRow].cast<LetterState>();
+    final prevGuess = board.letters[currRow - 1].cast<LetterState>();
+    final Iterable<LetterState> prevMisses = prevGuess.where(isMiss);
+    final List<LetterState?> prevOnlyMatches = prevGuess
+        .map((final letter) => isMatch(letter) ? letter : null)
+        .toList();
+    final List<LetterState?> currGuessOnlyMatches = currGuess
+        .map((final letter) => isMatch(letter) ? letter : null)
         .toList();
 
     return
         // Contains all matches in the right spots
-        listEquals(previousMatches, currGuessMatches) &&
+        listEquals(prevOnlyMatches, currGuessOnlyMatches) &&
             // Contains all misses
-            currGuess.toSet().containsAll(previousMisses);
+            currGuess.toSet().containsAll(prevMisses);
   }
 
   GameState copyWith({
