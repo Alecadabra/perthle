@@ -57,34 +57,35 @@ class _ShakingPerthleAppbarState extends State<ShakingPerthleAppbar>
       child: BlocBuilder<DailyCubit, DailyState>(
         builder: (final context, final daily) {
           return BlocBuilder<GameBloc, GameState>(
-              builder: (final context, final gameData) {
-            LightSource lightSource = LightSource(
-              gameData.currCol == gameData.board.width ||
-                      !gameData.completion.isPlaying
-                  ? 0
-                  : gameData.currCol / gameData.board.width,
-              !gameData.completion.isPlaying
-                  ? 0
-                  : gameData.currRow / gameData.board.height,
-            );
-            return AnimatedBuilder(
-              animation: _controller,
-              builder: (final context, final child) {
-                return RepaintBoundary(
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      left: offset + 24,
-                      right: 24 - offset,
+            builder: (final context, final gameData) {
+              LightSource lightSource = LightSource(
+                gameData.currCol == gameData.board.width ||
+                        !gameData.completion.isPlaying
+                    ? 0
+                    : gameData.currCol / gameData.board.width,
+                !gameData.completion.isPlaying
+                    ? 0
+                    : gameData.currRow / gameData.board.height,
+              );
+              return AnimatedBuilder(
+                animation: _controller,
+                builder: (final context, final child) {
+                  return RepaintBoundary(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        left: offset + 24,
+                        right: 24 - offset,
+                      ),
+                      child: PerthleAppbar(
+                        title: '${daily.gameModeString} ${daily.gameNum}',
+                        lightSource: lightSource,
+                      ),
                     ),
-                    child: PerthleAppbar(
-                      title: '${daily.gameModeString} ${daily.gameNum}',
-                      lightSource: lightSource,
-                    ),
-                  ),
-                );
-              },
-            );
-          });
+                  );
+                },
+              );
+            },
+          );
         },
       ),
     );

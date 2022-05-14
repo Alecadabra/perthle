@@ -8,7 +8,7 @@ import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:share_plus/share_plus.dart';
 
-class SavedGameTile extends StatelessWidget {
+class SavedGameTile extends StatefulWidget {
   const SavedGameTile({
     final Key? key,
     required this.savedGame,
@@ -22,7 +22,58 @@ class SavedGameTile extends StatelessWidget {
   final double visibility;
   final LightSource lightSource;
 
-  double get _depth => visibility * 4;
+  @override
+  State<SavedGameTile> createState() => _SavedGameTileState();
+}
+
+class _SavedGameTileState extends State<SavedGameTile>
+    with SingleTickerProviderStateMixin {
+  double get _depth => widget.visibility * 4;
+
+  late final AnimationController _controller;
+
+  late final Animation<double> _animation;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
+    super.initState();
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 200),
+      child: _VisibleSavedGameTile(
+        depth: _depth,
+        lightSource: widget.lightSource,
+        visibility: widget.visibility,
+        savedGame: widget.savedGame,
+        showWord: widget.showWord,
+      ),
+    );
+  }
+}
+
+class _VisibleSavedGameTile extends StatelessWidget {
+  const _VisibleSavedGameTile({
+    final Key? key,
+    required this.depth,
+    required this.lightSource,
+    required this.visibility,
+    required this.savedGame,
+    required this.showWord,
+  }) : super(key: key);
+
+  final double depth;
+  final LightSource lightSource;
+  final double visibility;
+  final SavedGameState savedGame;
+  final bool showWord;
 
   @override
   Widget build(final BuildContext context) {
@@ -32,7 +83,7 @@ class SavedGameTile extends StatelessWidget {
         Neumorphic(
           duration: Duration.zero,
           padding: const EdgeInsets.all(8),
-          style: NeumorphicStyle(depth: _depth, lightSource: lightSource),
+          style: NeumorphicStyle(depth: depth, lightSource: lightSource),
           child: AspectRatio(
             aspectRatio: 5 / 6,
             child: AnimatedOpacity(
@@ -63,7 +114,7 @@ class SavedGameTile extends StatelessWidget {
                 child: Neumorphic(
                   duration: Duration.zero,
                   style: NeumorphicStyle(
-                    depth: _depth,
+                    depth: depth,
                     lightSource: lightSource,
                   ),
                   child: AnimatedOpacity(
@@ -106,7 +157,7 @@ class SavedGameTile extends StatelessWidget {
                                 ? Duration.zero
                                 : Neumorphic.DEFAULT_DURATION,
                             style: NeumorphicStyle(
-                              depth: _depth,
+                              depth: depth,
                               lightSource: lightSource,
                             ),
                             child: AnimatedOpacity(
@@ -131,7 +182,7 @@ class SavedGameTile extends StatelessWidget {
                                 ? Duration.zero
                                 : Neumorphic.DEFAULT_DURATION,
                             style: NeumorphicStyle(
-                              depth: _depth,
+                              depth: depth,
                               lightSource: lightSource,
                             ),
                             child: AnimatedOpacity(
