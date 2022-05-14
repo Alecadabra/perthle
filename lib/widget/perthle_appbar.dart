@@ -27,7 +27,7 @@ class PerthleAppbar extends StatelessWidget {
                 lightSource: lightSource,
                 color: NeumorphicTheme.isUsingDark(context)
                     ? NeumorphicTheme.disabledColor(context)
-                    : Color.fromARGB(255, 94, 94, 94),
+                    : const Color(0xFF727272),
               ),
               textStyle: NeumorphicTextStyle(
                 fontFamily: 'Poppins',
