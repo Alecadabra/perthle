@@ -7,6 +7,8 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    environment:
+      name: stage
     steps:
     - uses: actions/checkout@v3
     - uses: subosito/flutter-action@main
@@ -23,6 +25,9 @@ jobs:
     name: Deploy to Stage
     needs: build
     runs-on: ubuntu-latest
+    environment:
+      name: stage
+      url: ${{ steps.deploy.outputs.details_url }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -32,9 +37,8 @@ jobs:
           name: web-build
           path: build/web
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
+        id: deploy
+        uses: FirebaseExtended/action-hosting-deploy@latest
         with:
-          args: hosting:channel:deploy ${GITHUB_REF##*/}
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_ID: default
+          firebaseServiceAccount: ${{ secrets.FIREBASE_TOKEN }}
+          projectId: ${GITHUB_REF##*/}
