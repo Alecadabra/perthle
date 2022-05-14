@@ -7,6 +7,8 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    environment:
+      name: prod
     steps:
     - uses: actions/checkout@v3
     - uses: subosito/flutter-action@main
@@ -23,6 +25,9 @@ jobs:
     name: Deploy to Prod
     needs: build
     runs-on: ubuntu-latest
+    environment:
+      name: prod
+      url: https://perthle.web.app
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
