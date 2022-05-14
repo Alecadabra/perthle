@@ -21,15 +21,18 @@ class PerthleAppbar extends StatelessWidget {
               title,
               duration: const Duration(milliseconds: 400),
               style: NeumorphicStyle(
-                border: const NeumorphicBorder(),
-                depth: 4,
+                // border: const NeumorphicBorder(),
+                depth: 2,
                 intensity: 0.65,
                 lightSource: lightSource,
+                color: NeumorphicTheme.isUsingDark(context)
+                    ? NeumorphicTheme.disabledColor(context)
+                    : Color.fromARGB(255, 94, 94, 94),
               ),
               textStyle: NeumorphicTextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 35,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w600,
               ),
             ),
             // Not visible, just pre-loads the emojis before they

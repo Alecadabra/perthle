@@ -15,7 +15,7 @@ class PerthleScaffold extends StatelessWidget {
     return Column(
       children: [
         Expanded(child: appBar),
-        Expanded(flex: 10, child: body),
+        Expanded(flex: 11, child: body),
       ],
     );
   }
