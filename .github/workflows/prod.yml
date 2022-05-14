@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: prod
-      url: ${{ steps.deploy.outputs.details_url }}
+      url: https://perthle.web.app
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
