@@ -8,7 +8,7 @@ import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({final Key? key}) : super(key: key);
@@ -173,10 +173,10 @@ class SettingsPage extends StatelessWidget {
               child: NeumorphicButton(
                 tooltip: 'Go to the Perthle GitHub repository',
                 onPressed: () async {
-                  const String url = 'https://github.com/Alecadabra/perthle';
-                  if (await canLaunch(url)) {
+                  const url = 'https://github.com/Alecadabra/perthle';
+                  if (await canLaunchUrlString(url)) {
                     HapticFeedback.heavyImpact();
-                    launch(url);
+                    launchUrlString(url);
                   }
                 },
                 child: Row(
@@ -196,9 +196,8 @@ class SettingsPage extends StatelessWidget {
               name: 'Licenses',
               child: NeumorphicButton(
                 tooltip: 'View open source licenses',
-                onPressed: () async {
-                  await HapticFeedback.heavyImpact();
-                  await Navigator.of(context).push(
+                onPressed: () {
+                  Navigator.of(context).push(
                     CupertinoPageRoute(
                       builder: (final context) => const _PerthleLicensePage(),
                     ),

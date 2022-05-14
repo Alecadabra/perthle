@@ -19,7 +19,16 @@ class PerthleScrollConfiguration extends StatelessWidget {
 }
 
 class PerthleScrollBehaviour extends ScrollBehavior {
-  const PerthleScrollBehaviour() : super(androidOverscrollIndicator: null);
+  const PerthleScrollBehaviour() : super();
+
+  @override
+  Widget buildOverscrollIndicator(
+    final BuildContext context,
+    final Widget child,
+    final ScrollableDetails details,
+  ) {
+    return child;
+  }
 
   @override
   Set<PointerDeviceKind> get dragDevices => PointerDeviceKind.values.toSet();

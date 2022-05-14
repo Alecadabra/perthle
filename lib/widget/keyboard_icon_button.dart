@@ -26,15 +26,15 @@ class KeyboardIconButton extends StatelessWidget {
   Widget build(final BuildContext context) {
     return KeyboardButton(
       flex: 15,
-      child: IconTheme(
-        data: IconThemeData(color: _iconColor(context)),
-        child: icon,
-      ),
       style: ButtonStyle(
         minimumSize: MaterialStateProperty.all(const Size(100, 100)),
         enableFeedback: true,
       ),
       onPressed: onPressed,
+      child: IconTheme(
+        data: IconThemeData(color: _iconColor(context)),
+        child: icon,
+      ),
     );
   }
 }

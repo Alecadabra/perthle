@@ -7,12 +7,11 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    environment:
-      name: stage
     steps:
     - uses: actions/checkout@v3
     - uses: subosito/flutter-action@main
       with:
+          flutter-version: '3.0.x'
           channel: 'stable'
     - run: flutter pub get
     - run: flutter build web
@@ -36,9 +35,13 @@ jobs:
         with:
           name: web-build
           path: build/web
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       - name: Deploy to Firebase
         id: deploy
-        uses: FirebaseExtended/action-hosting-deploy@latest
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: ${{ secrets.FIREBASE_TOKEN }}
-          projectId: ${GITHUB_REF##*/}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HOSTING }}
+          channelId: ${{ steps.extract_branch.outputs.branch }}

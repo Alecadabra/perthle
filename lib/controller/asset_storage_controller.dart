@@ -14,7 +14,13 @@ class AssetStorageController extends StorageController {
   @override
   Future<Map<String, dynamic>?> load(final String key) async {
     String string = await rootBundle.loadString(key, cache: cache);
-    return {listKey: string.split('\n')};
+    List<String> list = string.split('\n');
+    if (list.isNotEmpty && list.first.contains('\r')) {
+      throw StateError(
+        'Asset file $key contains CRLF file endings, only LF is supported',
+      );
+    }
+    return {listKey: list};
   }
 
   @override

@@ -1,12 +1,13 @@
 name: perthle
-description: A new Flutter project.
+repository: https://github.com/Alecadabra/perthle
 
 publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: ^3.0.0
 
 dependencies:
   flutter:
@@ -16,7 +17,7 @@ dependencies:
     sdk: flutter
 
   flutter_neumorphic: ^3.2.0
-  share_plus: ^3.0.4
+  share_plus: ^4.0.4
   flutter_bloc: ^8.0.1
   equatable: ^2.0.3
   url_launcher: ^6.0.20
@@ -26,7 +27,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^1.0.0
+  flutter_lints: ^2.0.1
 
 flutter:
   uses-material-design: true
