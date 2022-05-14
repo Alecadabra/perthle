@@ -11,6 +11,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: subosito/flutter-action@main
       with:
+          flutter-version: '3.0.x'
           channel: 'stable'
     - run: flutter pub get
     - run: flutter build web
@@ -23,6 +24,9 @@ jobs:
     name: Deploy to Stage
     needs: build
     runs-on: ubuntu-latest
+    environment:
+      name: stage
+      url: ${{ steps.deploy.outputs.details_url }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -31,10 +35,13 @@ jobs:
         with:
           name: web-build
           path: build/web
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
+        id: deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          args: hosting:channel:deploy ${GITHUB_REF##*/}
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_ID: default
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HOSTING }}
+          channelId: ${{ steps.extract_branch.outputs.branch }}

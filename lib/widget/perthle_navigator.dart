@@ -23,7 +23,7 @@ class _PerthleNavigatorState extends State<PerthleNavigator> {
   void initState() {
     controller = PageController(initialPage: 1);
     // Go to page one after a delay if they haven't played before
-    WidgetsBinding.instance?.addPostFrameCallback(
+    WidgetsBinding.instance.addPostFrameCallback(
       (final _) => Future.delayed(const Duration(milliseconds: 500)).then(
         (final _) {
           final history = HistoryCubit.of(context).state;
@@ -73,7 +73,16 @@ class _PerthleNavigatorState extends State<PerthleNavigator> {
 }
 
 class _PerthleScrollBehavior extends ScrollBehavior {
-  const _PerthleScrollBehavior() : super(androidOverscrollIndicator: null);
+  const _PerthleScrollBehavior() : super();
+
+  @override
+  Widget buildOverscrollIndicator(
+    final BuildContext context,
+    final Widget child,
+    final ScrollableDetails details,
+  ) {
+    return child;
+  }
 
   @override
   Set<PointerDeviceKind> get dragDevices => PointerDeviceKind.values.toSet();

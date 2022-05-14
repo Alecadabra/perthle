@@ -34,12 +34,12 @@ class DictionaryCubit extends PersistentCubit<DictionaryState?> {
   final HashSet<String> _answers = HashSet.of(DailyState.allAnswers);
 
   bool isValidWord(final String word) {
-    final DictionaryState? _dictionary = state;
-    if (_dictionary == null) {
+    final DictionaryState? localDict = state;
+    if (localDict == null) {
       throw StateError('isValidWord called before dictionary loaded');
     }
     return _answers.contains(word.toLowerCase()) ||
-        _dictionary.dictionary.contains(word.toLowerCase());
+        localDict.dictionary.contains(word.toLowerCase());
   }
 
   @override

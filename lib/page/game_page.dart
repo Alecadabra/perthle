@@ -30,16 +30,18 @@ class GamePage extends StatelessWidget {
       autofocus: true,
       focusNode: rootFocus,
       onKeyEvent: (final KeyEvent key) {
-        final LogicalKeyboardKey logicalKey = key.logicalKey;
-        final String? char = key.character?.toUpperCase();
-        final GameBloc gameBloc = GameBloc.of(context);
+        if (key is! KeyUpEvent) {
+          final LogicalKeyboardKey logicalKey = key.logicalKey;
+          final String? char = key.character?.toUpperCase();
+          final GameBloc gameBloc = GameBloc.of(context);
 
-        if (logicalKey == LogicalKeyboardKey.backspace) {
-          gameBloc.backspace();
-        } else if (logicalKey == LogicalKeyboardKey.enter) {
-          gameBloc.enter();
-        } else if (char != null && LetterState.isValid(char)) {
-          gameBloc.type(LetterState(char));
+          if (logicalKey == LogicalKeyboardKey.backspace) {
+            gameBloc.backspace();
+          } else if (logicalKey == LogicalKeyboardKey.enter) {
+            gameBloc.enter();
+          } else if (char != null && LetterState.isValid(char)) {
+            gameBloc.type(LetterState(char));
+          }
         }
       },
       child: PerthleScaffold(

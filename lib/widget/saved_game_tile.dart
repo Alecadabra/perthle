@@ -185,6 +185,14 @@ class _VisibleSavedGameTile extends StatelessWidget {
                               depth: depth,
                               lightSource: lightSource,
                             ),
+                            tooltip: 'Copy to Clipboard',
+                            onPressed: () async => await Clipboard.setData(
+                              ClipboardData(
+                                text: savedGame.shareableString(
+                                  settings.lightEmojis,
+                                ),
+                              ),
+                            ),
                             child: AnimatedOpacity(
                               opacity: visibility,
                               duration: Duration.zero,
@@ -193,14 +201,6 @@ class _VisibleSavedGameTile extends StatelessWidget {
                                 size: 20,
                                 color: NeumorphicTheme.defaultTextColor(
                                   context,
-                                ),
-                              ),
-                            ),
-                            tooltip: 'Copy to Clipboard',
-                            onPressed: () async => await Clipboard.setData(
-                              ClipboardData(
-                                text: savedGame.shareableString(
-                                  settings.lightEmojis,
                                 ),
                               ),
                             ),

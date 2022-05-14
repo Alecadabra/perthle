@@ -90,6 +90,9 @@ class KeyboardLetterButton extends StatelessWidget {
         TileMatchState tileMatch = gameData.keyboard[letter];
         return KeyboardButton(
           flex: flex,
+          onPressed:
+              gameData.canType ? () => GameBloc.of(context).type(letter) : null,
+          style: _buttonStyle(context, canType, tileMatch),
           child: Text(
             letter.letterString,
             style: Theme.of(context).textTheme.headline6!.apply(
@@ -99,9 +102,6 @@ class KeyboardLetterButton extends StatelessWidget {
                 ),
             textAlign: TextAlign.center,
           ),
-          onPressed:
-              gameData.canType ? () => GameBloc.of(context).type(letter) : null,
-          style: _buttonStyle(context, canType, tileMatch),
         );
       },
     );
