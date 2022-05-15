@@ -47,6 +47,10 @@ class _DailyCountdownState extends State<DailyCountdown> {
             .join(', ');
 
         return Neumorphic(
+          style: const NeumorphicStyle(
+            shape: NeumorphicShape.concave,
+            surfaceIntensity: 0.1,
+          ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
@@ -63,7 +67,7 @@ class _DailyCountdownState extends State<DailyCountdown> {
                   child: NeumorphicProgress(
                     percent: percent,
                     style: ProgressStyle(
-                      depth: -8,
+                      depth: -4,
                       variant: NeumorphicTheme.accentColor(context),
                     ),
                   ),
