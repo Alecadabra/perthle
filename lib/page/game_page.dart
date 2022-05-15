@@ -77,7 +77,7 @@ class GamePage extends StatelessWidget {
                                       showWord: gameData.completion.isLost,
                                     ),
                                   ),
-                                  const Spacer(flex: 2),
+                                  const Spacer(),
                                   const Expanded(
                                     flex: 3,
                                     child: DailyCountdown(),

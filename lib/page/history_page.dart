@@ -7,11 +7,11 @@ import 'package:perthle/controller/settings_cubit.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/settings_state.dart';
+import 'package:perthle/widget/animated_saved_game_tile.dart';
 import 'package:perthle/widget/history_stats.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/perthle_scroll_configuration.dart';
-import 'package:perthle/widget/saved_game_tile.dart';
 
 class HistoryPage extends StatelessWidget {
   const HistoryPage({final Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class HistoryPage extends StatelessWidget {
   static const double childPadding = 16;
   static const double childInnerHeight = 100;
 
-  static const double listPadding = childInnerHeight;
+  static const double listPadding = childInnerHeight / 2;
 
   @override
   Widget build(final BuildContext context) {
@@ -86,34 +86,57 @@ class _HistoryListState extends State<_HistoryList> {
             history.savedGamesList.reversed.toList(growable: false);
         return BlocBuilder<SettingsCubit, SettingsState>(
           builder: (final context, final settings) {
-            return LayoutBuilder(builder: (final context, final _) {
-              return PerthleScrollConfiguration(
-                child: ListView.builder(
-                  controller: scroll,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: HistoryPage.listPadding,
-                    horizontal: 16,
-                  ),
-                  itemCount: historyList.length,
-                  itemBuilder: (final context, final idx) {
-                    return Padding(
+            return LayoutBuilder(
+              builder: (final context, final _) {
+                return PerthleScrollConfiguration(
+                  child: ShaderMask(
+                    blendMode: BlendMode.dstIn,
+                    shaderCallback: (final Rect bounds) => const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black,
+                        Colors.black,
+                        Colors.transparent,
+                      ],
+                      stops: [
+                        0.0,
+                        0.1,
+                        0.9,
+                        1.0,
+                      ],
+                    ).createShader(bounds),
+                    child: ListView.builder(
+                      controller: scroll,
                       padding: const EdgeInsets.symmetric(
-                        vertical: HistoryPage.childPadding,
+                        vertical: HistoryPage.listPadding,
+                        horizontal: 16,
                       ),
-                      child: SizedBox(
-                        height: HistoryPage.childInnerHeight,
-                        child: SavedGameTile(
-                          savedGame: historyList[idx],
-                          showWord: settings.historyShowWords,
-                          visibility: scroll.visibilityForIdx(idx),
-                          lightSource: widget.lightSource,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            });
+                      itemCount: historyList.length,
+                      itemBuilder: (final context, final idx) {
+                        final visibility = scroll.viewportPosition(idx);
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: HistoryPage.childPadding,
+                          ),
+                          child: SizedBox(
+                            height: HistoryPage.childInnerHeight,
+                            child: AnimatedSavedGameTile(
+                              duration: const Duration(milliseconds: 250),
+                              savedGame: historyList[idx],
+                              showWord: settings.historyShowWords,
+                              shown: visibility > 0.05 && visibility < 0.95,
+                              lightSource: widget.lightSource,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+            );
           },
           buildWhen: (final a, final b) {
             return a.historyShowWords != b.historyShowWords;
@@ -125,17 +148,14 @@ class _HistoryListState extends State<_HistoryList> {
 }
 
 class _HistoryScrollController extends ScrollController {
-  double visibilityForIdx(final int idx) {
+  double viewportPosition(final int idx) {
     // Where this item is in the viewport, 0 is the top, 1 is the bottom
     var x = (HistoryPage.childHeight * idx -
             position.pixels +
             HistoryPage.listPadding) /
         (position.viewportDimension - HistoryPage.childHeight);
 
-    // y = -(2x - 1)^6 + 1
-    double y = -pow(2 * x - 1, 6) + 1;
-
     // Clamp to [0, 1]
-    return max(0, min(1, y));
+    return max(0, min(1, x));
   }
 }
