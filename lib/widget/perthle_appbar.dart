@@ -21,8 +21,7 @@ class PerthleAppbar extends StatelessWidget {
               title,
               duration: const Duration(milliseconds: 400),
               style: NeumorphicStyle(
-                // border: const NeumorphicBorder(),
-                depth: 2,
+                depth: 2.5,
                 intensity: 0.65,
                 lightSource: lightSource,
                 color: NeumorphicTheme.isUsingDark(context)
