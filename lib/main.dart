@@ -82,7 +82,6 @@ class PerthleApp extends StatelessWidget {
 
   static const _themeDataLight = NeumorphicThemeData(
     textTheme: _textThemeDark,
-    shadowDarkColorEmboss: Color(0x99000000),
     defaultTextColor: Color(0xC3363A3F),
     disabledColor: Color(0xFFACACAC),
     accentColor: _matchGreen,
