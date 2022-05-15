@@ -116,6 +116,7 @@ class _CopyButton extends StatelessWidget {
             surfaceIntensity: opacity / 15,
           ),
           minDistance: -depth / 4,
+          duration: opacity < 0.5 ? Duration.zero : Neumorphic.DEFAULT_DURATION,
           tooltip: 'Copy to Clipboard',
           onPressed: () async => await Clipboard.setData(
             ClipboardData(
@@ -173,6 +174,7 @@ class _ShareButton extends StatelessWidget {
             surfaceIntensity: opacity / 15,
           ),
           minDistance: -depth / 4,
+          duration: opacity < 0.5 ? Duration.zero : Neumorphic.DEFAULT_DURATION,
           child: Container(
             height: double.infinity,
             alignment: Alignment.center,
