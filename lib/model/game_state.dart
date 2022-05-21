@@ -74,24 +74,25 @@ class GameState extends Equatable {
       return true;
     }
 
-    bool isMiss(final LetterState letter) => keyboard[letter].isMiss;
-    bool isMatch(final LetterState letter) => keyboard[letter].isMatch;
-
     final currGuess = board.letters[currRow].cast<LetterState>();
     final prevGuess = board.letters[currRow - 1].cast<LetterState>();
-    final Iterable<LetterState> prevMisses = prevGuess.where(isMiss);
-    final List<LetterState?> prevOnlyMatches = prevGuess
-        .map((final letter) => isMatch(letter) ? letter : null)
-        .toList();
-    final List<LetterState?> currGuessOnlyMatches = currGuess
-        .map((final letter) => isMatch(letter) ? letter : null)
-        .toList();
+    final prevMatches = board.matches[currRow - 1];
+    final Iterable<LetterState> prevMissLetters =
+        prevGuess.where((final letter) => keyboard[letter].isMiss);
+    final List<LetterState?> prevOnlyMatches = [
+      for (int i = 0; i < prevMatches.length; i++)
+        prevMatches[i].isMatch ? prevGuess[i] : null,
+    ];
+    final List<LetterState?> currGuessOnlyMatches = [
+      for (int i = 0; i < prevMatches.length; i++)
+        prevOnlyMatches[i] != null ? currGuess[i] : null,
+    ];
 
     return
         // Contains all matches in the right spots
         listEquals(prevOnlyMatches, currGuessOnlyMatches) &&
             // Contains all misses
-            currGuess.toSet().containsAll(prevMisses);
+            currGuess.toSet().containsAll(prevMissLetters);
   }
 
   GameState copyWith({

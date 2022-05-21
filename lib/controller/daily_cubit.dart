@@ -25,9 +25,13 @@ class DailyCubit extends Cubit<DailyState> {
     Future.delayed(timeUntilMidnight).then((final _) => emit(resolve()));
   }
 
-  static DailyState resolve() => dailyDataForDateTime(DateTime.now());
+  static DailyState resolve() => DailyState(
+        gameNum: 85,
+        word: 'BESTIE',
+        gameMode: GameModeState.perthle,
+      );
 
-  static DailyState dailyDataForDateTime(final DateTime time) {
+  static DailyState dailyStateForDateTime(final DateTime time) {
     return DailyState(
       gameNum: gameNumForDateTime(time),
       word: wordForDateTime(time),
