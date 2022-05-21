@@ -1,17 +1,17 @@
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-abstract class StorageController {
-  const StorageController();
+abstract class StorageRepository {
+  const StorageRepository();
 
   Future<void> save(final String key, final Map<String, dynamic> data);
 
   Future<Map<String, dynamic>?> load(final String key);
 
-  static StorageController of(
+  static StorageRepository of(
     final BuildContext context, {
     final bool listen = false,
   }) {
-    return Provider.of<StorageController>(context, listen: listen);
+    return RepositoryProvider.of<StorageRepository>(context, listen: listen);
   }
 }

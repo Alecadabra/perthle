@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:perthle/controller/daily_cubit.dart';
-import 'package:perthle/controller/dictionary_cubit.dart';
-import 'package:perthle/controller/game_bloc.dart';
-import 'package:perthle/controller/history_cubit.dart';
-import 'package:perthle/controller/local_storage_controller.dart';
-import 'package:perthle/controller/settings_cubit.dart';
-import 'package:perthle/controller/messenger_cubit.dart';
-import 'package:perthle/controller/storage_controller.dart';
+import 'package:perthle/bloc/daily_cubit.dart';
+import 'package:perthle/bloc/dictionary_cubit.dart';
+import 'package:perthle/bloc/game_bloc.dart';
+import 'package:perthle/bloc/history_cubit.dart';
+import 'package:perthle/repository/local_storage_repository.dart';
+import 'package:perthle/bloc/settings_cubit.dart';
+import 'package:perthle/bloc/messenger_cubit.dart';
+import 'package:perthle/repository/storage_repository.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_navigator.dart';
 import 'package:provider/provider.dart';
@@ -108,6 +108,12 @@ class PerthleApp extends StatelessWidget {
   Widget build(final BuildContext context) {
     return MultiProvider(
       providers: [
+        // Repositories
+        RepositoryProvider<StorageRepository>(
+          create: (final context) => LocalStorageRepository(),
+          lazy: false,
+        ),
+        // Blocs/Cubits
         BlocProvider(
           create: (final context) => DailyCubit(),
           lazy: false,
@@ -118,13 +124,9 @@ class PerthleApp extends StatelessWidget {
           ),
           lazy: false,
         ),
-        Provider<StorageController>(
-          create: (final context) => LocalStorageController(),
-          lazy: false,
-        ),
         BlocProvider(
           create: (final context) => SettingsCubit(
-            storage: StorageController.of(context),
+            storage: StorageRepository.of(context),
           ),
           lazy: false,
         ),
@@ -134,7 +136,7 @@ class PerthleApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (final context) => GameBloc(
-            storage: StorageController.of(context),
+            storage: StorageRepository.of(context),
             dailyCubit: DailyCubit.of(context),
             dictionaryCubit: DictionaryCubit.of(context),
             messengerCubit: MessengerCubit.of(context),
@@ -145,7 +147,7 @@ class PerthleApp extends StatelessWidget {
         BlocProvider(
           create: (final context) => HistoryCubit(
             gameBloc: GameBloc.of(context),
-            storage: StorageController.of(context),
+            storage: StorageRepository.of(context),
           ),
           lazy: false,
         ),

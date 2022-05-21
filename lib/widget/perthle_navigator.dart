@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:perthle/controller/game_bloc.dart';
-import 'package:perthle/controller/history_cubit.dart';
+import 'package:perthle/bloc/game_bloc.dart';
+import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/page/history_page.dart';
 import 'package:perthle/page/settings_page.dart';

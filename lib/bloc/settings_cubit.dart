@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:perthle/controller/persistent_cubit.dart';
-import 'package:perthle/controller/storage_controller.dart';
+import 'package:perthle/repository/persistent.dart';
+import 'package:perthle/repository/storage_repository.dart';
 import 'package:perthle/model/settings_state.dart';
 
 class SettingsCubit extends PersistentCubit<SettingsState> {
-  SettingsCubit({required final StorageController storage})
+  SettingsCubit({required final StorageRepository storage})
       : super(initialState: const SettingsState(), storage: storage);
 
   SettingsState edit({

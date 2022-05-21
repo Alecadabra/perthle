@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:perthle/controller/daily_cubit.dart';
-import 'package:perthle/controller/game_bloc.dart';
-import 'package:perthle/controller/messenger_cubit.dart';
+import 'package:perthle/bloc/daily_cubit.dart';
+import 'package:perthle/bloc/game_bloc.dart';
+import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/game_completion_state.dart';

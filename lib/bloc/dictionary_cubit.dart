@@ -3,17 +3,17 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:perthle/controller/asset_storage_controller.dart';
-import 'package:perthle/controller/daily_cubit.dart';
-import 'package:perthle/controller/persistent_cubit.dart';
+import 'package:perthle/repository/asset_storage_repository.dart';
+import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/dictionary_state.dart';
+import 'package:perthle/repository/persistent.dart';
 
 class DictionaryCubit extends PersistentCubit<DictionaryState?> {
   DictionaryCubit({required this.dailyCubit})
       : super(
           initialState: null,
-          storage: const AssetStorageController(
+          storage: const AssetStorageRepository(
             listKey: DictionaryState.jsonKey,
           ),
         ) {

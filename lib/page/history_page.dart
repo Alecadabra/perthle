@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:perthle/controller/history_cubit.dart';
-import 'package:perthle/controller/settings_cubit.dart';
+import 'package:perthle/bloc/history_cubit.dart';
+import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/settings_state.dart';

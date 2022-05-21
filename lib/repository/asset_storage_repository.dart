@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart' show rootBundle;
 
-import 'package:perthle/controller/storage_controller.dart';
+import 'package:perthle/repository/storage_repository.dart';
 
-class AssetStorageController extends StorageController {
-  const AssetStorageController({
+class AssetStorageRepository extends StorageRepository {
+  const AssetStorageRepository({
     this.cache = false,
     this.listKey = 'data',
   }) : super();

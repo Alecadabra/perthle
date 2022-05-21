@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:perthle/controller/daily_cubit.dart';
-import 'package:perthle/controller/dictionary_cubit.dart';
-import 'package:perthle/controller/game_event.dart';
-import 'package:perthle/controller/persistent_bloc.dart';
-import 'package:perthle/controller/settings_cubit.dart';
-import 'package:perthle/controller/messenger_cubit.dart';
-import 'package:perthle/controller/storage_controller.dart';
+import 'package:perthle/bloc/daily_cubit.dart';
+import 'package:perthle/bloc/dictionary_cubit.dart';
+import 'package:perthle/bloc/game_event.dart';
+import 'package:perthle/repository/persistent.dart';
+import 'package:perthle/bloc/settings_cubit.dart';
+import 'package:perthle/bloc/messenger_cubit.dart';
+import 'package:perthle/repository/storage_repository.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/dictionary_state.dart';
 import 'package:perthle/model/game_state.dart';
@@ -21,7 +21,7 @@ typedef GameEmitter = Emitter<GameState>;
 
 class GameBloc extends PersistentBloc<GameEvent, GameState> {
   GameBloc({
-    required final StorageController storage,
+    required final StorageRepository storage,
     required this.dailyCubit,
     required this.dictionaryCubit,
     required this.messengerCubit,

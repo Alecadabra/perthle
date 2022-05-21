@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:perthle/controller/history_cubit.dart';
+import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/model/history_state.dart';
 
 class HistoryStats extends StatelessWidget {

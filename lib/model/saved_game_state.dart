@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:perthle/controller/daily_cubit.dart';
+import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 

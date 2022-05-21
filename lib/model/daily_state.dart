@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:perthle/controller/daily_cubit.dart';
+import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/model/game_mode_state.dart';
 
 /// Immutable state containing today's perthle's number, word, and mode.

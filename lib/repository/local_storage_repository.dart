@@ -2,9 +2,9 @@ import 'dart:convert';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 
-import 'package:perthle/controller/storage_controller.dart';
+import 'package:perthle/repository/storage_repository.dart';
 
-class LocalStorageController extends StorageController {
+class LocalStorageRepository extends StorageRepository {
   final JsonEncoder _encoder = const JsonEncoder();
   final JsonDecoder _decoder = const JsonDecoder();
 
