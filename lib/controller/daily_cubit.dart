@@ -35,8 +35,10 @@ class DailyCubit extends Cubit<DailyState> {
     );
   }
 
-  // Perthle 1, 00:00:00, in milliseconds since unix epoch
-  static const int epoch = 1645718400000;
+  // Perthle 1, 00:00:00
+  static final DateTime epoch = DateTime(2022, 2, 25);
+  // The above in milliseconds since unix epoch in AWST
+  static const int epochMs = 1645718400000;
 
   // The last game num for the volumes of Perthle answers
   static const int _lastVolOne = 35;
@@ -56,10 +58,10 @@ class DailyCubit extends Cubit<DailyState> {
       gameModeForDateTime(dateTimeForGameNum(gameNum));
 
   static DateTime dateTimeForGameNum(final int gameNum) =>
-      DateTime.fromMillisecondsSinceEpoch(epoch).add(Duration(days: gameNum));
+      epoch.add(Duration(days: gameNum));
 
   static int gameNumForDateTime(final DateTime time) =>
-      time.difference(DateTime.fromMillisecondsSinceEpoch(epoch)).inDays;
+      time.difference(epoch).inDays;
 
   static String wordForDateTime(final DateTime time) =>
       wordForGameNum(gameNumForDateTime(time));

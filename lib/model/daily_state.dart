@@ -183,7 +183,7 @@ class DailyState extends Equatable {
 
   // Just a fun bit of obfuscation
   static final String special = String.fromCharCodes([
-    for (num i = 0x1FB1DE0 ^ DailyCubit.epoch ~/ 01E5; i > 0E27; i ~/= 0x100)
+    for (num i = 0x1FB1DE0 ^ DailyCubit.epochMs ~/ 01E5; i > 0E27; i ~/= 0x100)
       1970500473 ~/ i % 256,
   ]);
 }
