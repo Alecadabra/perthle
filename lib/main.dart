@@ -142,12 +142,12 @@ class PerthleApp extends StatelessWidget {
     brightness: Brightness.light,
     textTheme: _themeDataLight.textTheme,
     scaffoldBackgroundColor: _themeDataLight.baseColor,
-    appBarTheme: AppBarTheme(
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: _themeDataLight.baseColor,
-        statusBarBrightness: Brightness.light,
-      ),
-    ),
+    // appBarTheme: AppBarTheme(
+    //   systemOverlayStyle: SystemUiOverlayStyle(
+    //     statusBarColor: _themeDataLight.baseColor,
+    //     statusBarBrightness: Brightness.light,
+    //   ),
+    // ),
   );
 
   static final _materialThemeDark = ThemeData.dark().copyWith(
@@ -159,12 +159,12 @@ class PerthleApp extends StatelessWidget {
     brightness: Brightness.dark,
     textTheme: _themeDataDark.textTheme,
     scaffoldBackgroundColor: _themeDataDark.baseColor,
-    appBarTheme: AppBarTheme(
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: _themeDataDark.baseColor,
-        statusBarBrightness: Brightness.dark,
-      ),
-    ),
+    // appBarTheme: AppBarTheme(
+    //   systemOverlayStyle: SystemUiOverlayStyle(
+    //     statusBarColor: _themeDataDark.baseColor,
+    //     statusBarBrightness: Brightness.dark,
+    //   ),
+    // ),
   );
 
   // Build
