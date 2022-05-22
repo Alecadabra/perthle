@@ -4,9 +4,14 @@ import 'package:perthle/repository/persistent.dart';
 import 'package:perthle/repository/storage_repository.dart';
 import 'package:perthle/model/settings_state.dart';
 
+/// Bloc cubit for managing the settings state and allowing it's editing
 class SettingsCubit extends PersistentCubit<SettingsState> {
+  // Constructor
+
   SettingsCubit({required final StorageRepository storage})
       : super(initialState: const SettingsState(), storage: storage);
+
+  // Action
 
   SettingsState edit({
     final bool? hardMode,
@@ -24,6 +29,8 @@ class SettingsCubit extends PersistentCubit<SettingsState> {
     return data;
   }
 
+  // Persistent implementation
+
   @override
   SettingsState? fromJson(final Map<String, dynamic> json) =>
       SettingsState.fromJson(json[key]);
@@ -35,6 +42,8 @@ class SettingsCubit extends PersistentCubit<SettingsState> {
 
   @override
   String get key => 'settings';
+
+  // Provider
 
   static SettingsCubit of(final BuildContext context) =>
       BlocProvider.of<SettingsCubit>(context);

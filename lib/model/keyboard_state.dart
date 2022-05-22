@@ -5,11 +5,16 @@ import 'package:flutter/widgets.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
+/// Immutable state holding all the keys on the perthle keyboard and their
+/// match state.
 @immutable
 class KeyboardState extends Equatable {
+  // Constructors
+
   const KeyboardState({
     required final Map<LetterState, TileMatchState> keys,
   }) : _keys = keys;
+
   KeyboardState.empty()
       : this(
           keys: {
@@ -17,6 +22,7 @@ class KeyboardState extends Equatable {
               LetterState(chars): TileMatchState.blank,
           },
         );
+
   KeyboardState.fromJson(final Map<String, dynamic> json)
       : this(
           keys: {
@@ -26,6 +32,8 @@ class KeyboardState extends Equatable {
           },
         );
 
+  // State & immutable access
+
   final Map<LetterState, TileMatchState> _keys;
   UnmodifiableMapView<LetterState, TileMatchState> get keys =>
       UnmodifiableMapView(Map.of(_keys));
@@ -33,6 +41,8 @@ class KeyboardState extends Equatable {
   TileMatchState operator [](final LetterState letter) {
     return _keys[letter]!;
   }
+
+  // Transformers
 
   KeyboardState copyWith({final Map<LetterState, TileMatchState>? keys}) =>
       KeyboardState(keys: keys ?? this.keys);
@@ -43,6 +53,8 @@ class KeyboardState extends Equatable {
         entry.key.letterString: entry.value.index,
     };
   }
+
+  // Equatable implementation
 
   @override
   List<Object?> get props => [_keys];

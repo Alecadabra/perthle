@@ -1,5 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
+/// A stateful countdown timer until the next perthle (local midnight).
 class DailyCountdown extends StatefulWidget {
   const DailyCountdown({final Key? key}) : super(key: key);
 

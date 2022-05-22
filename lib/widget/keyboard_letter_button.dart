@@ -6,6 +6,7 @@ import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 import 'package:perthle/widget/keyboard_button.dart';
 
+/// A keyboard key that types a letter and shows that key's match colour.
 class KeyboardLetterButton extends StatelessWidget {
   const KeyboardLetterButton({
     final Key? key,

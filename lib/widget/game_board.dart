@@ -5,6 +5,7 @@ import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
 import 'package:perthle/widget/board_tile.dart';
 
+/// The perthle board of guesses, made up of [BoardTile]s.
 class GameBoard extends StatelessWidget {
   const GameBoard({final Key? key}) : super(key: key);
 

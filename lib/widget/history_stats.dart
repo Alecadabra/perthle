@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/model/history_state.dart';
 
+/// The panel to show the stats values for the game history.
 class HistoryStats extends StatelessWidget {
   const HistoryStats({final Key? key}) : super(key: key);
 
@@ -25,6 +26,7 @@ class HistoryStats extends StatelessWidget {
   }
 }
 
+/// A single statistic
 class _Stat extends StatelessWidget {
   const _Stat({
     final Key? key,

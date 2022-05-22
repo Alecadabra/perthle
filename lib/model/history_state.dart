@@ -6,11 +6,15 @@ import 'package:flutter/foundation.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/history_stats_state.dart';
 
+/// Immutable state to hold the history of all games previously played.
 @immutable
 class HistoryState extends Equatable {
+  // Constructors
+
   const HistoryState({
     required final Map<int, SavedGameState> savedGames,
   }) : _savedGames = savedGames;
+
   HistoryState.fromJson(final Map<String, dynamic> json)
       : this(
           savedGames: {
@@ -19,11 +23,9 @@ class HistoryState extends Equatable {
           },
         );
 
-  // State
+  // State & immutable access
 
   final Map<int, SavedGameState> _savedGames;
-
-  // Getters
 
   UnmodifiableMapView<int, SavedGameState> get savedGames =>
       UnmodifiableMapView(_savedGames);
@@ -74,12 +76,10 @@ class HistoryState extends Equatable {
     );
   }
 
-  // Copy with
+  // Transformers
 
   HistoryState copyWith({final Map<int, SavedGameState>? savedGames}) =>
       HistoryState(savedGames: savedGames ?? this.savedGames);
-
-  // Serialization
 
   Map<String, dynamic> toJson() {
     return {
@@ -88,7 +88,7 @@ class HistoryState extends Equatable {
     };
   }
 
-  // Equatable
+  // Equatable implementation
 
   @override
   List<Object?> get props => [_savedGames];

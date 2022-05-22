@@ -2,6 +2,8 @@ import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:perthle/repository/storage_repository.dart';
 
+/// A storage repository that loads from an asset file, and does not support
+/// saving.
 class AssetStorageRepository extends StorageRepository {
   const AssetStorageRepository({
     this.cache = false,
@@ -23,6 +25,7 @@ class AssetStorageRepository extends StorageRepository {
     return {listKey: list};
   }
 
+  // Do nothing
   @override
   Future<void> save(final String key, final Map<String, dynamic> data) async {}
 }

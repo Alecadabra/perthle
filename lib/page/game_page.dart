@@ -72,7 +72,7 @@ class GamePage extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     flex: 5,
-                                    child: SavedGameTile(
+                                    child: SavedGame(
                                       savedGame: gameData.toSavedGame(),
                                       showWord: gameData.completion.isLost,
                                     ),

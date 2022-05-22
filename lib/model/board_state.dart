@@ -5,9 +5,12 @@ import 'package:flutter/foundation.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
-/// Immutable state of the game board
+/// Immutable state of the game board, holding the entered letters and their
+/// match states
 @immutable
 class BoardState extends Equatable {
+  // Constructors
+
   const BoardState({
     required this.width,
     required this.height,
@@ -15,6 +18,7 @@ class BoardState extends Equatable {
     required final List<List<TileMatchState>> matches,
   })  : _letters = letters,
         _matches = matches;
+
   BoardState.empty({
     required final int width,
     required final int height,
@@ -25,6 +29,7 @@ class BoardState extends Equatable {
           matches:
               List.filled(height, List.filled(width, TileMatchState.blank)),
         );
+
   BoardState.fromJson(final Map<String, dynamic> json)
       : this(
           width: json['width'],
@@ -47,6 +52,8 @@ class BoardState extends Equatable {
           ],
         );
 
+  // State & immutable access
+
   final int width;
   final int height;
 
@@ -65,6 +72,8 @@ class BoardState extends Equatable {
           for (List<TileMatchState> row in _matches) UnmodifiableListView(row),
         ],
       );
+
+  // Transformers
 
   BoardState copyWith({
     final int? width,
@@ -98,6 +107,8 @@ class BoardState extends Equatable {
       ]
     };
   }
+
+  // Equatable implementation
 
   @override
   List<Object?> get props => [width, height, _letters, _matches];

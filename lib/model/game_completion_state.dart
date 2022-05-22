@@ -1,6 +1,12 @@
+/// Enum to hold the status of the game
 enum GameCompletionState {
+  /// The game is in progress
   playing,
+
+  /// The game is finished and the word was guessed
   won,
+
+  /// The game is finished and the word was not guessed
   lost,
 }
 

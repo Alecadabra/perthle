@@ -1,4 +1,4 @@
-/// Immutable enumeration representing a wordle letter's state.
+/// Enum representing a wordle letter's state.
 enum TileMatchState {
   /// This tile has not yet been part of a guess.
   blank,
@@ -16,6 +16,7 @@ enum TileMatchState {
 }
 
 extension TileMatchStatePrecedence on TileMatchState {
+  /// The match's precedence when setting a specific tile's match state.
   int get precedence {
     switch (this) {
       case TileMatchState.blank:

@@ -6,8 +6,9 @@ import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:share_plus/share_plus.dart';
 
-class SavedGameTile extends StatelessWidget {
-  const SavedGameTile({
+/// Widget to show the details of a saved game and ways to share it.
+class SavedGame extends StatelessWidget {
+  const SavedGame({
     final Key? key,
     required this.savedGame,
     required this.showWord,

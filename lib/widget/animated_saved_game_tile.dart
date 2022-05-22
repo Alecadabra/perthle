@@ -4,6 +4,8 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/widget/saved_game_tile.dart';
 
+/// A [SavedGame] that has implicitly animated depth and inner opacity based
+/// on the [shown] flag.
 class AnimatedSavedGameTile extends ImplicitlyAnimatedWidget {
   const AnimatedSavedGameTile({
     final super.key,
@@ -45,7 +47,7 @@ class _AnimatedSavedGameTileState
   Widget build(final BuildContext context) {
     final Animation<double> animation = this.animation;
     final double? visibility = _visibilityTween?.evaluate(animation);
-    return SavedGameTile(
+    return SavedGame(
       savedGame: widget.savedGame,
       showWord: widget.showWord,
       opacity: visibility != null ? -pow(visibility - 1, 2) + 1 : null,

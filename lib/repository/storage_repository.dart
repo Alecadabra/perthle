@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// A repository that provides load and save functionality using json maps.
 abstract class StorageRepository {
   const StorageRepository();
 
@@ -8,10 +9,9 @@ abstract class StorageRepository {
 
   Future<Map<String, dynamic>?> load(final String key);
 
-  static StorageRepository of(
-    final BuildContext context, {
-    final bool listen = false,
-  }) {
-    return RepositoryProvider.of<StorageRepository>(context, listen: listen);
+  // Provider
+
+  static StorageRepository of(final BuildContext context) {
+    return RepositoryProvider.of<StorageRepository>(context);
   }
 }

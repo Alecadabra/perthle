@@ -4,6 +4,7 @@ import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/widget/keyboard_button.dart';
 
+/// A key on the keyboard that is not a letter, e.g. backspace.
 class KeyboardIconButton extends StatelessWidget {
   const KeyboardIconButton({
     final Key? key,

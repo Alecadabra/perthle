@@ -24,6 +24,8 @@ main() {
 class PerthleApp extends StatelessWidget {
   const PerthleApp({final Key? key}) : super(key: key);
 
+  // Theme constants
+
   static const TextTheme _textThemeLight = TextTheme(
     bodyLarge: TextStyle(
       fontFamily: 'Poppins',
@@ -164,6 +166,8 @@ class PerthleApp extends StatelessWidget {
       ),
     ),
   );
+
+  // Build
 
   @override
   Widget build(final BuildContext context) {

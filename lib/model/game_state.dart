@@ -7,8 +7,11 @@ import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
+/// Immutable state holding all of a game's data.
 @immutable
 class GameState extends Equatable {
+  // Constructors
+
   GameState({
     required this.gameNum,
     required this.word,
@@ -26,6 +29,7 @@ class GameState extends Equatable {
               width: word.length,
               height: word.length + 1,
             );
+
   GameState.fromJson(final Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],
@@ -95,6 +99,8 @@ class GameState extends Equatable {
             currGuess.toSet().containsAll(prevMissLetters);
   }
 
+  // Transformers
+
   GameState copyWith({
     final int? gameNum,
     final String? word,
@@ -139,7 +145,7 @@ class GameState extends Equatable {
     };
   }
 
-  // Equatable
+  // Equatable implementation
 
   @override
   List<Object?> get props => [

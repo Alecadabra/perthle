@@ -5,15 +5,19 @@ import 'package:flutter/foundation.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/model/game_mode_state.dart';
 
-/// Immutable state containing today's perthle's number, word, and mode.
+/// Immutable state containing today's perthle's number, word, and game mode.
 /// Statically holds the lists that words are taken from.
 @immutable
 class DailyState extends Equatable {
+  // Constructor
+
   const DailyState({
     required this.gameNum,
     required this.word,
     required this.gameMode,
   });
+
+  // State & immutable access
 
   final int gameNum;
   final String word;
@@ -30,8 +34,12 @@ class DailyState extends Equatable {
     }
   }
 
+  // Equatable implementation
+
   @override
   List<Object?> get props => [gameNum, word, gameMode];
+
+  // The answers
 
   // SPOILERS ------ SPOILERS ------ SPOILERS ------ SPOILERS ------ SPOILERS
   //  ------ SPOILERS ------ SPOILERS ------ SPOILERS ------ SPOILERS ------

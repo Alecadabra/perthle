@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
+/// Configures children to use the perthle scroll behaviour
 class PerthleScrollConfiguration extends StatelessWidget {
   const PerthleScrollConfiguration({
     final Key? key,

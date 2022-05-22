@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
@@ -9,15 +8,20 @@ import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/dictionary_state.dart';
 import 'package:perthle/repository/persistent.dart';
 
+/// Bloc cubit for managing the dictionary of valid words
 class DictionaryCubit extends PersistentCubit<DictionaryState?> {
-  DictionaryCubit({required this.dailyCubit})
-      : super(
+  // Constructor
+
+  DictionaryCubit({required final DailyCubit dailyCubit})
+      : _dailyCubit = dailyCubit,
+        super(
           initialState: null,
           storage: const AssetStorageRepository(
             listKey: DictionaryState.jsonKey,
           ),
         ) {
-    dailySubscription = dailyCubit.stream.listen(
+    // Emit new dictionary states when midnight hits
+    dailyCubit.stream.listen(
       (final daily) {
         emit(null); // Remove yesterday's dictionary
         persist(); // Start loading today's dictionary
@@ -25,13 +29,16 @@ class DictionaryCubit extends PersistentCubit<DictionaryState?> {
     );
   }
 
-  final DailyCubit dailyCubit;
-  late StreamSubscription dailySubscription;
+  // State
 
-  int get wordLength => dailyCubit.state.word.length;
-  bool get isLoaded => state != null;
+  final DailyCubit _dailyCubit;
 
   final HashSet<String> _answers = HashSet.of(DailyState.allAnswers);
+
+  // Getters
+
+  int get wordLength => _dailyCubit.state.word.length;
+  bool get isLoaded => state != null;
 
   bool isValidWord(final String word) {
     final DictionaryState? localDict = state;
@@ -42,16 +49,21 @@ class DictionaryCubit extends PersistentCubit<DictionaryState?> {
         localDict.dictionary.contains(word.toLowerCase());
   }
 
+  // Persistent implementation
+
   @override
   DictionaryState? fromJson(final Map<String, dynamic> json) {
     return DictionaryState.fromJson(json);
   }
 
+  // Not required for asset storage controllers
   @override
   Map<String, dynamic> toJson(final DictionaryState? state) => {};
 
   @override
   String get key => 'assets/dictionary/words_$wordLength.txt';
+
+  // Provider
 
   static DictionaryCubit of(final BuildContext context) =>
       BlocProvider.of<DictionaryCubit>(context);

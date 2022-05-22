@@ -9,6 +9,7 @@ import 'package:perthle/model/game_completion_state.dart';
 import 'package:perthle/model/messenger_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 
+/// A perthle app bar that shakes in response to the messenger cubit.
 class ShakingPerthleAppbar extends StatefulWidget {
   const ShakingPerthleAppbar({final Key? key}) : super(key: key);
 

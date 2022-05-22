@@ -9,6 +9,8 @@ import 'package:perthle/model/tile_match_state.dart';
 /// Immutable storage for a particular completed wordle game.
 @immutable
 class SavedGameState extends Equatable {
+  // Constructors
+
   const SavedGameState({
     required final int gameNum,
     required final List<List<TileMatchState>> matches,
@@ -16,6 +18,7 @@ class SavedGameState extends Equatable {
   })  : _gameNum = gameNum,
         _matches = matches,
         hardMode = hardMode ?? false;
+
   SavedGameState.fromJson(final Map<String, dynamic> json)
       : this(
           gameNum: json['gameNum'],
@@ -36,7 +39,7 @@ class SavedGameState extends Equatable {
 
   final bool hardMode;
 
-  // Getters
+  // Immutable access
 
   UnmodifiableListView<UnmodifiableListView<TileMatchState>> get matches =>
       UnmodifiableListView(
@@ -47,8 +50,8 @@ class SavedGameState extends Equatable {
 
   DailyState get dailyState => DailyState(
         gameNum: _gameNum,
-        word: DailyCubit.wordForGameNum(_gameNum),
-        gameMode: DailyCubit.gameModeForGameNum(_gameNum),
+        word: _gameNum.resolveGameWord(),
+        gameMode: _gameNum.resolveGameMode(),
       );
 
   List<List<TileMatchState>> get attempts => _matches
@@ -89,6 +92,8 @@ class SavedGameState extends Equatable {
   String shareableString(final bool lightEmojis) =>
       '$title\n\n${boardEmojis(lightEmojis)}';
 
+  // Serialization
+
   Map<String, dynamic> toJson() {
     return {
       'gameNum': _gameNum,
@@ -101,6 +106,8 @@ class SavedGameState extends Equatable {
       'hardMode': hardMode,
     };
   }
+
+  // Equatable implementation
 
   @override
   List<Object?> get props => [_gameNum, _matches, hardMode];

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
@@ -9,24 +7,26 @@ import 'package:perthle/repository/persistent.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/repository/storage_repository.dart';
-import 'package:perthle/model/daily_state.dart';
-import 'package:perthle/model/dictionary_state.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
-import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
 
 typedef GameEmitter = Emitter<GameState>;
 
+/// Bloc for all the game logic
 class GameBloc extends PersistentBloc<GameEvent, GameState> {
+  // Constructor
+
   GameBloc({
     required final StorageRepository storage,
-    required this.dailyCubit,
-    required this.dictionaryCubit,
-    required this.messengerCubit,
-    required this.settingsCubit,
-  }) : super(
+    required final DailyCubit dailyCubit,
+    required final DictionaryCubit dictionaryCubit,
+    required final MessengerCubit messengerCubit,
+    required final SettingsCubit settingsCubit,
+  })  : _dictionaryCubit = dictionaryCubit,
+        _messengerCubit = messengerCubit,
+        super(
           storage: storage,
           initialState: GameState(
             gameNum: dailyCubit.state.gameNum,
@@ -34,13 +34,16 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
             hardMode: settingsCubit.state.hardMode,
           ),
         ) {
-    dailySubscription = dailyCubit.stream.listen(
+    // New games at midnight
+    dailyCubit.stream.listen(
       (final daily) => add(GameNewDailyEvent(daily)),
     );
-    dictionarySubscription = dictionaryCubit.stream.listen(
+    // Respond to the dictionary loading
+    dictionaryCubit.stream.listen(
       (final dictionary) => add(GameDictionaryLoadedEvent(dictionary != null)),
     );
-    settingsSubscription = settingsCubit.stream.listen(
+    // Hard mode setting
+    settingsCubit.stream.listen(
       (final settings) {
         if (state.completion.isPlaying) {
           add(GameHardModeToggleEvent(settings.hardMode));
@@ -57,16 +60,13 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     on<GameDictionaryLoadedEvent>(_dictionaryLoaded);
   }
 
-  final DailyCubit dailyCubit;
-  late StreamSubscription<DailyState> dailySubscription;
+  // State
 
-  final DictionaryCubit dictionaryCubit;
-  late StreamSubscription<DictionaryState?> dictionarySubscription;
+  final DictionaryCubit _dictionaryCubit;
 
-  final SettingsCubit settingsCubit;
-  late StreamSubscription<SettingsState> settingsSubscription;
+  final MessengerCubit _messengerCubit;
 
-  final MessengerCubit messengerCubit;
+  // Actions
 
   void type(final LetterState letter) {
     if (state.canType) {
@@ -84,7 +84,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     if (state.canEnter) {
       add(
         GameEnterEvent(
-          validWord: dictionaryCubit.isValidWord(
+          validWord: _dictionaryCubit.isValidWord(
             state.board.letters[state.currRow].join(),
           ),
           satisfiesHardMode: state.satisfiesHardMode,
@@ -92,6 +92,8 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
       );
     }
   }
+
+  // Persistent implementation
 
   @override
   GameState? fromJson(final Map<String, dynamic> json) =>
@@ -113,6 +115,8 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
             current.completion != next.completion);
   }
 
+  // Provider
+
   static GameBloc of(final BuildContext context) =>
       BlocProvider.of<GameBloc>(context);
 
@@ -120,7 +124,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
   void _newDaily(final GameNewDailyEvent event, final GameEmitter emit) {
     emit(
-      GameState(gameNum: event.dailyData.gameNum, word: event.dailyData.word),
+      GameState(gameNum: event.dailyState.gameNum, word: event.dailyState.word),
     );
   }
 
@@ -182,7 +186,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
       if (missingLetters.isNotEmpty) {
         // There are any amount of missed letters
-        messengerCubit.send(
+        _messengerCubit.send(
           '${currGuess.join()} doesn\'t contain '
           '${missingLetters.join(', ')}',
         );
@@ -200,7 +204,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
                 ? prevOnlyMatches[i]
                 : null,
         ].where((final letter) => letter != null);
-        messengerCubit.send(
+        _messengerCubit.send(
           '${currGuess.join()} uses the wrong '
           'position${wrongPositionLetters.length != 1 ? 's' : ''} for '
           '${wrongPositionLetters.join(', ')}',
@@ -208,7 +212,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
       }
     } else if (!event.validWord) {
       // Invalid word
-      messengerCubit.send(
+      _messengerCubit.send(
         '${state.board.letters[state.currRow].join()} is not a word',
       );
     } else {

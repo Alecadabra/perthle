@@ -1,8 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
+/// Immutable state for the stats values for a history state. Get from
+/// `HistoryState.historyStats`.
 @immutable
 class HistoryStatsState extends Equatable {
+  // Constructor
+
   const HistoryStatsState({
     required this.gamesPlayed,
     required this.winPercentage,
@@ -10,10 +14,14 @@ class HistoryStatsState extends Equatable {
     required this.longestStreak,
   });
 
+  // Immutable state
+
   final int gamesPlayed;
   final int winPercentage;
   final int currStreak;
   final int longestStreak;
+
+  // Equatable implementation
 
   @override
   List<Object?> get props => [

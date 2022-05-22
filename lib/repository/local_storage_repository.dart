@@ -4,6 +4,7 @@ import 'dart:html';
 
 import 'package:perthle/repository/storage_repository.dart';
 
+/// A storage repository that loads and saves to web local storage.
 class LocalStorageRepository extends StorageRepository {
   final JsonEncoder _encoder = const JsonEncoder();
   final JsonDecoder _decoder = const JsonDecoder();

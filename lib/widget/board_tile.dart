@@ -4,6 +4,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
+/// A square on the perthle board for a nullable letter and it's match state.
 class BoardTile extends StatelessWidget {
   const BoardTile({
     final Key? key,

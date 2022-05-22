@@ -3,75 +3,89 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_mode_state.dart';
 
+// The last game num for the volumes of Perthle answers
+const int _lastVolOne = 35;
+const int _lastVolTwo = 70;
+
+/// Bloc cubit for the daily state, handles emitting new states at midnight
+/// and resolving daily states through it's static helper functions
 class DailyCubit extends Cubit<DailyState> {
-  DailyCubit() : super(resolve()) {
-    emitTomorrow();
+  // Constructor
+
+  DailyCubit() : super(DateTime.now().resolveDailyState()) {
+    _emitTomorrow();
   }
+
+  // Cubit implementation
 
   @override
   void onChange(final Change<DailyState> change) {
     super.onChange(change);
-    emitTomorrow();
+    // Changes come from emitTomorrow, when they happen, start the next
+    // emitTomorrow
+    _emitTomorrow();
   }
 
-  void emitTomorrow() {
+  void _emitTomorrow() {
     DateTime now = DateTime.now();
-    DateTime midnightTonight = DateTime(
-      now.year,
-      now.month,
-      now.day + 1,
-    );
+    DateTime midnightTonight = DateTime(now.year, now.month, now.day + 1);
     Duration timeUntilMidnight = midnightTonight.difference(now);
-    Future.delayed(timeUntilMidnight).then((final _) => emit(resolve()));
-  }
-
-  static DailyState resolve() => dailyStateForDateTime(DateTime.now());
-
-  static DailyState dailyStateForDateTime(final DateTime time) {
-    return DailyState(
-      gameNum: gameNumForDateTime(time),
-      word: wordForDateTime(time),
-      gameMode: gameModeForDateTime(time),
+    Future.delayed(timeUntilMidnight).then(
+      (final _) => emit(DateTime.now().resolveDailyState()),
     );
   }
 
-  // Perthle 1, 00:00:00
+  // Source of truth for game numbers
+
+  /// Perthle 1, 00:00:00
   static final DateTime epoch = DateTime(2022, 2, 25);
   // The above in milliseconds since unix epoch in AWST
   static const int epochMs = 1645718400000;
 
-  // The last game num for the volumes of Perthle answers
-  static const int _lastVolOne = 35;
-  static const int _lastVolTwo = 70;
+  // Provider
 
-  static GameModeState gameModeForDateTime(final DateTime time) {
-    if (time.weekday < 6 || gameNumForDateTime(time) <= _lastVolOne) {
+  static DailyCubit of(final BuildContext context) =>
+      BlocProvider.of<DailyCubit>(context);
+}
+
+// Extensions for conversions between game state and it's attributes
+
+extension DailyCubitDateTime on DateTime {
+  DailyState resolveDailyState() => DailyState(
+        gameNum: this.resolveGameNum(),
+        word: this.resolveGameWord(),
+        gameMode: this.resolveGameMode(),
+      );
+
+  GameModeState resolveGameMode() {
+    if (weekday < 6 || this.resolveGameNum() <= _lastVolOne) {
       return GameModeState.perthle;
-    } else if (time.weekday == 6) {
+    } else if (weekday == 6) {
       return GameModeState.perthlonger;
     } else {
       return GameModeState.special;
     }
   }
 
-  static GameModeState gameModeForGameNum(final int gameNum) =>
-      gameModeForDateTime(dateTimeForGameNum(gameNum));
+  int resolveGameNum() => this.difference(DailyCubit.epoch).inDays;
 
-  static DateTime dateTimeForGameNum(final int gameNum) =>
-      epoch.add(Duration(days: gameNum));
+  String resolveGameWord() => this.resolveGameNum().resolveGameWord();
+}
 
-  static int gameNumForDateTime(final DateTime time) =>
-      time.difference(epoch).inDays;
+extension DailyCubitGameNum on int {
+  GameModeState resolveGameMode() => this.resolveDateTime().resolveGameMode();
 
-  static String wordForDateTime(final DateTime time) =>
-      wordForGameNum(gameNumForDateTime(time));
+  DateTime resolveDateTime() => DailyCubit.epoch.add(Duration(days: this));
 
-  static String wordForGameNum(final int gameNum) {
+  String resolveGameWord() {
+    // Readability
+    final gameNum = this;
+
     if (gameNum <= _lastVolOne) {
       // Perthle Volume 1
       return DailyState.perthleVolOne[gameNum - 1].toUpperCase();
     } else {
-      final gameMode = gameModeForGameNum(gameNum);
+      final gameMode = gameNum.resolveGameMode();
       if (gameMode == GameModeState.perthle) {
         if (gameNum <= _lastVolTwo) {
           // Perthle Volume 2
@@ -98,7 +112,4 @@ class DailyCubit extends Cubit<DailyState> {
       }
     }
   }
-
-  static DailyCubit of(final BuildContext context) =>
-      BlocProvider.of<DailyCubit>(context);
 }

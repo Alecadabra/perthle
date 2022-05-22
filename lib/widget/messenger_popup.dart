@@ -9,6 +9,8 @@ import 'package:perthle/model/history_state.dart';
 import 'package:perthle/model/messenger_state.dart';
 import 'package:perthle/model/settings_state.dart';
 
+/// A small, normally hidden popup that shows messages sent through the
+/// messenger cubit.
 class MessengerPopup extends StatelessWidget {
   const MessengerPopup({final Key? key}) : super(key: key);
 
