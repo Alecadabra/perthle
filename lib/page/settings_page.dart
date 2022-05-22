@@ -199,12 +199,7 @@ class SettingsPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(
                     CupertinoPageRoute(
-                      builder: (final context) => const LicensePage(
-                        applicationName: 'Perthle',
-                        applicationLegalese:
-                            'Perthle by Alec Maughan, a respectful homage '
-                            'to Wordle by Josh Wardle',
-                      ),
+                      builder: (final context) => const _PerthleLicensePage(),
                     ),
                   );
                 },
@@ -298,6 +293,40 @@ class _SettingsRow extends StatelessWidget {
               buildWhen: buildWhen!,
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _PerthleLicensePage extends StatelessWidget {
+  const _PerthleLicensePage({final Key? key}) : super(key: key);
+
+  @override
+  Widget build(final BuildContext context) {
+    final neuTheme = NeumorphicTheme.of(context)!.current!;
+    return Theme(
+      data: ThemeData(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: MaterialColor(
+            neuTheme.accentColor.value,
+            {
+              50: neuTheme.accentColor,
+              for (int i = 100; i <= 900; i += 100) i: neuTheme.accentColor,
+            },
+          ),
+          brightness: NeumorphicTheme.isUsingDark(context)
+              ? Brightness.dark
+              : Brightness.light,
+          cardColor: neuTheme.baseColor,
+          primaryColorDark: neuTheme.accentColor,
+          backgroundColor: neuTheme.baseColor,
+        ),
+        textTheme: neuTheme.textTheme,
+      ),
+      child: const LicensePage(
+        applicationName: 'Perthle',
+        applicationLegalese: 'Perthle by Alec Maughan, a respectful homage '
+            'to Wordle by Josh Wardle',
       ),
     );
   }

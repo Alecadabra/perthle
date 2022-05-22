@@ -133,40 +133,6 @@ class PerthleApp extends StatelessWidget {
     intensity: 0.35,
   );
 
-  // static final _materialThemeLight = ThemeData().copyWith(
-  //   colorScheme: ThemeData.light().colorScheme.copyWith(
-  //         primary: _themeDataLight.accentColor,
-  //         secondary: _themeDataLight.variantColor,
-  //       ),
-  //   iconTheme: _themeDataLight.iconTheme,
-  //   brightness: Brightness.light,
-  //   textTheme: _themeDataLight.textTheme,
-  //   scaffoldBackgroundColor: _themeDataLight.baseColor,
-  //   // appBarTheme: AppBarTheme(
-  //   //   systemOverlayStyle: SystemUiOverlayStyle(
-  //   //     statusBarColor: _themeDataLight.baseColor,
-  //   //     statusBarBrightness: Brightness.light,
-  //   //   ),
-  //   // ),
-  // );
-
-  // static final _materialThemeDark = ThemeData.dark().copyWith(
-  //   colorScheme: ThemeData.dark().colorScheme.copyWith(
-  //         primary: _themeDataDark.accentColor,
-  //         secondary: _themeDataDark.variantColor,
-  //       ),
-  //   iconTheme: _themeDataDark.iconTheme,
-  //   brightness: Brightness.dark,
-  //   textTheme: _themeDataDark.textTheme,
-  //   scaffoldBackgroundColor: _themeDataDark.baseColor,
-  //   // appBarTheme: AppBarTheme(
-  //   //   systemOverlayStyle: SystemUiOverlayStyle(
-  //   //     statusBarColor: _themeDataDark.baseColor,
-  //   //     statusBarBrightness: Brightness.dark,
-  //   //   ),
-  //   // ),
-  // );
-
   // Build
 
   @override
@@ -227,8 +193,6 @@ class PerthleApp extends StatelessWidget {
             themeMode: settings.themeMode,
             theme: _themeDataLight,
             darkTheme: _themeDataDark,
-            // materialTheme: _materialThemeLight,
-            // materialDarkTheme: _materialThemeDark,
             home: const PerthleNavigator(),
           );
         },
