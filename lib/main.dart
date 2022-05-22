@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -24,15 +25,63 @@ class PerthleApp extends StatelessWidget {
   const PerthleApp({final Key? key}) : super(key: key);
 
   static const TextTheme _textThemeLight = TextTheme(
+    bodyLarge: TextStyle(
+      fontFamily: 'Poppins',
+      color: Color(0xFF525252),
+    ),
     bodyMedium: TextStyle(
       fontFamily: 'Poppins',
-      color: NeumorphicColors.darkDefaultTextColor,
+      color: Color(0xFF525252),
     ),
+    bodySmall: TextStyle(
+      fontFamily: 'Poppins',
+      color: Color(0xFF525252),
+    ),
+    labelLarge: TextStyle(
+      fontFamily: 'Poppins',
+      color: Color(0xFF525252),
+    ),
+    titleMedium: TextStyle(
+      fontFamily: 'Poppins',
+      color: Color(0xFF525252),
+    ),
+    headlineMedium: TextStyle(
+      fontFamily: 'Poppins',
+      fontWeight: FontWeight.w600,
+      color: Color(0xaa525252),
+      fontSize: 14,
+      letterSpacing: 0.15,
+    ),
+    headlineSmall: TextStyle(
+      fontFamily: 'Poppins',
+      fontWeight: FontWeight.w600,
+      color: Color(0xFF525252),
+    ),
+    displaySmall: TextStyle(
+      fontFamily: 'Poppins',
+      fontSize: 38,
+      fontWeight: FontWeight.w500,
+    ),
+  );
+
+  static const TextTheme _textThemeDark = TextTheme(
     bodyLarge: TextStyle(
       fontFamily: 'Poppins',
       color: NeumorphicColors.darkDefaultTextColor,
     ),
+    bodyMedium: TextStyle(
+      fontFamily: 'Poppins',
+      color: NeumorphicColors.darkDefaultTextColor,
+    ),
+    bodySmall: TextStyle(
+      fontFamily: 'Poppins',
+      color: NeumorphicColors.darkDefaultTextColor,
+    ),
     labelLarge: TextStyle(
+      fontFamily: 'Poppins',
+      color: NeumorphicColors.darkDefaultTextColor,
+    ),
+    titleMedium: TextStyle(
       fontFamily: 'Poppins',
       color: NeumorphicColors.darkDefaultTextColor,
     ),
@@ -43,32 +92,10 @@ class PerthleApp extends StatelessWidget {
       fontSize: 14,
       letterSpacing: 0.15,
     ),
-    displaySmall: TextStyle(
-      fontFamily: 'Poppins',
-      fontSize: 38,
-      fontWeight: FontWeight.w500,
-    ),
-  );
-
-  static const TextTheme _textThemeDark = TextTheme(
-    bodyMedium: TextStyle(
-      fontFamily: 'Poppins',
-      color: Color(0xFF525252),
-    ),
-    bodyLarge: TextStyle(
-      fontFamily: 'Poppins',
-      color: Color(0xFF525252),
-    ),
-    labelLarge: TextStyle(
-      fontFamily: 'Poppins',
-      color: Color(0xFF525252),
-    ),
-    headlineMedium: TextStyle(
+    headlineSmall: TextStyle(
       fontFamily: 'Poppins',
       fontWeight: FontWeight.w600,
-      color: Color(0xaa525252),
-      fontSize: 14,
-      letterSpacing: 0.15,
+      color: NeumorphicColors.darkDefaultTextColor,
     ),
     displaySmall: TextStyle(
       fontFamily: 'Poppins',
@@ -81,7 +108,7 @@ class PerthleApp extends StatelessWidget {
   static const Color _missYellow = Color(0xFFDBC381);
 
   static const _themeDataLight = NeumorphicThemeData(
-    textTheme: _textThemeDark,
+    textTheme: _textThemeLight,
     defaultTextColor: Color(0xC3363A3F),
     disabledColor: Color(0xFFACACAC),
     accentColor: _matchGreen,
@@ -91,7 +118,7 @@ class PerthleApp extends StatelessWidget {
   );
 
   static const _themeDataDark = NeumorphicThemeData.dark(
-    textTheme: _textThemeLight,
+    textTheme: _textThemeDark,
     baseColor: Color(0xFF32353A),
     shadowLightColor: Color(0xFF8F8F8F),
     shadowDarkColor: Color(0xC5000000),
@@ -102,6 +129,40 @@ class PerthleApp extends StatelessWidget {
     variantColor: _missYellow,
     depth: 3,
     intensity: 0.35,
+  );
+
+  static final _materialThemeLight = ThemeData.light().copyWith(
+    colorScheme: ThemeData.light().colorScheme.copyWith(
+          primary: _themeDataLight.accentColor,
+          secondary: _themeDataLight.variantColor,
+        ),
+    iconTheme: _themeDataLight.iconTheme,
+    brightness: Brightness.light,
+    textTheme: _themeDataLight.textTheme,
+    scaffoldBackgroundColor: _themeDataLight.baseColor,
+    appBarTheme: AppBarTheme(
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: _themeDataLight.baseColor,
+        statusBarBrightness: Brightness.light,
+      ),
+    ),
+  );
+
+  static final _materialThemeDark = ThemeData.dark().copyWith(
+    colorScheme: ThemeData.dark().colorScheme.copyWith(
+          primary: _themeDataDark.accentColor,
+          secondary: _themeDataDark.variantColor,
+        ),
+    iconTheme: _themeDataDark.iconTheme,
+    brightness: Brightness.dark,
+    textTheme: _themeDataDark.textTheme,
+    scaffoldBackgroundColor: _themeDataDark.baseColor,
+    appBarTheme: AppBarTheme(
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: _themeDataDark.baseColor,
+        statusBarBrightness: Brightness.dark,
+      ),
+    ),
   );
 
   @override
@@ -162,6 +223,8 @@ class PerthleApp extends StatelessWidget {
             themeMode: settings.themeMode,
             theme: _themeDataLight,
             darkTheme: _themeDataDark,
+            materialTheme: _materialThemeLight,
+            materialDarkTheme: _materialThemeDark,
             home: const PerthleNavigator(),
           );
         },
