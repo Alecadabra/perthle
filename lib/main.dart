@@ -133,7 +133,7 @@ class PerthleApp extends StatelessWidget {
     intensity: 0.35,
   );
 
-  static final _materialThemeLight = ThemeData.light().copyWith(
+  static final _materialThemeLight = ThemeData().copyWith(
     colorScheme: ThemeData.light().colorScheme.copyWith(
           primary: _themeDataLight.accentColor,
           secondary: _themeDataLight.variantColor,
