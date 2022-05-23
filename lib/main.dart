@@ -25,107 +25,39 @@ class PerthleApp extends StatelessWidget {
 
   // Theme constants
 
-  static const TextTheme _textThemeLight = TextTheme(
-    bodyLarge: TextStyle(
-      fontFamily: 'Poppins',
-      color: Color(0xFF525252),
-    ),
-    bodyMedium: TextStyle(
-      fontFamily: 'Poppins',
-      color: Color(0xFF525252),
-    ),
-    bodySmall: TextStyle(
-      fontFamily: 'Poppins',
-      color: Color(0xFF525252),
-    ),
-    labelLarge: TextStyle(
-      fontFamily: 'Poppins',
-      color: Color(0xFF525252),
-    ),
-    titleMedium: TextStyle(
-      fontFamily: 'Poppins',
-      color: Color(0xFF525252),
-    ),
-    headlineMedium: TextStyle(
-      fontFamily: 'Poppins',
-      fontWeight: FontWeight.w600,
-      color: Color(0xaa525252),
-      fontSize: 14,
-      letterSpacing: 0.15,
-    ),
-    headlineSmall: TextStyle(
-      fontFamily: 'Poppins',
-      fontWeight: FontWeight.w600,
-      color: Color(0xFF525252),
-    ),
-    displaySmall: TextStyle(
-      fontFamily: 'Poppins',
-      fontSize: 38,
-      fontWeight: FontWeight.w500,
-    ),
+  static final TextTheme _textThemeLight = Typography.whiteMountainView.apply(
+    fontFamily: 'Poppins',
+    bodyColor: const Color(0xFF525252),
+    displayColor: const Color(0xaa525252),
   );
 
-  static const TextTheme _textThemeDark = TextTheme(
-    bodyLarge: TextStyle(
-      fontFamily: 'Poppins',
-      color: NeumorphicColors.darkDefaultTextColor,
-    ),
-    bodyMedium: TextStyle(
-      fontFamily: 'Poppins',
-      color: NeumorphicColors.darkDefaultTextColor,
-    ),
-    bodySmall: TextStyle(
-      fontFamily: 'Poppins',
-      color: NeumorphicColors.darkDefaultTextColor,
-    ),
-    labelLarge: TextStyle(
-      fontFamily: 'Poppins',
-      color: NeumorphicColors.darkDefaultTextColor,
-    ),
-    titleMedium: TextStyle(
-      fontFamily: 'Poppins',
-      color: NeumorphicColors.darkDefaultTextColor,
-    ),
-    headlineMedium: TextStyle(
-      fontFamily: 'Poppins',
-      fontWeight: FontWeight.w600,
-      color: Color(0xaaFFFFFF),
-      fontSize: 14,
-      letterSpacing: 0.15,
-    ),
-    headlineSmall: TextStyle(
-      fontFamily: 'Poppins',
-      fontWeight: FontWeight.w600,
-      color: NeumorphicColors.darkDefaultTextColor,
-    ),
-    displaySmall: TextStyle(
-      fontFamily: 'Poppins',
-      fontSize: 38,
-      fontWeight: FontWeight.w500,
-    ),
+  static final TextTheme _textThemeDark = Typography.blackMountainView.apply(
+    fontFamily: 'Poppins',
+    bodyColor: const Color(0xB3FFFFFF),
+    displayColor: const Color(0xaaFFFFFF),
   );
 
   static const Color _matchGreen = Color(0xFF8FDA93);
   static const Color _missYellow = Color(0xFFDBC381);
 
-  static const _themeDataLight = NeumorphicThemeData(
+  static final _themeDataLight = NeumorphicThemeData(
     textTheme: _textThemeLight,
-    defaultTextColor: Color(0xC3363A3F),
-    disabledColor: Color(0xFFACACAC),
+    defaultTextColor: const Color(0xC3363A3F),
+    disabledColor: const Color(0xFFACACAC),
     accentColor: _matchGreen,
     variantColor: _missYellow,
     depth: 6,
     intensity: 0.65,
   );
 
-  static const _themeDataDark = NeumorphicThemeData.dark(
+  static final _themeDataDark = NeumorphicThemeData.dark(
     textTheme: _textThemeDark,
-    baseColor: Color(0xFF32353A),
-    shadowLightColor: Color(0xFF8F8F8F),
-    shadowDarkColor: Color(0xC5000000),
-    shadowDarkColorEmboss: Color(0xff000000),
-    shadowLightColorEmboss: Color(0xB9FFFFFF),
-    defaultTextColor: Color(0x92DDE6E8),
+    baseColor: const Color(0xFF32353A),
+    shadowLightColor: const Color(0xFF8F8F8F),
+    shadowDarkColor: const Color(0xC5000000),
+    shadowDarkColorEmboss: const Color(0xff000000),
+    shadowLightColorEmboss: const Color(0xB9FFFFFF),
+    defaultTextColor: const Color(0x92DDE6E8),
     accentColor: _matchGreen,
     variantColor: _missYellow,
     depth: 3,

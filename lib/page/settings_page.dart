@@ -8,6 +8,7 @@ import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
+import 'package:perthle/widget/perthle_scroll_configuration.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -26,19 +27,15 @@ class SettingsPage extends StatelessWidget {
       ),
       body: SizedBox(
         width: _maxWidth,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: ListView(
           children: [
             const _SettingsHeading('Theme'),
             _SettingsRow(
               name: 'Theme mode',
               builder: (final context, final settings) {
                 return NeumorphicToggle(
-                  width: 250,
-                  style: NeumorphicToggleStyle(
-                    // backgroundColor: Theme.of(context).disabledColor,
-                    lightSource: lightSource,
-                  ),
+                  width: 240,
+                  style: NeumorphicToggleStyle(lightSource: lightSource),
                   selectedIndex: settings.themeMode.index,
                   thumb: Neumorphic(
                     style: NeumorphicStyle(
@@ -53,12 +50,14 @@ class SettingsPage extends StatelessWidget {
                       final rest = themeMode.name.substring(1);
                       return ToggleElement(
                         foreground: Center(
-                            child: Text(
-                          '$firstLetter$rest',
-                          style: Theme.of(context).textTheme.bodyMedium?.apply(
-                                color: NeumorphicTheme.baseColor(context),
-                              ),
-                        )),
+                          child: Text(
+                            '$firstLetter$rest',
+                            style:
+                                Theme.of(context).textTheme.bodyMedium?.apply(
+                                      color: NeumorphicTheme.baseColor(context),
+                                    ),
+                          ),
+                        ),
                         background: Center(child: Text('$firstLetter$rest')),
                       );
                     },
@@ -172,6 +171,7 @@ class SettingsPage extends StatelessWidget {
               name: 'Open source',
               child: NeumorphicButton(
                 tooltip: 'Go to the Perthle GitHub repository',
+                minDistance: -1,
                 onPressed: () async {
                   const url = 'https://github.com/Alecadabra/perthle';
                   if (await canLaunchUrlString(url)) {
@@ -196,6 +196,7 @@ class SettingsPage extends StatelessWidget {
               name: 'Licenses',
               child: NeumorphicButton(
                 tooltip: 'View open source licenses',
+                minDistance: -1,
                 onPressed: () {
                   Navigator.of(context).push(
                     CupertinoPageRoute(
@@ -239,7 +240,7 @@ class _SettingsHeading extends StatelessWidget {
       alignment: Alignment.bottomLeft,
       child: Text(
         text.toUpperCase(),
-        style: Theme.of(context).textTheme.headlineMedium,
+        style: Theme.of(context).textTheme.labelLarge,
       ),
     );
   }
@@ -285,6 +286,7 @@ class _SettingsRow extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(width: 20),
           if (child != null)
             child!
           else

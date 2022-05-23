@@ -39,12 +39,12 @@ class _DailyCountdownState extends State<DailyCountdown> {
         final duration = timerSnapshot.data ?? timeUntilMidnight;
         final percent = (dayInSeconds - duration.inSeconds) / dayInSeconds;
         final durationMap = {
-          'hours': duration.inHours,
-          'minutes': duration.inMinutes - 60 * duration.inHours,
-          'seconds': duration.inSeconds - 60 * duration.inMinutes,
+          'h': duration.inHours,
+          'm': duration.inMinutes - 60 * duration.inHours,
+          's': duration.inSeconds - 60 * duration.inMinutes,
         }..removeWhere((final key, final value) => value == 0);
         final String durationString = durationMap.entries
-            .map((final entry) => '${entry.value} ${entry.key}')
+            .map((final entry) => '${entry.value}${entry.key}')
             .join(', ');
 
         return Neumorphic(

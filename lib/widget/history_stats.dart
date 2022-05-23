@@ -46,20 +46,12 @@ class _Stat extends StatelessWidget {
           Text(
             name.toUpperCase().split(' ').join('\n'),
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall?.apply(
-                  fontWeightDelta: 2,
-                  color: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.color
-                      ?.withAlpha(0xaa),
-                ),
+            style: Theme.of(context).textTheme.labelMedium,
           ),
           const SizedBox(height: 6),
           Text(
             value,
-            style:
-                Theme.of(context).textTheme.bodySmall?.apply(fontSizeDelta: 14),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
         ],
       ),

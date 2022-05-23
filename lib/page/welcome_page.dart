@@ -21,74 +21,72 @@ class WelcomePage extends StatelessWidget {
       body: Container(
         padding: const EdgeInsets.all(16),
         width: 600,
-        child: PerthleScrollConfiguration(
-          child: ListView(
-            children: [
-              const _Heading('Welcome to Perthle'),
-              const Text(
-                'It\'s like Wordle, but much more graphically intensive, '
-                'and the answers are all words relevant to Perthgang.',
-              ),
-              const _Heading('How to Play'),
-              const Text('Guess the word before you run out of tries - and you '
-                  'can\'t just make up words.'),
-              const SizedBox(height: 16),
-              _BoardRow(
-                word: 'Alec',
-                matches: const [
-                  TileMatchState.blank,
-                  TileMatchState.wrong,
-                  TileMatchState.blank,
-                  TileMatchState.blank,
-                ],
-              ),
-              _BoardRowCaption(
-                start: 'The letter ',
-                letter: 'L',
-                end: ' is not in the word.',
-                color: NeumorphicTheme.disabledColor(context),
-              ),
-              const SizedBox(height: 16),
-              _BoardRow(
-                word: 'Perth',
-                matches: const [
-                  TileMatchState.blank,
-                  TileMatchState.blank,
-                  TileMatchState.match,
-                  TileMatchState.blank,
-                  TileMatchState.blank,
-                ],
-              ),
-              _BoardRowCaption(
-                start: 'The letter ',
-                letter: 'R',
-                end: ' is in the word in the right place.',
-                color: NeumorphicTheme.accentColor(context),
-              ),
-              const SizedBox(height: 16),
-              _BoardRow(
-                word: 'Wordle',
-                matches: const [
-                  TileMatchState.blank,
-                  TileMatchState.blank,
-                  TileMatchState.blank,
-                  TileMatchState.miss,
-                  TileMatchState.blank,
-                  TileMatchState.blank,
-                ],
-              ),
-              _BoardRowCaption(
-                start: 'The letter ',
-                letter: 'D',
-                end: ' is in the word but not in the right place.',
-                color: NeumorphicTheme.variantColor(context),
-              ),
-              const _Heading('Ready?'),
-              const Text('Swipe over to the game to play.'),
-              const SizedBox(height: 8),
-              const Text('New Perthle every day!'),
-            ],
-          ),
+        child: ListView(
+          children: [
+            const _Heading('Welcome to Perthle'),
+            const Text(
+              'It\'s like Wordle, but much more graphically intensive, '
+              'and the answers are all words relevant to Perthgang.',
+            ),
+            const _Heading('How to Play'),
+            const Text('Guess the word before you run out of tries - and you '
+                'can\'t just make up words.'),
+            const SizedBox(height: 16),
+            _BoardRow(
+              word: 'Alec',
+              matches: const [
+                TileMatchState.blank,
+                TileMatchState.wrong,
+                TileMatchState.blank,
+                TileMatchState.blank,
+              ],
+            ),
+            _BoardRowCaption(
+              start: 'The letter ',
+              letter: 'L',
+              end: ' is not in the word.',
+              color: NeumorphicTheme.disabledColor(context),
+            ),
+            const SizedBox(height: 16),
+            _BoardRow(
+              word: 'Perth',
+              matches: const [
+                TileMatchState.blank,
+                TileMatchState.blank,
+                TileMatchState.match,
+                TileMatchState.blank,
+                TileMatchState.blank,
+              ],
+            ),
+            _BoardRowCaption(
+              start: 'The letter ',
+              letter: 'R',
+              end: ' is in the word in the right place.',
+              color: NeumorphicTheme.accentColor(context),
+            ),
+            const SizedBox(height: 16),
+            _BoardRow(
+              word: 'Wordle',
+              matches: const [
+                TileMatchState.blank,
+                TileMatchState.blank,
+                TileMatchState.blank,
+                TileMatchState.miss,
+                TileMatchState.blank,
+                TileMatchState.blank,
+              ],
+            ),
+            _BoardRowCaption(
+              start: 'The letter ',
+              letter: 'D',
+              end: ' is in the word but not in the right place.',
+              color: NeumorphicTheme.variantColor(context),
+            ),
+            const _Heading('Ready?'),
+            const Text('Swipe over to the game to play.'),
+            const SizedBox(height: 8),
+            const Text('New Perthle every day!'),
+          ],
         ),
       ),
     );
@@ -185,7 +183,7 @@ class _Heading extends StatelessWidget {
       padding: const EdgeInsets.only(top: 36, bottom: 4),
       child: Text(
         text.toUpperCase(),
-        style: Theme.of(context).textTheme.headlineMedium,
+        style: Theme.of(context).textTheme.labelLarge,
       ),
     );
   }

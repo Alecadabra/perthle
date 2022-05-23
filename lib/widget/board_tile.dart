@@ -96,6 +96,8 @@ class BoardTile extends StatelessWidget {
                             .textTheme
                             .displaySmall
                             ?.copyWith(
+                              fontSize: 38,
+                              fontWeight: FontWeight.w500,
                               color: match != TileMatchState.blank
                                   ? NeumorphicTheme.baseColor(context)
                                   : NeumorphicTheme.defaultTextColor(context),
