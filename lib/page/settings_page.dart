@@ -8,7 +8,6 @@ import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
-import 'package:perthle/widget/perthle_scroll_configuration.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsPage extends StatelessWidget {
