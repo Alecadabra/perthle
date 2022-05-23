@@ -8,9 +8,9 @@ import 'package:perthle/widget/saved_game_tile.dart';
 /// on the [shown] flag.
 class AnimatedSavedGameTile extends ImplicitlyAnimatedWidget {
   const AnimatedSavedGameTile({
-    final super.key,
-    required final super.duration,
-    final super.curve,
+    super.key,
+    required super.duration,
+    super.curve,
     required this.savedGame,
     required this.showWord,
     required this.shown,

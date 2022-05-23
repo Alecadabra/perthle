@@ -4,7 +4,6 @@ import 'package:perthle/model/tile_match_state.dart';
 import 'package:perthle/widget/board_tile.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
-import 'package:perthle/widget/perthle_scroll_configuration.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({final Key? key}) : super(key: key);
