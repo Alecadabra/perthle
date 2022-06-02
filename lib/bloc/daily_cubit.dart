@@ -6,6 +6,7 @@ import 'package:perthle/model/game_mode_state.dart';
 // The last game num for the volumes of Perthle answers
 const int _lastVolOne = 35;
 const int _lastVolTwo = 70;
+const int _lastVolThree = 99;
 
 /// Bloc cubit for the daily state, handles emitting new states at midnight
 /// and resolving daily states through it's static helper functions
@@ -92,10 +93,15 @@ extension DailyCubitGameNum on int {
           int index = gameNum - _lastVolOne - 1;
           var list = DailyState.perthleVolTwo;
           return list[index % list.length].toUpperCase();
-        } else {
+        } else if (gameNum <= _lastVolThree) {
           // Perthle Volume 3
           int index = gameNum - _lastVolTwo - 1;
           var list = DailyState.perthleVolThree;
+          return list[index % list.length].toUpperCase();
+        } else {
+          // Perthle Volume 4
+          int index = gameNum - _lastVolThree - 1;
+          var list = DailyState.perthleVolFour;
           return list[index % list.length].toUpperCase();
         }
       } else if (gameMode == GameModeState.perthlonger) {
