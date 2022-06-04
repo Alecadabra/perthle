@@ -3,4 +3,6 @@ enum GameModeState {
   perthle,
   perthlonger,
   special,
+  perthshorter,
+  martoperthle,
 }

@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/repository/asset_storage_repository.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
@@ -37,13 +38,30 @@ class DictionaryCubit extends PersistentCubit<DictionaryState?> {
 
   // Getters
 
-  int get wordLength => _dailyCubit.state.word.length;
+  int get wordLength {
+    if (_dailyCubit.state.gameMode == GameModeState.martoperthle) {
+      return _dailyCubit.state.word.length - 'marto'.length;
+    } else {
+      return _dailyCubit.state.word.length;
+    }
+  }
+
   bool get isLoaded => state != null;
 
   bool isValidWord(final String word) {
     final DictionaryState? localDict = state;
     if (localDict == null) {
       throw StateError('isValidWord called before dictionary loaded');
+    }
+    if (_dailyCubit.state.gameMode == GameModeState.martoperthle) {
+      // Martoperthle
+      if (!word.startsWith('MARTO')) {
+        return false;
+      } else {
+        final martolessWord = word.replaceFirst('MARTO', '');
+        return _answers.contains(word.toLowerCase()) ||
+            localDict.dictionary.contains(martolessWord.toLowerCase());
+      }
     }
     return _answers.contains(word.toLowerCase()) ||
         localDict.dictionary.contains(word.toLowerCase());

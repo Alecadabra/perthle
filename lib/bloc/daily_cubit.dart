@@ -59,12 +59,26 @@ extension DailyCubitDateTime on DateTime {
       );
 
   GameModeState resolveGameMode() {
-    if (weekday < 6 || this.resolveGameNum() <= _lastVolOne) {
+    final gameNum = this.resolveGameNum();
+
+    if (gameNum <= _lastVolOne) {
       return GameModeState.perthle;
-    } else if (weekday == 6) {
-      return GameModeState.perthlonger;
+    } else if (gameNum <= _lastVolThree) {
+      if (weekday < 6) {
+        return GameModeState.perthle;
+      } else if (weekday == 6) {
+        return GameModeState.perthlonger;
+      } else {
+        return GameModeState.special;
+      }
     } else {
-      return GameModeState.special;
+      if (weekday < 6) {
+        return GameModeState.perthle;
+      } else {
+        final days = gameNum - _lastVolThree;
+        final index = days - days ~/ 7 * 5;
+        return DailyState.weekendGamesVolTwo[index - 1].gameMode;
+      }
     }
   }
 
@@ -81,40 +95,50 @@ extension DailyCubitGameNum on int {
   String resolveGameWord() {
     // Readability
     final gameNum = this;
+    final gameMode = gameNum.resolveGameMode();
 
     if (gameNum <= _lastVolOne) {
       // Perthle Volume 1
       return DailyState.perthleVolOne[gameNum - 1].toUpperCase();
-    } else {
-      final gameMode = gameNum.resolveGameMode();
+    } else if (gameNum <= _lastVolThree) {
+      // Perthle volumes 2 and 3, Saturday Perthlonger, Sunday Special
       if (gameMode == GameModeState.perthle) {
         if (gameNum <= _lastVolTwo) {
           // Perthle Volume 2
           int index = gameNum - _lastVolOne - 1;
           var list = DailyState.perthleVolTwo;
           return list[index % list.length].toUpperCase();
-        } else if (gameNum <= _lastVolThree) {
+        } else {
           // Perthle Volume 3
           int index = gameNum - _lastVolTwo - 1;
           var list = DailyState.perthleVolThree;
-          return list[index % list.length].toUpperCase();
-        } else {
-          // Perthle Volume 4
-          int index = gameNum - _lastVolThree - 1;
-          var list = DailyState.perthleVolFour;
           return list[index % list.length].toUpperCase();
         }
       } else if (gameMode == GameModeState.perthlonger) {
         // Perthlonger
         int index = (gameNum - _lastVolOne - 1) ~/ 7;
-        return DailyState.longAnswers[index % DailyState.longAnswers.length]
+        return DailyState
+            .perthlongerVolOne[index % DailyState.perthlongerVolOne.length]
             .toUpperCase();
       } else {
         // Special
         int index = (gameNum - _lastVolOne - 1) ~/ 7;
-        return DailyState
-            .specialAnswers[index % DailyState.specialAnswers.length]
+        return DailyState.specialVolOne[index % DailyState.specialVolOne.length]
             .toUpperCase();
+      }
+    } else {
+      // Weekday Perthle volume 4, weekend Perthlonger, Special, Perthshorter,
+      // Martoperthle
+      final days = gameNum - _lastVolThree;
+      if (gameMode == GameModeState.perthle) {
+        // Perthle Volume 4
+        final index = days - days ~/ 7 * 2;
+        final list = DailyState.perthleVolFour;
+        return list[(index - 2) % list.length].toUpperCase();
+      } else {
+        // Weekend modes
+        final index = days - days ~/ 7 * 5;
+        return DailyState.weekendGamesVolTwo[index - 1].word.toUpperCase();
       }
     }
   }

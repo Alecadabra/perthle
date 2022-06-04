@@ -211,10 +211,14 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
         );
       }
     } else if (!event.validWord) {
-      // Invalid word
-      _messengerCubit.send(
-        '${state.board.letters[state.currRow].join()} is not a word',
-      );
+      final word = state.board.letters[state.currRow].join();
+      if (state.word.startsWith('MARTO') && !word.startsWith('MARTO')) {
+        // Not a martoword
+        _messengerCubit.send('$word does not start with Marto 💔');
+      } else {
+        // Invalid word
+        _messengerCubit.send('$word is not a word');
+      }
     } else {
       // Valid word
       List<int> indicies = List.generate(state.board.width, (final i) => i);

@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
+import 'package:perthle/model/daily_state.dart';
+import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/model/messenger_state.dart';
 import 'package:perthle/model/settings_state.dart';
@@ -16,24 +19,34 @@ class MessengerPopup extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return BlocBuilder<HistoryCubit, HistoryState>(
-      builder: (final context, final history) {
-        return BlocBuilder<SettingsCubit, SettingsState>(
-          builder: (final context, final settings) {
-            if (settings.hardMode || history.savedGames.isEmpty) {
-              // Only use popup box if it's their first game or hard mode is on
-              return const _MessengerPopupBox();
-            } else {
-              return const SizedBox.shrink();
-            }
+    return BlocBuilder<DailyCubit, DailyState>(
+      builder: (final context, final daily) {
+        return BlocBuilder<HistoryCubit, HistoryState>(
+          builder: (final context, final history) {
+            return BlocBuilder<SettingsCubit, SettingsState>(
+              builder: (final context, final settings) {
+                if (settings.hardMode ||
+                    history.savedGames.isEmpty ||
+                    daily.gameMode == GameModeState.martoperthle) {
+                  // Only use popup box if it's their first game, hard mode is
+                  // on, or it's Martoperthle
+                  return const _MessengerPopupBox();
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+              buildWhen: (final a, final b) {
+                return a.hardMode != b.hardMode;
+              },
+            );
           },
           buildWhen: (final a, final b) {
-            return a.hardMode != b.hardMode;
+            return a.savedGames.isEmpty != b.savedGames.isEmpty;
           },
         );
       },
       buildWhen: (final a, final b) {
-        return a.savedGames.isEmpty != b.savedGames.isEmpty;
+        return a.gameMode != b.gameMode;
       },
     );
   }

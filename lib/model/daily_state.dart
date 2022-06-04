@@ -31,6 +31,10 @@ class DailyState extends Equatable {
         return 'Perthlonger';
       case GameModeState.special:
         return 'Perthl$special';
+      case GameModeState.perthshorter:
+        return 'Perthshorter';
+      case GameModeState.martoperthle:
+        return 'Martoperthle';
     }
   }
 
@@ -50,8 +54,10 @@ class DailyState extends Equatable {
   static Set<String> get allAnswers => {
         ...perthleVolOne,
         ...perthleVolThree,
-        ...longAnswers,
-        ...specialAnswers,
+        ...perthleVolFour,
+        ...perthlongerVolOne,
+        ...specialVolOne,
+        ...weekendGamesVolTwo.map((final wg) => wg.word),
       };
 
   static const List<String> perthleVolOne = [
@@ -149,50 +155,50 @@ class DailyState extends Equatable {
   ]..shuffle(Random(1));
 
   static List<String> perthleVolFour = [
-    'beemit',
-    'cyrus',
-    'salmon',
-    'sunset',
-    'marina',
-    'nick',
-    'bestie',
     'cronch',
-    'james',
     'saab',
-    'winc',
-    'curtin',
-    'grilld',
-    'albany',
     'ethan',
+    'james',
     'farm',
-    'pears',
-    'subaru',
-    'marto',
-    'blahaj',
-    'fruity',
-    'kotlin',
-    'wordle',
-    'ethel',
     'alec',
-    'csbp',
-    'taylor',
-    'orca',
-    'jamp',
+    'salmon',
+    'marina',
+    'ankha',
+    'yumi',
+    'winc',
+    'framed',
+    'cyrus',
     'hommus',
+    'perth',
+    'curtin',
+    'fruity',
+    'nick',
+    'wing',
+    'bestie',
+    'pears',
+    'kotlin',
+    'sean',
+    'grilld',
+    'csbp',
+    'ethel',
+    'scouts',
+    'sunset',
     'sydney',
     'coops',
-    'framed',
     'martin',
-    'yumi',
-    'sean',
-    'ankha',
-    'wing',
-    'scouts',
+    'orca',
+    'beemit',
     'lgbt',
-    'perth',
+    'albany',
+    'jamp',
+    'wordle',
+    'subaru',
+    'taylor',
+    'blahaj',
+    'marto',
   ];
 
-  static const List<String> longAnswers = [
+  static const List<String> perthlongerVolOne = [
     'hensman',
     'bankwest',
     'discord',
@@ -212,7 +218,7 @@ class DailyState extends Equatable {
     'heardle',
   ];
 
-  static List<String> specialAnswers = [
+  static List<String> specialVolOne = [
     'b',
     'w',
     't',
@@ -233,9 +239,52 @@ class DailyState extends Equatable {
     'c',
   ].map((final s) => '$s$special').toList();
 
+  static List<WeekendGame> weekendGamesVolTwo = [
+    _martoperthleGame('milk'),
+    _perthshorterGame('gay'),
+    _perthlongerGame('snapchat'),
+    _specialGame('ch'),
+    _perthlongerGame('geography'),
+    _martoperthleGame('morning'),
+    _perthlongerGame('impreza'),
+    _specialGame('citr'),
+    _perthlongerGame('hillarys'),
+    _perthshorterGame('uwa'),
+    _perthlongerGame('burrito'),
+    _perthlongerGame('forklift'),
+    _perthlongerGame('heardle'),
+  ];
+
   // Just a fun bit of obfuscation
   static final String special = String.fromCharCodes([
     for (num i = 0x1FB1DE0 ^ DailyCubit.epochMs ~/ 01E5; i > 0E27; i ~/= 0x100)
       1970500473 ~/ i % 256,
   ]);
 }
+
+class WeekendGame {
+  const WeekendGame({required this.gameMode, required this.word});
+
+  final GameModeState gameMode;
+  final String word;
+}
+
+WeekendGame _perthlongerGame(final String s) => WeekendGame(
+      gameMode: GameModeState.perthlonger,
+      word: s,
+    );
+
+WeekendGame _specialGame(final String s) => WeekendGame(
+      gameMode: GameModeState.special,
+      word: '$s${DailyState.special}',
+    );
+
+WeekendGame _perthshorterGame(final String s) => WeekendGame(
+      gameMode: GameModeState.perthshorter,
+      word: s,
+    );
+
+WeekendGame _martoperthleGame(final String s) => WeekendGame(
+      gameMode: GameModeState.martoperthle,
+      word: 'marto$s',
+    );
