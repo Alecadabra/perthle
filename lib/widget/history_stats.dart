@@ -13,7 +13,7 @@ class HistoryStats extends StatelessWidget {
       builder: (final context, final history) {
         final stats = history.historyStats;
         final percentageString = stats.winPercentage
-            .toStringAsFixed(stats.winPercentage < 99 ? 0 : 1);
+            .toStringAsFixed(stats.winPercentage.round() == 99 ? 1 : 0);
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
