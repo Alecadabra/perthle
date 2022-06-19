@@ -42,10 +42,9 @@ class HistoryState extends Equatable {
       );
 
     final gamesPlayed = games.length;
-    final int winPercentage =
+    final double winPercentage =
         ((games.where((final game) => game.won).length / max(1, gamesPlayed)) *
-                100)
-            .round();
+            100);
     int longestStreak = 0;
     int currStreak = 0;
     int? lastWonGame;

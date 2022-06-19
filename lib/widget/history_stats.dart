@@ -12,11 +12,13 @@ class HistoryStats extends StatelessWidget {
     return BlocBuilder<HistoryCubit, HistoryState>(
       builder: (final context, final history) {
         final stats = history.historyStats;
+        final percentageString = stats.winPercentage
+            .toStringAsFixed(stats.winPercentage < 99 ? 0 : 1);
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _Stat(name: 'Games Played', value: '${stats.gamesPlayed}'),
-            _Stat(name: 'Win Percentage', value: '${stats.winPercentage}%'),
+            _Stat(name: 'Win Percentage', value: '$percentageString%'),
             _Stat(name: 'Current Streak', value: '${stats.currStreak}'),
             _Stat(name: 'Longest Streak', value: '${stats.longestStreak}'),
           ],

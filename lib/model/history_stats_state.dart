@@ -17,7 +17,7 @@ class HistoryStatsState extends Equatable {
   // Immutable state
 
   final int gamesPlayed;
-  final int winPercentage;
+  final double winPercentage;
   final int currStreak;
   final int longestStreak;
 
