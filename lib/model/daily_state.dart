@@ -194,6 +194,7 @@ class DailyState extends Equatable {
     'lgbt',
     'albany',
     'jamp',
+    'bereal',
     'subaru',
     'taylor',
     'blahaj',
