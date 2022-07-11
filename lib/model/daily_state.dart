@@ -184,7 +184,6 @@ class DailyState extends Equatable {
     'thor',
     'ethel',
     'scouts',
-    'brock',
     'sunset',
     'sydney',
     'coops',
