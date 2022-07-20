@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -6,6 +7,7 @@ import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/bloc/dictionary_cubit.dart';
 import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/bloc/history_cubit.dart';
+import 'package:perthle/bloc/user_cubit.dart';
 import 'package:perthle/firebase_options.dart';
 import 'package:perthle/repository/local_storage_repository.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
@@ -116,6 +118,14 @@ class PerthleApp extends StatelessWidget {
           create: (final context) => HistoryCubit(
             gameBloc: GameBloc.of(context),
             storage: StorageRepository.of(context),
+          ),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (final context) => UserCubit(
+            firebaseAuth: FirebaseAuth.instanceFor(
+              app: Firebase.app('perthgang-wordle'),
+            ),
           ),
           lazy: false,
         ),

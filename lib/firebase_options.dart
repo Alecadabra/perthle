@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDEgadgd-37be4MgIMokV_XpDgr9iskUtQ',
-    appId: '1:951244738282:web:3ca18aef8c49a27989d193',
+    appId: '1:951244738282:web:e8d46fe0729b0fac89d193',
     messagingSenderId: '951244738282',
     projectId: 'perthgang-wordle',
     authDomain: 'perthgang-wordle.firebaseapp.com',
