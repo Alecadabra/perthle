@@ -256,6 +256,8 @@ class DailyState extends Equatable {
     _perthlongerGame('overwatch'),
     _perthlongerGame('burrito'),
     _perthlongerGame('forklift'),
+    _martoperthleGame('sick'),
+    _perthlongerGame('jackbox'),
     _perthlongerGame('heardle'),
   ];
 
