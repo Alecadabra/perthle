@@ -7,7 +7,7 @@ import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/bloc/dictionary_cubit.dart';
 import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/bloc/history_cubit.dart';
-import 'package:perthle/bloc/user_cubit.dart';
+import 'package:perthle/bloc/perthle_user_cubit.dart';
 import 'package:perthle/firebase_options.dart';
 import 'package:perthle/repository/local_storage_repository.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
@@ -17,11 +17,13 @@ import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_navigator.dart';
 import 'package:provider/provider.dart';
 
+const String _firebaseAppName = 'perthgang-wordle';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setUrlStrategy(PathUrlStrategy());
   await Firebase.initializeApp(
-    name: 'perthgang-wordle',
+    name: _firebaseAppName,
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const PerthleApp());
@@ -122,9 +124,9 @@ class PerthleApp extends StatelessWidget {
           lazy: false,
         ),
         BlocProvider(
-          create: (final context) => UserCubit(
+          create: (final context) => PerthleUserCubit(
             firebaseAuth: FirebaseAuth.instanceFor(
-              app: Firebase.app('perthgang-wordle'),
+              app: Firebase.app(_firebaseAppName),
             ),
           ),
           lazy: false,
