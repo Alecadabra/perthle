@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/repository/persistent.dart';
-import 'package:perthle/repository/storage_repository.dart';
+import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
@@ -13,7 +13,7 @@ class HistoryCubit extends PersistentCubit<HistoryState> {
 
   HistoryCubit({
     required final GameBloc gameBloc,
-    required final StorageRepository storage,
+    required final MutableStorageRepository storage,
   }) : super(
           initialState: const HistoryState(savedGames: {}),
           storage: storage,

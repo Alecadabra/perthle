@@ -2,11 +2,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/bloc/dictionary_cubit.dart';
-import 'package:perthle/bloc/game_event.dart';
+import 'package:perthle/event/game_event.dart';
 import 'package:perthle/repository/persistent.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
-import 'package:perthle/repository/storage_repository.dart';
+import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
@@ -19,7 +19,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   // Constructor
 
   GameBloc({
-    required final StorageRepository storage,
+    required final MutableStorageRepository storage,
     required final DailyCubit dailyCubit,
     required final DictionaryCubit dictionaryCubit,
     required final MessengerCubit messengerCubit,

@@ -7,10 +7,10 @@ import 'package:perthle/repository/asset_storage_repository.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/dictionary_state.dart';
-import 'package:perthle/repository/persistent.dart';
+import 'package:perthle/repository/loaded.dart';
 
 /// Bloc cubit for managing the dictionary of valid words
-class DictionaryCubit extends PersistentCubit<DictionaryState?> {
+class DictionaryCubit extends LoadedCubit<DictionaryState?> {
   // Constructor
 
   DictionaryCubit({required final DailyCubit dailyCubit})
@@ -25,7 +25,7 @@ class DictionaryCubit extends PersistentCubit<DictionaryState?> {
     dailyCubit.stream.listen(
       (final daily) {
         emit(null); // Remove yesterday's dictionary
-        persist(); // Start loading today's dictionary
+        load(); // Start loading today's dictionary
       },
     );
   }
@@ -73,10 +73,6 @@ class DictionaryCubit extends PersistentCubit<DictionaryState?> {
   DictionaryState? fromJson(final Map<String, dynamic> json) {
     return DictionaryState.fromJson(json);
   }
-
-  // Not required for asset storage controllers
-  @override
-  Map<String, dynamic> toJson(final DictionaryState? state) => {};
 
   @override
   String get key => 'assets/dictionary/words_$wordLength.txt';

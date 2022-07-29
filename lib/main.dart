@@ -7,12 +7,12 @@ import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/bloc/dictionary_cubit.dart';
 import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/bloc/history_cubit.dart';
-import 'package:perthle/bloc/perthle_user_cubit.dart';
+import 'package:perthle/bloc/perthle_user_bloc.dart';
 import 'package:perthle/firebase_options.dart';
 import 'package:perthle/repository/local_storage_repository.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
-import 'package:perthle/repository/storage_repository.dart';
+import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_navigator.dart';
 import 'package:provider/provider.dart';
@@ -81,7 +81,7 @@ class PerthleApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         // Repositories
-        RepositoryProvider<StorageRepository>(
+        RepositoryProvider<MutableStorageRepository>(
           create: (final context) => LocalStorageRepository(),
           lazy: false,
         ),
@@ -98,7 +98,7 @@ class PerthleApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (final context) => SettingsCubit(
-            storage: StorageRepository.of(context),
+            storage: MutableStorageRepository.of(context),
           ),
           lazy: false,
         ),
@@ -108,7 +108,7 @@ class PerthleApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (final context) => GameBloc(
-            storage: StorageRepository.of(context),
+            storage: MutableStorageRepository.of(context),
             dailyCubit: DailyCubit.of(context),
             dictionaryCubit: DictionaryCubit.of(context),
             messengerCubit: MessengerCubit.of(context),
@@ -119,12 +119,12 @@ class PerthleApp extends StatelessWidget {
         BlocProvider(
           create: (final context) => HistoryCubit(
             gameBloc: GameBloc.of(context),
-            storage: StorageRepository.of(context),
+            storage: MutableStorageRepository.of(context),
           ),
           lazy: false,
         ),
         BlocProvider(
-          create: (final context) => PerthleUserCubit(
+          create: (final context) => PerthleUserBloc(
             firebaseAuth: FirebaseAuth.instanceFor(
               app: Firebase.app(_firebaseAppName),
             ),
