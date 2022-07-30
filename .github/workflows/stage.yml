@@ -20,6 +20,17 @@ jobs:
       with:
         name: web-build
         path: build/web
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: subosito/flutter-action@main
+      with:
+          flutter-version: '3.0.x'
+          channel: 'stable'
+    - run: flutter pub get
+    - run: flutter test
   deploy_stage:
     name: Deploy to Stage
     needs: build
