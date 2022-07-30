@@ -1,3 +1,4 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +27,9 @@ Future<void> main() async {
     name: _firebaseAppName,
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseAppCheck.instanceFor(
+    app: Firebase.app(_firebaseAppName),
+  ).activate(webRecaptchaSiteKey: '6LeYIjIhAAAAAIKQ-SwT6sDe6q_cGUSPTZ8FQyCz');
   runApp(const PerthleApp());
 }
 
