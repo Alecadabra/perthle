@@ -39,8 +39,6 @@ class DailyCubit extends Cubit<DailyState> {
 
   /// Perthle 1, 00:00:00
   static final DateTime epoch = DateTime(2022, 2, 25);
-  // The above in milliseconds since unix epoch in AWST
-  static const int epochMs = 1645718400000;
 
   // Provider
 

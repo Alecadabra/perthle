@@ -218,9 +218,12 @@ class DailyState extends Equatable {
 
   // Just a fun bit of obfuscation
   static final String special = String.fromCharCodes([
-    for (num i = 0x1FB1DE0 ^ DailyCubit.epochMs ~/ 01E5; i > 0E27; i ~/= 0x100)
+    for (num i = 0x1FB1DE0 ^ key ~/ 01E5; i > 0E27; i ~/= 0x100)
       1970500473 ~/ i % 256 - 32,
   ]);
+  static final int key = 28800000 +
+      DailyCubit.epoch.millisecondsSinceEpoch -
+      DailyCubit.epoch.timeZoneOffset.inMilliseconds;
 }
 
 class WeekendGame {
