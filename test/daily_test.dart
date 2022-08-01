@@ -7,12 +7,12 @@ void main() {
   test('historical answers list has not changed', () {
     for (int gameNum = 1; gameNum - 1 < _expectedWords.length; gameNum++) {
       String actual = gameNum.resolveGameWord();
-      expect(actual, equalsIgnoringCase(_expectedWords[gameNum - 1]));
+      expect(actual, equals(_expectedWords[gameNum - 1]));
     }
   });
 
   test('historical game mode list has not changed', () {
-    for (int gameNum = 1; gameNum - 1 < _expectedWords.length; gameNum++) {
+    for (int gameNum = 1; gameNum - 1 < _expectedModes.length; gameNum++) {
       GameModeState actual = gameNum.resolveGameMode();
       expect(actual, equals(_expectedModes[gameNum - 1]));
     }
