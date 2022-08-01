@@ -75,9 +75,9 @@ extension DailyCubitDateTime on DateTime {
       if (weekday < 6) {
         return GameModeState.perthle;
       } else {
-        final days = gameNum - _lastVolThree;
+        final days = gameNum - _lastVolOne;
         final index = days - days ~/ 7 * 5;
-        return DailyState.weekendGamesVolTwo[index - 1].gameMode;
+        return DailyState.weekendGames[index - 1].gameMode;
       }
     }
   }
@@ -98,48 +98,18 @@ extension DailyCubitGameNum on int {
     final gameMode = gameNum.resolveGameMode();
 
     if (gameNum <= _lastVolOne) {
-      // Perthle Volume 1
+      // Perthle Volume 1 (No weekend modes)
       return DailyState.perthleVolOne[gameNum - 1].toUpperCase();
-    } else if (gameNum <= _lastVolThree) {
-      // Perthle volumes 2 and 3, Saturday Perthlonger, Sunday Special
-      if (gameMode == GameModeState.perthle) {
-        if (gameNum <= _lastVolTwo) {
-          // Perthle Volume 2
-          int index = gameNum - _lastVolOne - 1;
-          var list = DailyState.perthleVolTwo;
-          return list[index % list.length].toUpperCase();
-        } else {
-          // Perthle Volume 3
-          int index = gameNum - _lastVolTwo - 1;
-          var list = DailyState.perthleVolThree;
-          return list[index % list.length].toUpperCase();
-        }
-      } else if (gameMode == GameModeState.perthlonger) {
-        // Perthlonger
-        int index = (gameNum - _lastVolOne - 1) ~/ 7;
-        return DailyState
-            .perthlongerVolOne[index % DailyState.perthlongerVolOne.length]
-            .toUpperCase();
-      } else {
-        // Special
-        int index = (gameNum - _lastVolOne - 1) ~/ 7;
-        return DailyState.specialVolOne[index % DailyState.specialVolOne.length]
-            .toUpperCase();
-      }
+    } else if (gameMode == GameModeState.perthle) {
+      // Perthle volumes 2, 3 & 4
+      final days = gameNum - _lastVolOne + 4;
+      final index = gameNum - days ~/ 7 * 2;
+      return DailyState.perthle[index - 1];
     } else {
-      // Weekday Perthle volume 4, weekend Perthlonger, Special, Perthshorter,
-      // Martoperthle
-      final days = gameNum - _lastVolThree;
-      if (gameMode == GameModeState.perthle) {
-        // Perthle Volume 4
-        final index = days - days ~/ 7 * 2;
-        final list = DailyState.perthleVolFour;
-        return list[(index - 2) % list.length].toUpperCase();
-      } else {
-        // Weekend modes
-        final index = days - days ~/ 7 * 5;
-        return DailyState.weekendGamesVolTwo[index - 1].word.toUpperCase();
-      }
+      // Weekend modes
+      final days = gameNum - _lastVolOne;
+      final index = days - days ~/ 7 * 5;
+      return DailyState.weekendGames[index - 1].word.toUpperCase();
     }
   }
 }
