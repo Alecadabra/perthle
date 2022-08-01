@@ -59,11 +59,11 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
         return false;
       } else {
         final martolessWord = word.replaceFirst('MARTO', '');
-        return _answers.contains(word.toLowerCase()) ||
+        return _answers.contains(word.toUpperCase()) ||
             localDict.dictionary.contains(martolessWord.toLowerCase());
       }
     }
-    return _answers.contains(word.toLowerCase()) ||
+    return _answers.contains(word.toUpperCase()) ||
         localDict.dictionary.contains(word.toLowerCase());
   }
 
