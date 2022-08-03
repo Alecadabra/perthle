@@ -1,24 +1,16 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:perthle/bloc/daily_cubit.dart';
-import 'package:perthle/bloc/dictionary_cubit.dart';
-import 'package:perthle/bloc/game_bloc.dart';
-import 'package:perthle/bloc/history_cubit.dart';
-import 'package:perthle/bloc/perthle_user_bloc.dart';
 import 'package:perthle/firebase_options.dart';
-import 'package:perthle/repository/local_storage_repository.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
-import 'package:perthle/bloc/messenger_cubit.dart';
-import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_navigator.dart';
-import 'package:provider/provider.dart';
+import 'package:perthle/widget/perthle_provider.dart';
 
 const String _firebaseAppName = 'perthgang-wordle';
+final FirebaseApp _firebaseApp = Firebase.app(_firebaseAppName);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,9 +19,9 @@ Future<void> main() async {
     name: _firebaseAppName,
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseAppCheck.instanceFor(
-    app: Firebase.app(_firebaseAppName),
-  ).activate(webRecaptchaSiteKey: '6LeYIjIhAAAAAIKQ-SwT6sDe6q_cGUSPTZ8FQyCz');
+  await FirebaseAppCheck.instanceFor(app: _firebaseApp).activate(
+    webRecaptchaSiteKey: '6LeYIjIhAAAAAIKQ-SwT6sDe6q_cGUSPTZ8FQyCz',
+  );
   runApp(const PerthleApp());
 }
 
@@ -82,60 +74,8 @@ class PerthleApp extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return MultiProvider(
-      providers: [
-        // Repositories
-        RepositoryProvider<MutableStorageRepository>(
-          create: (final context) => LocalStorageRepository(),
-          lazy: false,
-        ),
-        // Blocs/Cubits
-        BlocProvider(
-          create: (final context) => DailyCubit(),
-          lazy: false,
-        ),
-        BlocProvider(
-          create: (final context) => DictionaryCubit(
-            dailyCubit: DailyCubit.of(context),
-          ),
-          lazy: false,
-        ),
-        BlocProvider(
-          create: (final context) => SettingsCubit(
-            storage: MutableStorageRepository.of(context),
-          ),
-          lazy: false,
-        ),
-        BlocProvider(
-          create: (final context) => MessengerCubit(),
-          lazy: false,
-        ),
-        BlocProvider(
-          create: (final context) => GameBloc(
-            storage: MutableStorageRepository.of(context),
-            dailyCubit: DailyCubit.of(context),
-            dictionaryCubit: DictionaryCubit.of(context),
-            messengerCubit: MessengerCubit.of(context),
-            settingsCubit: SettingsCubit.of(context),
-          ),
-          lazy: false,
-        ),
-        BlocProvider(
-          create: (final context) => HistoryCubit(
-            gameBloc: GameBloc.of(context),
-            storage: MutableStorageRepository.of(context),
-          ),
-          lazy: false,
-        ),
-        BlocProvider(
-          create: (final context) => PerthleUserBloc(
-            firebaseAuth: FirebaseAuth.instanceFor(
-              app: Firebase.app(_firebaseAppName),
-            ),
-          ),
-          lazy: false,
-        ),
-      ],
+    return PerthleProvider(
+      firebaseApp: _firebaseApp,
       child: BlocBuilder<SettingsCubit, SettingsState>(
         buildWhen: (final a, final b) {
           return a.themeMode != b.themeMode;

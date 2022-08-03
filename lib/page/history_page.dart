@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
+import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/settings_state.dart';
@@ -122,12 +124,20 @@ class _HistoryListState extends State<_HistoryList> {
                           ),
                           child: SizedBox(
                             height: HistoryPage.childInnerHeight,
-                            child: AnimatedSavedGameTile(
-                              duration: const Duration(milliseconds: 250),
-                              savedGame: historyList[idx],
-                              showWord: settings.historyShowWords,
-                              shown: visibility > 0.05 && visibility < 0.95,
-                              lightSource: widget.lightSource,
+                            child: FutureBuilder<DailyState>(
+                              future: DailyCubit.of(context).dailyFromGameNum(
+                                historyList[idx].gameNum,
+                              ),
+                              builder: (final context, final dailySnapshot) {
+                                return AnimatedSavedGameTile(
+                                  duration: const Duration(milliseconds: 250),
+                                  savedGame: historyList[idx],
+                                  daily: dailySnapshot.data,
+                                  showWord: settings.historyShowWords,
+                                  shown: visibility > 0.05 && visibility < 0.95,
+                                  lightSource: widget.lightSource,
+                                );
+                              },
                             ),
                           ),
                         );

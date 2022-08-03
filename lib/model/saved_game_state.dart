@@ -2,8 +2,7 @@ import 'dart:collection';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:perthle/bloc/daily_cubit.dart';
-import 'package:perthle/model/daily_state.dart';
+import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
 /// Immutable storage for a particular completed wordle game.
@@ -12,11 +11,10 @@ class SavedGameState extends Equatable {
   // Constructors
 
   const SavedGameState({
-    required final int gameNum,
+    required this.gameNum,
     required final List<List<TileMatchState>> matches,
     final bool? hardMode,
-  })  : _gameNum = gameNum,
-        _matches = matches,
+  })  : _matches = matches,
         hardMode = hardMode ?? false;
 
   SavedGameState.fromJson(final Map<String, dynamic> json)
@@ -33,7 +31,7 @@ class SavedGameState extends Equatable {
 
   // State
 
-  final int _gameNum;
+  final int gameNum;
 
   final List<List<TileMatchState>> _matches;
 
@@ -48,12 +46,6 @@ class SavedGameState extends Equatable {
         ],
       );
 
-  DailyState get dailyState => DailyState(
-        gameNum: _gameNum,
-        word: _gameNum.resolveGameWord(),
-        gameMode: _gameNum.resolveGameMode(),
-      );
-
   List<List<TileMatchState>> get attempts => _matches
       .where(
         (final List<TileMatchState> row) => !row.every(
@@ -66,7 +58,8 @@ class SavedGameState extends Equatable {
         (final TileMatchState matchState) => matchState == TileMatchState.match,
       );
 
-  String get title => '${dailyState.gameModeString} $_gameNum '
+  String title(final GameModeState gameMode) =>
+      '${gameMode.gameModeString} $gameNum '
       '${won ? attempts.length : 'X'}/${_matches.length}'
       '${hardMode ? '*' : ''}';
 
@@ -89,14 +82,18 @@ class SavedGameState extends Equatable {
         },
       ).join('\n');
 
-  String shareableString(final bool lightEmojis) =>
-      '$title\n\n${boardEmojis(lightEmojis)}';
+  String shareableString({
+    required final GameModeState gameMode,
+    required final bool lightEmojis,
+  }) {
+    return '${title(gameMode)}\n\n${boardEmojis(lightEmojis)}';
+  }
 
   // Serialization
 
   Map<String, dynamic> toJson() {
     return {
-      'gameNum': _gameNum,
+      'gameNum': gameNum,
       'matches': [
         for (List<TileMatchState> row in _matches)
           [
@@ -110,5 +107,5 @@ class SavedGameState extends Equatable {
   // Equatable implementation
 
   @override
-  List<Object?> get props => [_gameNum, _matches, hardMode];
+  List<Object?> get props => [gameNum, _matches, hardMode];
 }

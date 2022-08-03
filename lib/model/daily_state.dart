@@ -15,25 +15,27 @@ class DailyState extends Equatable {
     required this.gameMode,
   });
 
+  DailyState.fromJson(final Map<String, dynamic> json)
+      : this(
+          gameNum: json['gameNum'],
+          word: json['word'],
+          gameMode: GameModeState.fromIndex(json['gameMode']),
+        );
+
   // State & immutable access
 
   final int gameNum;
   final String word;
   final GameModeState gameMode;
 
-  String get gameModeString {
-    switch (gameMode) {
-      case GameModeState.perthle:
-        return 'Perthle';
-      case GameModeState.perthlonger:
-        return 'Perthlonger';
-      case GameModeState.special:
-        return 'Perthl${special.toLowerCase()}';
-      case GameModeState.perthshorter:
-        return 'Perthshorter';
-      case GameModeState.martoperthle:
-        return 'Martoperthle';
-    }
+  // Serialization
+
+  Map<String, dynamic> toJson() {
+    return {
+      'gameNum': gameNum,
+      'word': word,
+      'gameMode': gameMode.index,
+    };
   }
 
   // Equatable implementation

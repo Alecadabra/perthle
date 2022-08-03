@@ -37,7 +37,7 @@ class HistoryState extends Equatable {
     final games = savedGamesList.toList()
       ..sort(
         (final SavedGameState a, final SavedGameState b) {
-          return a.dailyState.gameNum.compareTo(b.dailyState.gameNum);
+          return a.gameNum.compareTo(b.gameNum);
         },
       );
 
@@ -49,7 +49,7 @@ class HistoryState extends Equatable {
     int currStreak = 0;
     int? lastWonGame;
     for (final game in games) {
-      final gameNum = game.dailyState.gameNum;
+      final gameNum = game.gameNum;
 
       if (game.won) {
         longestStreak = max(1, longestStreak);

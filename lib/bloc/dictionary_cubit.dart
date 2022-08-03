@@ -67,7 +67,7 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
         localDict.dictionary.contains(word.toLowerCase());
   }
 
-  // Persistent implementation
+  // Loaded implementation
 
   @override
   DictionaryState? fromJson(final Map<String, dynamic> json) {

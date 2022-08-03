@@ -2,15 +2,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
+import 'package:perthle/model/daily_state.dart';
+import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:share_plus/share_plus.dart';
 
 /// Widget to show the details of a saved game and ways to share it.
-class SavedGame extends StatelessWidget {
-  const SavedGame({
+class SavedGameTile extends StatelessWidget {
+  const SavedGameTile({
     final Key? key,
     required this.savedGame,
+    required this.daily,
     required this.showWord,
     final double? opacity,
     final double? depth,
@@ -20,6 +23,7 @@ class SavedGame extends StatelessWidget {
         super(key: key);
 
   final SavedGameState savedGame;
+  final DailyState? daily;
   final bool showWord;
   final double opacity;
   final LightSource lightSource;
@@ -27,6 +31,9 @@ class SavedGame extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    // Property promotion
+    final daily = this.daily;
+
     return LayoutBuilder(
       builder: (final context, final BoxConstraints constraints) {
         final double pad = constraints.biggest.shortestSide / 6;
@@ -50,7 +57,8 @@ class SavedGame extends StatelessWidget {
                       depth: depth,
                       lightSource: lightSource,
                       opacity: opacity,
-                      showWord: showWord,
+                      gameMode: daily?.gameMode,
+                      word: showWord ? daily?.word : null,
                       savedGame: savedGame,
                     ),
                   ),
@@ -65,6 +73,7 @@ class SavedGame extends StatelessWidget {
                             opacity: opacity,
                             depth: depth,
                             lightSource: lightSource,
+                            gameMode: daily?.gameMode,
                             savedGame: savedGame,
                           ),
                         ),
@@ -75,6 +84,7 @@ class SavedGame extends StatelessWidget {
                             opacity: opacity,
                             depth: depth,
                             lightSource: lightSource,
+                            gameMode: daily?.gameMode,
                             savedGame: savedGame,
                           ),
                         ),
@@ -97,16 +107,21 @@ class _CopyButton extends StatelessWidget {
     required this.opacity,
     required this.depth,
     required this.lightSource,
+    required this.gameMode,
     required this.savedGame,
   }) : super(key: key);
 
   final double opacity;
   final double depth;
   final LightSource lightSource;
+  final GameModeState? gameMode;
   final SavedGameState savedGame;
 
   @override
   Widget build(final BuildContext context) {
+    // Property promotion
+    final gameMode = this.gameMode;
+
     return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (final context, final settings) {
         return NeumorphicButton(
@@ -114,18 +129,21 @@ class _CopyButton extends StatelessWidget {
             depth: depth,
             lightSource: lightSource,
             shape: NeumorphicShape.concave,
-            surfaceIntensity: opacity / 15,
+            surfaceIntensity: gameMode == null ? 0 : opacity / 15,
           ),
           minDistance: -depth / 4,
           duration: opacity < 0.5 ? Duration.zero : Neumorphic.DEFAULT_DURATION,
           tooltip: 'Copy to Clipboard',
-          onPressed: () async => await Clipboard.setData(
-            ClipboardData(
-              text: savedGame.shareableString(
-                settings.lightEmojis,
-              ),
-            ),
-          ),
+          onPressed: gameMode == null
+              ? null
+              : () async => await Clipboard.setData(
+                    ClipboardData(
+                      text: savedGame.shareableString(
+                        gameMode: gameMode,
+                        lightEmojis: settings.lightEmojis,
+                      ),
+                    ),
+                  ),
           child: Container(
             height: double.infinity,
             alignment: Alignment.center,
@@ -155,16 +173,21 @@ class _ShareButton extends StatelessWidget {
     required this.opacity,
     required this.depth,
     required this.lightSource,
+    required this.gameMode,
     required this.savedGame,
   }) : super(key: key);
 
   final double opacity;
   final double depth;
   final LightSource lightSource;
+  final GameModeState? gameMode;
   final SavedGameState savedGame;
 
   @override
   Widget build(final BuildContext context) {
+    // Property promotion
+    final gameMode = this.gameMode;
+
     return BlocBuilder<SettingsCubit, SettingsState>(
       builder: (final context, final settings) {
         return NeumorphicButton(
@@ -172,10 +195,19 @@ class _ShareButton extends StatelessWidget {
             depth: depth,
             lightSource: lightSource,
             shape: NeumorphicShape.concave,
-            surfaceIntensity: opacity / 15,
+            surfaceIntensity: gameMode == null ? 0 : opacity / 15,
           ),
           minDistance: -depth / 4,
           duration: opacity < 0.5 ? Duration.zero : Neumorphic.DEFAULT_DURATION,
+          onPressed: gameMode == null
+              ? null
+              : () async => await Share.share(
+                    savedGame.shareableString(
+                      gameMode: gameMode,
+                      lightEmojis: settings.lightEmojis,
+                    ),
+                    subject: savedGame.title(gameMode),
+                  ),
           child: Container(
             height: double.infinity,
             alignment: Alignment.center,
@@ -186,10 +218,6 @@ class _ShareButton extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-          ),
-          onPressed: () async => await Share.share(
-            savedGame.shareableString(settings.lightEmojis),
-            subject: savedGame.title,
           ),
         );
       },
@@ -206,18 +234,24 @@ class _Title extends StatelessWidget {
     required this.depth,
     required this.lightSource,
     required this.opacity,
-    required this.showWord,
+    required this.gameMode,
+    required this.word,
     required this.savedGame,
   }) : super(key: key);
 
   final double depth;
   final LightSource lightSource;
   final double opacity;
-  final bool showWord;
+  final GameModeState? gameMode;
+  final String? word;
   final SavedGameState savedGame;
 
   @override
   Widget build(final BuildContext context) {
+    // Property promotion
+    GameModeState? gameMode = this.gameMode;
+    String? word = this.word;
+
     return Neumorphic(
       duration: Duration.zero,
       style: NeumorphicStyle(
@@ -234,15 +268,31 @@ class _Title extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(savedGame.title),
-              if (showWord)
-                Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Text(
-                    savedGame.dailyState.word,
-                    textAlign: TextAlign.end,
-                  ),
+              AnimatedSwitcher(
+                duration: Neumorphic.DEFAULT_DURATION,
+                layoutBuilder: (final currentChild, final previousChildren) {
+                  return Stack(
+                    alignment: Alignment.centerLeft,
+                    children: <Widget>[
+                      ...previousChildren,
+                      if (currentChild != null) currentChild,
+                    ],
+                  );
+                },
+                child: Text(
+                  savedGame.title(gameMode ?? GameModeState.perthle),
+                  key: ValueKey(gameMode == null ? 1 : 2),
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: AnimatedSwitcher(
+                  duration: Neumorphic.DEFAULT_DURATION,
+                  child: word == null
+                      ? const SizedBox.shrink()
+                      : Text(word, textAlign: TextAlign.end),
+                ),
+              ),
             ],
           ),
         ),

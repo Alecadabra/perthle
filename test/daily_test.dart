@@ -1,20 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_mode_state.dart';
+import 'package:perthle/repository/daily_storage_repository.dart';
 
 void main() {
-  test('historical answers list has not changed', () {
-    for (int gameNum = 1; gameNum - 1 < _expectedWords.length; gameNum++) {
-      String actual = gameNum.resolveGameWord();
-      expect(actual, equals(_expectedWords[gameNum - 1]));
-    }
-  });
+  const dailyRepo = DailyStorageRepository();
 
-  test('historical game mode list has not changed', () {
-    for (int gameNum = 1; gameNum - 1 < _expectedModes.length; gameNum++) {
-      GameModeState actual = gameNum.resolveGameMode();
-      expect(actual, equals(_expectedModes[gameNum - 1]));
+  test('historical daily state has not changed', () async {
+    for (int gameNum = 1; gameNum - 1 < _expectedWords.length; gameNum++) {
+      final actual = DailyState.fromJson((await dailyRepo.load('$gameNum'))!);
+
+      expect(actual.word, equals(_expectedWords[gameNum - 1]));
+      expect(actual.gameMode, equals(_expectedModes[gameNum - 1]));
     }
   });
 }

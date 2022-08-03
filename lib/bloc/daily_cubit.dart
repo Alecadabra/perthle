@@ -1,38 +1,45 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/model/daily_state.dart';
-import 'package:perthle/model/game_mode_state.dart';
-
-// The last game num for the volumes of Perthle answers
-const int _lastVolOne = 35;
-const int _lastVolThree = 99;
+import 'package:perthle/repository/daily_storage_repository.dart';
 
 /// Bloc cubit for the daily state, handles emitting new states at midnight
 /// and resolving daily states through it's static helper functions
 class DailyCubit extends Cubit<DailyState> {
   // Constructor
 
-  DailyCubit() : super(DateTime.now().resolveDailyState()) {
+  DailyCubit({required final DailyState todaysState}) : super(todaysState) {
     _emitTomorrow();
   }
 
-  // Cubit implementation
+  // State
 
-  @override
-  void onChange(final Change<DailyState> change) {
-    super.onChange(change);
-    // Changes come from emitTomorrow, when they happen, start the next
-    // emitTomorrow
-    _emitTomorrow();
+  final DailyStorageRepository _dailyRepository = const DailyStorageRepository(
+    collection: 'daily',
+  );
+
+  Future<void> _emitTomorrow() async {
+    final tommorowsState = await dailyFromGameNum(state.gameNum + 1);
+
+    final now = DateTime.now();
+    final midnightTonight = DateTime(now.year, now.month, now.day + 1);
+    final timeUntilMidnight = midnightTonight.difference(now);
+
+    Future.delayed(timeUntilMidnight, () async {
+      // Good morning!
+      emit(tommorowsState);
+      await _emitTomorrow();
+    });
   }
 
-  void _emitTomorrow() {
-    DateTime now = DateTime.now();
-    DateTime midnightTonight = DateTime(now.year, now.month, now.day + 1);
-    Duration timeUntilMidnight = midnightTonight.difference(now);
-    Future.delayed(timeUntilMidnight).then(
-      (final _) => emit(DateTime.now().resolveDailyState()),
-    );
+  // State factory
+
+  Future<DailyState> dailyFromGameNum(final int gameNum) async {
+    return DailyState.fromJson((await _dailyRepository.load('$gameNum'))!);
+  }
+
+  Future<DailyState> dailyFromDateTime(final DateTime dateTime) async {
+    return await dailyFromGameNum(gameNumFromDateTime(dateTime));
   }
 
   // Source of truth for game numbers
@@ -40,73 +47,16 @@ class DailyCubit extends Cubit<DailyState> {
   /// Perthle 1, 00:00:00
   static final DateTime epoch = DateTime(2022, 2, 25);
 
+  static int gameNumFromDateTime(final DateTime dateTime) {
+    return dateTime.difference(epoch).inDays;
+  }
+
+  static DateTime dateTimeFromGameNum(final int gameNum) {
+    return epoch.add(Duration(days: gameNum));
+  }
+
   // Provider
 
   static DailyCubit of(final BuildContext context) =>
       BlocProvider.of<DailyCubit>(context);
-}
-
-// Extensions for conversions between game state and it's attributes
-
-extension DailyCubitDateTime on DateTime {
-  DailyState resolveDailyState() => DailyState(
-        gameNum: this.resolveGameNum(),
-        word: this.resolveGameWord(),
-        gameMode: this.resolveGameMode(),
-      );
-
-  GameModeState resolveGameMode() {
-    final gameNum = this.resolveGameNum();
-
-    if (gameNum <= _lastVolOne) {
-      return GameModeState.perthle;
-    } else if (gameNum <= _lastVolThree) {
-      if (weekday < 6) {
-        return GameModeState.perthle;
-      } else if (weekday == 6) {
-        return GameModeState.perthlonger;
-      } else {
-        return GameModeState.special;
-      }
-    } else {
-      if (weekday < 6) {
-        return GameModeState.perthle;
-      } else {
-        final days = gameNum - _lastVolOne;
-        final index = days - days ~/ 7 * 5;
-        return DailyState.weekendGames[index - 1].gameMode;
-      }
-    }
-  }
-
-  int resolveGameNum() => this.difference(DailyCubit.epoch).inDays;
-
-  String resolveGameWord() => this.resolveGameNum().resolveGameWord();
-}
-
-extension DailyCubitGameNum on int {
-  GameModeState resolveGameMode() => this.resolveDateTime().resolveGameMode();
-
-  DateTime resolveDateTime() => DailyCubit.epoch.add(Duration(days: this));
-
-  String resolveGameWord() {
-    // Readability
-    final gameNum = this;
-    final gameMode = gameNum.resolveGameMode();
-
-    if (gameNum <= _lastVolOne) {
-      // Perthle Volume 1 (No weekend modes)
-      return DailyState.perthle[gameNum - 1];
-    } else if (gameMode == GameModeState.perthle) {
-      // Perthle volumes 2, 3 & 4
-      final days = gameNum - _lastVolOne + 4;
-      final index = gameNum - days ~/ 7 * 2;
-      return DailyState.perthle[index - 1];
-    } else {
-      // Weekend modes
-      final days = gameNum - _lastVolOne;
-      final index = days - days ~/ 7 * 5;
-      return DailyState.weekendGames[index - 1].word;
-    }
-  }
 }

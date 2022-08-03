@@ -1,7 +1,9 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/bloc/game_bloc.dart';
+import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
@@ -72,9 +74,14 @@ class GamePage extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     flex: 5,
-                                    child: SavedGame(
-                                      savedGame: gameData.toSavedGame(),
-                                      showWord: gameData.completion.isLost,
+                                    child: BlocBuilder<DailyCubit, DailyState>(
+                                      builder: (final context, final daily) {
+                                        return SavedGameTile(
+                                          savedGame: gameData.toSavedGame(),
+                                          daily: daily,
+                                          showWord: gameData.completion.isLost,
+                                        );
+                                      },
                                     ),
                                   ),
                                   const Spacer(),

@@ -58,15 +58,14 @@ class _ShakingPerthleAppbarState extends State<ShakingPerthleAppbar>
       child: BlocBuilder<DailyCubit, DailyState>(
         builder: (final context, final daily) {
           return BlocBuilder<GameBloc, GameState>(
-            builder: (final context, final gameData) {
+            builder: (final context, final game) {
               LightSource lightSource = LightSource(
-                gameData.currCol == gameData.board.width ||
-                        !gameData.completion.isPlaying
+                game.currCol == game.board.width || !game.completion.isPlaying
                     ? 0
-                    : gameData.currCol / gameData.board.width,
-                !gameData.completion.isPlaying
+                    : game.currCol / game.board.width,
+                !game.completion.isPlaying
                     ? 0
-                    : gameData.currRow / gameData.board.height,
+                    : game.currRow / game.board.height,
               );
               return AnimatedBuilder(
                 animation: _controller,
@@ -78,7 +77,8 @@ class _ShakingPerthleAppbarState extends State<ShakingPerthleAppbar>
                         right: 24 - offset,
                       ),
                       child: PerthleAppbar(
-                        title: '${daily.gameModeString} ${daily.gameNum}',
+                        title:
+                            '${daily.gameMode.gameModeString} ${daily.gameNum}',
                         lightSource: lightSource,
                       ),
                     ),
