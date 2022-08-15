@@ -377,7 +377,7 @@ final List<GameModeState> _expectedModes = [
   GameModeState.perthle,
   GameModeState.perthle,
   GameModeState.perthle,
-  GameModeState.perthle,
+  GameModeState.perthlonger,
   GameModeState.perthle,
   GameModeState.martoperthle,
   GameModeState.special,

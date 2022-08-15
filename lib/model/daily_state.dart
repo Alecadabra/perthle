@@ -229,7 +229,7 @@ class DailyState extends Equatable {
     _dailyState(164, 'PEARS', GameModeState.perthle),
     _dailyState(165, 'SYDNEY', GameModeState.perthle),
     _dailyState(166, 'NICK', GameModeState.perthle),
-    _dailyState(167, 'MURDOCH', GameModeState.perthle),
+    _dailyState(167, 'MURDOCH', GameModeState.perthlonger),
     _dailyState(168, 'FRUITY', GameModeState.perthle),
     _dailyState(169, 'MARTOTOMATO', GameModeState.martoperthle),
     _dailyState(170, 'SHREKUSSY', GameModeState.special),
