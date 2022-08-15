@@ -20,29 +20,16 @@ class DailyStorageRepository extends StorageRepository {
 
   // Private resolving logic
 
-  // The last game num for the volumes of Perthle answers
+  // The last game num before weekend modes were introduced
   static const int _lastVolOne = 35;
-  static const int _lastVolThree = 99;
 
   GameModeState _resolveGameMode(final int gameNum, final DateTime dateTime) {
-    if (gameNum <= _lastVolOne) {
+    if (gameNum <= _lastVolOne || dateTime.weekday < 6) {
       return GameModeState.perthle;
-    } else if (gameNum <= _lastVolThree) {
-      if (dateTime.weekday < 6) {
-        return GameModeState.perthle;
-      } else if (dateTime.weekday == 6) {
-        return GameModeState.perthlonger;
-      } else {
-        return GameModeState.special;
-      }
     } else {
-      if (dateTime.weekday < 6) {
-        return GameModeState.perthle;
-      } else {
-        final days = gameNum - _lastVolOne;
-        final index = days - days ~/ 7 * 5;
-        return DailyState.weekendGames[index - 1].gameMode;
-      }
+      final days = gameNum - _lastVolOne;
+      final index = days - days ~/ 7 * 5;
+      return DailyState.weekendGames[index - 1].gameMode;
     }
   }
 
