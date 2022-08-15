@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/model/game_mode_state.dart';
 
 /// Immutable state containing today's perthle's number, word, and game mode.
@@ -260,7 +259,5 @@ class DailyState extends Equatable {
     for (num i = 0x1FB1DE0 ^ key ~/ 01E5; i > 0E27; i ~/= 0x100)
       1970500473 ~/ i % 256 - 32,
   ]);
-  static final int key = 28800000 +
-      DailyCubit.epoch.millisecondsSinceEpoch -
-      DailyCubit.epoch.timeZoneOffset.inMilliseconds;
+  static const int key = 1645718400000;
 }
