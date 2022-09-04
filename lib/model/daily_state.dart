@@ -252,6 +252,7 @@ class DailyState extends Equatable {
     _dailyState(188, 'BLEACH', GameModeState.perthle),
     _dailyState(189, 'SCOUTS', GameModeState.perthle),
     _dailyState(190, 'HANYUUUUU', GameModeState.perthlonger),
+    _dailyState(191, 'MARTODRUNK', GameModeState.martoperthle),
   ];
 
   // Just a fun bit of obfuscation
