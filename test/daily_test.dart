@@ -1,20 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_mode_state.dart';
-import 'package:perthle/repository/daily_storage_repository.dart';
 
 void main() {
-  // const dailyRepo = DailyStorageRepository(firebaseFirestore: null);
+  test('historical daily state has not changed', () async {
+    expect(_expectedWords.length, equals(_expectedModes.length));
+    for (int gameNum = 1; gameNum - 1 < _expectedWords.length; gameNum++) {
+      final actual = DailyState.perthle[gameNum - 1];
 
-  // test('historical daily state has not changed', () async {
-  //   expect(_expectedWords.length, equals(_expectedModes.length));
-  //   for (int gameNum = 1; gameNum - 1 < _expectedWords.length; gameNum++) {
-  //     final actual = DailyState.fromJson((await dailyRepo.load('$gameNum'))!);
-
-  //     expect(actual.word, equals(_expectedWords[gameNum - 1]));
-  //     expect(actual.gameMode, equals(_expectedModes[gameNum - 1]));
-  //   }
-  // });
+      expect(actual.word, equals(_expectedWords[gameNum - 1]));
+      expect(actual.gameMode, equals(_expectedModes[gameNum - 1]));
+    }
+  });
 }
 
 final List<String> _expectedWords = [
