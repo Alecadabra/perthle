@@ -8,15 +8,17 @@ import 'package:perthle/repository/daily_storage_repository.dart';
 class DailyCubit extends Cubit<DailyState> {
   // Constructor
 
-  DailyCubit({required final DailyState todaysState}) : super(todaysState) {
+  DailyCubit({
+    required final DailyState todaysState,
+    required final DailyStorageRepository dailyRepository,
+  })  : _dailyRepository = dailyRepository,
+        super(todaysState) {
     _emitTomorrow();
   }
 
   // State
 
-  final DailyStorageRepository _dailyRepository = const DailyStorageRepository(
-    collection: 'daily',
-  );
+  final DailyStorageRepository _dailyRepository;
 
   Future<void> _emitTomorrow() async {
     final tommorowsState = await dailyFromGameNum(state.gameNum + 1);

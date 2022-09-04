@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,29 +26,49 @@ class PerthleProvider extends StatelessWidget {
   final Widget child;
   final FirebaseApp firebaseApp;
 
-  Future<DailyState> get _dailyFuture async {
+  Future<DailyState> _dailyFuture(
+    final DailyStorageRepository dailyRepo,
+  ) async {
     final todaysGameNum = DailyCubit.gameNumFromDateTime(DateTime.now());
-    const todaysRepo = DailyStorageRepository(collection: 'daily');
-    final dailyJson = await todaysRepo.load('$todaysGameNum');
+    final dailyJson = await dailyRepo.load('$todaysGameNum');
     return DailyState.fromJson(dailyJson!);
   }
 
   @override
   Widget build(final BuildContext context) {
-    return BlocProvider(
-      create: (final context) => PerthleUserBloc(
-        firebaseAuth: FirebaseAuth.instanceFor(app: firebaseApp),
-      ),
-      lazy: false,
-      child: FutureBuilder<DailyState>(
-        future: _dailyFuture,
-        builder: (final context, final AsyncSnapshot<DailyState> snapshot) {
-          final dailyState = snapshot.data;
-          return AnimatedSwitcher(
-            duration: Neumorphic.DEFAULT_DURATION,
-            child: dailyState == null
-                ? const SizedBox.shrink()
-                : _PerthleMultiProvider(dailyState: dailyState, child: child),
+    return MultiProvider(
+      providers: [
+        // Repositories
+        RepositoryProvider(
+          create: (final context) => DailyStorageRepository(
+            firebaseFirestore: FirebaseFirestore.instanceFor(app: firebaseApp),
+          ),
+          lazy: false,
+        ),
+        // Blocs/Cubits
+        BlocProvider(
+          create: (final context) => PerthleUserBloc(
+            firebaseAuth: FirebaseAuth.instanceFor(app: firebaseApp),
+          ),
+          lazy: false,
+        ),
+      ],
+      child: Builder(
+        builder: (final context) {
+          return FutureBuilder<DailyState>(
+            future: _dailyFuture(DailyStorageRepository.of(context)),
+            builder: (final context, final AsyncSnapshot<DailyState> snapshot) {
+              final dailyState = snapshot.data;
+              return AnimatedSwitcher(
+                duration: Neumorphic.DEFAULT_DURATION,
+                child: dailyState == null
+                    ? const SizedBox.shrink()
+                    : _PerthleMultiProvider(
+                        dailyState: dailyState,
+                        child: child,
+                      ),
+              );
+            },
           );
         },
       ),
@@ -76,7 +97,10 @@ class _PerthleMultiProvider extends StatelessWidget {
         ),
         // Blocs/Cubits
         BlocProvider(
-          create: (final context) => DailyCubit(todaysState: dailyState),
+          create: (final context) => DailyCubit(
+            todaysState: dailyState,
+            dailyRepository: DailyStorageRepository.of(context),
+          ),
           lazy: false,
         ),
         BlocProvider(

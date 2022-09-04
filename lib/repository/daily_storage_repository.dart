@@ -1,30 +1,31 @@
-import 'package:perthle/bloc/daily_cubit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/model/daily_state.dart';
-import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/repository/storage_repository.dart';
 
 class DailyStorageRepository extends StorageRepository {
-  const DailyStorageRepository({this.collection = 'daily'}) : super();
+  const DailyStorageRepository({required this.firebaseFirestore}) : super();
 
-  final String collection;
+  final FirebaseFirestore firebaseFirestore;
 
   @override
   Future<Map<String, dynamic>?> load(final String key) async {
-    final gameNum = int.parse(key);
-    final dateTime = DailyCubit.dateTimeFromGameNum(gameNum);
-    final gameMode = _resolveGameMode(gameNum, dateTime);
-    final word = _resolveWord(gameNum, gameMode);
-    return DailyState(gameNum: gameNum, word: word, gameMode: gameMode)
-        .toJson();
+    final collection = firebaseFirestore.collection('daily');
+    final doc = await collection.doc(key).get();
+    final json = doc.data();
+    if (json == null) {
+      return null;
+    } else {
+      // Validate data
+      final daily = DailyState.fromJson(json);
+      return daily.toJson();
+    }
   }
 
-  // Private resolving logic
+  // Provider
 
-  GameModeState _resolveGameMode(final int gameNum, final DateTime dateTime) {
-    return DailyState.perthle[gameNum - 1].gameMode;
-  }
-
-  String _resolveWord(final int gameNum, final GameModeState gameMode) {
-    return DailyState.perthle[gameNum - 1].word;
+  static DailyStorageRepository of(final BuildContext context) {
+    return RepositoryProvider.of<DailyStorageRepository>(context);
   }
 }
