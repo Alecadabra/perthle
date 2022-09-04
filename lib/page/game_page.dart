@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -14,6 +16,8 @@ import 'package:perthle/widget/saved_game_tile.dart';
 import 'package:perthle/widget/shaking_perthle_appbar.dart';
 import 'package:perthle/widget/game_board.dart';
 import 'package:perthle/widget/game_keyboard.dart';
+
+import '../repository/daily_storage_repository.dart';
 
 class GamePage extends StatelessWidget {
   const GamePage({final Key? key}) : super(key: key);
@@ -55,6 +59,23 @@ class GamePage extends StatelessWidget {
 
             // Messenger
             const Expanded(child: MessengerPopup()),
+
+            NeumorphicButton(
+              child: const Text('Upload'),
+              onPressed: () async {
+                const dailyRepo = DailyStorageRepository();
+                final collection = FirebaseFirestore.instanceFor(
+                        app: Firebase.app('perthgang-wordle'))
+                    .collection('daily');
+                for (int gameNum = 1; gameNum < 199; gameNum++) {
+                  final gameState =
+                      DailyState.fromJson((await dailyRepo.load('$gameNum'))!);
+
+                  await collection.doc('$gameNum').set(gameState.toJson());
+                  print(gameNum);
+                }
+              },
+            ),
 
             // Keyboard / Stats switcher
             Expanded(
