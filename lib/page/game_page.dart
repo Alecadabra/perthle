@@ -31,7 +31,7 @@ class GamePage extends StatelessWidget {
     return KeyboardListener(
       autofocus: true,
       focusNode: rootFocus,
-      onKeyEvent: (final KeyEvent key) {
+      onKeyEvent: (final KeyEvent key) async {
         if (key is! KeyUpEvent) {
           final LogicalKeyboardKey logicalKey = key.logicalKey;
           final String? char = key.character?.toUpperCase();
@@ -40,7 +40,7 @@ class GamePage extends StatelessWidget {
           if (logicalKey == LogicalKeyboardKey.backspace) {
             gameBloc.backspace();
           } else if (logicalKey == LogicalKeyboardKey.enter) {
-            gameBloc.enter();
+            await gameBloc.enter();
           } else if (char != null && LetterState.isValid(char)) {
             gameBloc.type(LetterState(char));
           }

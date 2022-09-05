@@ -34,8 +34,6 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
 
   final DailyCubit _dailyCubit;
 
-  final HashSet<String> _answers = HashSet.of(DailyState.allAnswers);
-
   // Getters
 
   int get wordLength {
@@ -48,7 +46,7 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
 
   bool get isLoaded => state != null;
 
-  bool isValidWord(final String word) {
+  Future<bool> isValidWord(final String word) async {
     final DictionaryState? localDict = state;
     if (localDict == null) {
       throw StateError('isValidWord called before dictionary loaded');
@@ -59,12 +57,12 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
         return false;
       } else {
         final martolessWord = word.replaceFirst('MARTO', '');
-        return _answers.contains(word.toUpperCase()) ||
-            localDict.dictionary.contains(martolessWord.toLowerCase());
+        return localDict.dictionary.contains(martolessWord.toLowerCase()) ||
+            await _dailyCubit.isAnAnswer(word.toUpperCase());
       }
     }
-    return _answers.contains(word.toUpperCase()) ||
-        localDict.dictionary.contains(word.toLowerCase());
+    return localDict.dictionary.contains(word.toLowerCase()) ||
+        await _dailyCubit.isAnAnswer(word.toUpperCase());
   }
 
   // Loaded implementation

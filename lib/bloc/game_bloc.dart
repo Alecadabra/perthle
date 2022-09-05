@@ -80,11 +80,11 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     }
   }
 
-  void enter() {
+  Future<void> enter() async {
     if (state.canEnter) {
       add(
         GameEnterEvent(
-          validWord: _dictionaryCubit.isValidWord(
+          validWord: await _dictionaryCubit.isValidWord(
             state.board.letters[state.currRow].join(),
           ),
           satisfiesHardMode: state.satisfiesHardMode,

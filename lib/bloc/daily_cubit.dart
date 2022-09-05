@@ -34,6 +34,13 @@ class DailyCubit extends Cubit<DailyState> {
     });
   }
 
+  Future<bool> isAnAnswer(final String word) async {
+    final collection = _dailyRepository.firebaseFirestore.collection('daily');
+    final query = collection.where('word', isEqualTo: word).limit(1);
+    final data = await query.get();
+    return data.size != 0;
+  }
+
   // State factory
 
   Future<DailyState> dailyFromGameNum(final int gameNum) async {
