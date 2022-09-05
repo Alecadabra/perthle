@@ -44,9 +44,6 @@ Future<void> _initFirebase() async {
     await FirebaseAuth.instanceFor(app: _firebaseApp).setPersistence(
       Persistence.LOCAL,
     );
-    await FirebaseFirestore.instanceFor(app: _firebaseApp).enablePersistence(
-      const PersistenceSettings(synchronizeTabs: true),
-    );
   } else {
     await Firebase.initializeApp(
       name: 'perthle-stage',
