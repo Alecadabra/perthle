@@ -11,32 +11,34 @@ class PerthleUserBloc extends Bloc<PerthleUserEvent, PerthleUserState> {
 
   PerthleUserBloc({
     required final FirebaseAuth firebaseAuth,
-  }) : /*_firebaseAuth = firebaseAuth,*/
+  })  : _firebaseAuth = firebaseAuth,
         super(PerthleUserState(firebaseUser: firebaseAuth.currentUser)) {
-    // firebaseAuth.userChanges().listen(
-    //   (final newFirebaseUser) {
-    //     add(
-    //       PerthleUserFirebaseUserChangeEvent(
-    //         currentFirebaseUser: state.firebaseUser,
-    //         newFirebaseUser: newFirebaseUser,
-    //       ),
-    //     );
-    //   },
-    // );
+    _initUser();
+    firebaseAuth.userChanges().listen(
+      (final newFirebaseUser) {
+        add(
+          PerthleUserFirebaseUserChangeEvent(
+            currentFirebaseUser: state.firebaseUser,
+            newFirebaseUser: newFirebaseUser,
+          ),
+        );
+      },
+    );
+    on<PerthleUserFirebaseUserChangeEvent>(_firebaseUserChangeEvent);
   }
 
   // State
 
-  // final FirebaseAuth _firebaseAuth;
+  final FirebaseAuth _firebaseAuth;
 
-  // void _initUser() {
-  //   if (state.firebaseUser == null) {
-  //     Future.microtask(() async {
-  //       await _firebaseAuth.setPersistence(Persistence.LOCAL);
-  //       await _firebaseAuth.signInAnonymously();
-  //     });
-  //   }
-  // }
+  void _initUser() {
+    if (state.firebaseUser == null) {
+      Future.microtask(() async {
+        await _firebaseAuth.setPersistence(Persistence.LOCAL);
+        await _firebaseAuth.signInAnonymously();
+      });
+    }
+  }
 
   // Provider
 
@@ -44,4 +46,11 @@ class PerthleUserBloc extends Bloc<PerthleUserEvent, PerthleUserState> {
       BlocProvider.of<PerthleUserBloc>(context);
 
   // Event handlers
+
+  void _firebaseUserChangeEvent(
+    final PerthleUserFirebaseUserChangeEvent event,
+    final PerthleUserEmitter emit,
+  ) {
+    emit(PerthleUserState(firebaseUser: event.newFirebaseUser));
+  }
 }
