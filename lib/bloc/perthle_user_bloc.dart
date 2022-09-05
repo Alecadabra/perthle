@@ -33,10 +33,7 @@ class PerthleUserBloc extends Bloc<PerthleUserEvent, PerthleUserState> {
 
   void _initUser() {
     if (state.firebaseUser == null) {
-      Future.microtask(() async {
-        await _firebaseAuth.setPersistence(Persistence.LOCAL);
-        await _firebaseAuth.signInAnonymously();
-      });
+      Future.microtask(() async => await _firebaseAuth.signInAnonymously());
     }
   }
 
