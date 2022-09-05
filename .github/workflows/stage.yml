@@ -1,8 +1,6 @@
 name: stage
 on:
   push:
-    branches-ignore:
-      - main
 jobs:
   build:
     name: Build
