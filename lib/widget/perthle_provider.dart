@@ -9,6 +9,7 @@ import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/bloc/perthle_user_bloc.dart';
 import 'package:perthle/model/daily_state.dart';
+import 'package:perthle/model/perthle_user_state.dart';
 import 'package:perthle/repository/daily_storage_repository.dart';
 import 'package:perthle/repository/local_storage_repository.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
@@ -53,23 +54,28 @@ class PerthleProvider extends StatelessWidget {
           lazy: false,
         ),
       ],
-      child: Builder(
-        builder: (final context) {
-          return FutureBuilder<DailyState>(
-            future: _dailyFuture(DailyStorageRepository.of(context)),
-            builder: (final context, final AsyncSnapshot<DailyState> snapshot) {
-              final dailyState = snapshot.data;
-              return AnimatedSwitcher(
-                duration: Neumorphic.DEFAULT_DURATION,
-                child: dailyState == null
-                    ? const SizedBox.shrink()
-                    : _PerthleMultiProvider(
-                        dailyState: dailyState,
-                        child: child,
-                      ),
-              );
-            },
-          );
+      child: BlocBuilder<PerthleUserBloc, PerthleUserState>(
+        builder: (final context, final perthleUser) {
+          if (perthleUser.firebaseUser == null) {
+            return const SizedBox.shrink();
+          } else {
+            return FutureBuilder<DailyState>(
+              future: _dailyFuture(DailyStorageRepository.of(context)),
+              builder:
+                  (final context, final AsyncSnapshot<DailyState> snapshot) {
+                final dailyState = snapshot.data;
+                return AnimatedSwitcher(
+                  duration: Neumorphic.DEFAULT_DURATION,
+                  child: dailyState == null
+                      ? const SizedBox.shrink()
+                      : _PerthleMultiProvider(
+                          dailyState: dailyState,
+                          child: child,
+                        ),
+                );
+              },
+            );
+          }
         },
       ),
     );
