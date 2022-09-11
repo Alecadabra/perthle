@@ -40,7 +40,7 @@ class PerthleAppbar extends StatelessWidget {
             const Visibility(
               visible: false,
               maintainState: true,
-              child: Text('⬜🟨⬛🟩'),
+              child: Text('⬜🟨⬛🟩🔳🔲'),
             )
           ],
         ),

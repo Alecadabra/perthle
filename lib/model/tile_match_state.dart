@@ -1,4 +1,4 @@
-/// Enum representing a wordle letter's state.
+/// Enum representing a wordle letter or character's state.
 enum TileMatchState {
   /// This tile has not yet been part of a guess.
   blank,
@@ -13,6 +13,9 @@ enum TileMatchState {
   /// This letter is part of the wordle word, and has been
   /// guessed in a correct position.
   match,
+
+  /// This letter or character has been revealed.
+  revealed,
 }
 
 extension TileMatchStatePrecedence on TileMatchState {
@@ -27,6 +30,8 @@ extension TileMatchStatePrecedence on TileMatchState {
         return 2;
       case TileMatchState.match:
         return 3;
+      case TileMatchState.revealed:
+        return 0;
     }
   }
 }
@@ -36,4 +41,5 @@ extension TileMatchStateSugar on TileMatchState {
   bool get isWrong => this == TileMatchState.wrong;
   bool get isMiss => this == TileMatchState.miss;
   bool get isMatch => this == TileMatchState.match;
+  bool get isRevealed => this == TileMatchState.revealed;
 }

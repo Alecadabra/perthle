@@ -1,29 +1,18 @@
 import 'package:flutter/widgets.dart';
+import 'package:perthle/model/character_state.dart';
 
-/// Immutable state representing a letter in the English alphabet.
+/// Immutable state representing a single capital letter in the English
+/// alphabet.
 @immutable
-class LetterState {
+class LetterState extends CharacterState {
   // Constructor
 
-  LetterState(this.letterString) : assert(isValid(letterString));
-
-  // Immutable state
+  LetterState(this.letterString)
+      : assert(isValid(letterString)),
+        super(letterString);
 
   /// The single letter in A-Z
   final String letterString;
-
-  // Access
-
-  @override
-  String toString() => letterString;
-
-  @override
-  int get hashCode => letterString.hashCode;
-
-  @override
-  bool operator ==(final Object other) {
-    return other is LetterState && other.letterString == letterString;
-  }
 
   /// If the given letter string can make a valid letter state, i.e. is a
   /// capital letter between A and Z.
@@ -36,6 +25,13 @@ extension LetterStateCharacters on String {
   /// Convert this string to it's letter states
   Iterable<LetterState> get letters {
     return Characters(this).map((final String c) => LetterState(c));
+  }
+
+  /// Convert this string to it's letter states, or null
+  Iterable<LetterState>? get lettersOrNull {
+    return this.characters.every((final char) => LetterState.isValid(char))
+        ? Characters(this).map((final String c) => LetterState(c))
+        : null;
   }
 }
 

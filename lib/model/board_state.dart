@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:perthle/model/character_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
@@ -14,7 +15,7 @@ class BoardState extends Equatable {
   const BoardState({
     required this.width,
     required this.height,
-    required final List<List<LetterState?>> letters,
+    required final List<List<CharacterState?>> letters,
     required final List<List<TileMatchState>> matches,
   })  : _letters = letters,
         _matches = matches;
@@ -39,7 +40,7 @@ class BoardState extends Equatable {
               [
                 for (int j = 0; j < json['width']; j++)
                   json['letters'][i][j] != null
-                      ? LetterState(json['letters'][i][j])
+                      ? CharacterState(json['letters'][i][j])
                       : null,
               ],
           ],
@@ -57,11 +58,11 @@ class BoardState extends Equatable {
   final int width;
   final int height;
 
-  final List<List<LetterState?>> _letters;
-  UnmodifiableListView<UnmodifiableListView<LetterState?>> get letters =>
+  final List<List<CharacterState?>> _letters;
+  UnmodifiableListView<UnmodifiableListView<CharacterState?>> get letters =>
       UnmodifiableListView(
         [
-          for (List<LetterState?> row in _letters) UnmodifiableListView(row),
+          for (List<CharacterState?> row in _letters) UnmodifiableListView(row),
         ],
       );
 
@@ -78,7 +79,7 @@ class BoardState extends Equatable {
   BoardState copyWith({
     final int? width,
     final int? height,
-    final List<List<LetterState?>>? letters,
+    final List<List<CharacterState?>>? letters,
     final List<List<TileMatchState>>? matches,
   }) {
     return BoardState(
@@ -94,9 +95,9 @@ class BoardState extends Equatable {
       'width': width,
       'height': height,
       'letters': [
-        for (List<LetterState?> row in _letters)
+        for (List<CharacterState?> row in _letters)
           [
-            for (LetterState? letter in row) letter?.letterString,
+            for (CharacterState? letter in row) letter?.characterString,
           ],
       ],
       'matches': [
@@ -106,6 +107,45 @@ class BoardState extends Equatable {
           ],
       ]
     };
+  }
+
+  // Static convenience factory
+  static BoardState fromWord(final String word) {
+    final characters = word.characterStates.toList();
+    final numCharacters = characters.length;
+    final numLetters = characters
+        .where(
+          (final character) => LetterState.isValid(character.characterString),
+        )
+        .toList()
+        .length;
+
+    // Init empty everything
+    final height = numLetters + 1;
+    final width = numCharacters;
+    List<List<CharacterState?>> letters =
+        List.filled(height, List.filled(width, null));
+    List<List<TileMatchState>> matches =
+        List.filled(height, List.filled(width, TileMatchState.blank));
+
+    // Reveal non-letters if there are any
+    if (numLetters != numCharacters) {
+      for (int j = 0; j < width; j++) {
+        if (!LetterState.isValid(characters[j].characterString)) {
+          for (int i = 0; i < height; i++) {
+            letters[i][j] = characters[j];
+            matches[i][j] = TileMatchState.revealed;
+          }
+        }
+      }
+    }
+
+    return BoardState(
+      width: width,
+      height: height,
+      letters: letters,
+      matches: matches,
+    );
   }
 
   // Equatable implementation

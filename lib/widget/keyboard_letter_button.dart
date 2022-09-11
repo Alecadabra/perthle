@@ -26,6 +26,7 @@ class KeyboardLetterButton extends StatelessWidget {
 
     switch (tileMatch) {
       case TileMatchState.blank:
+      case TileMatchState.revealed:
         base = NeumorphicTheme.baseColor(context);
         break;
       case TileMatchState.wrong:

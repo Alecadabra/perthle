@@ -74,6 +74,8 @@ class SavedGameState extends Equatable {
                   return '🟨';
                 case TileMatchState.wrong:
                   return lightEmojis ? '⬜' : '⬛';
+                case TileMatchState.revealed:
+                  return lightEmojis ? '🔳' : '🔲';
                 case TileMatchState.blank:
                   throw StateError('Blank match impossible');
               }

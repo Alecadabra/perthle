@@ -24,11 +24,7 @@ class GameState extends Equatable {
     this.dictionaryLoaded = false,
   })  : completion = completion ?? GameCompletionState.playing,
         keyboard = keyboard ?? KeyboardState.empty(),
-        board = board ??
-            BoardState.empty(
-              width: word.length,
-              height: word.length + 1,
-            );
+        board = board ?? BoardState.fromWord(word);
 
   GameState.fromJson(final Map<String, dynamic> json)
       : this(

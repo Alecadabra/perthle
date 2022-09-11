@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/bloc/dictionary_cubit.dart';
 import 'package:perthle/event/game_event.dart';
+import 'package:perthle/model/character_state.dart';
 import 'package:perthle/repository/persistent.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
@@ -82,11 +83,11 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
   Future<void> enter() async {
     if (state.canEnter) {
+      final word = state.board.letters[state.currRow].join();
       add(
         GameEnterEvent(
-          validWord: await _dictionaryCubit.isValidWord(
-            state.board.letters[state.currRow].join(),
-          ),
+          validWord:
+              word == state.word || await _dictionaryCubit.isValidWord(word),
           satisfiesHardMode: state.satisfiesHardMode,
         ),
       );
@@ -129,9 +130,23 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   }
 
   void _letterType(final GameLetterTypeEvent event, final GameEmitter emit) {
+    // Find the next valid column of the board to be at
+    int nextCol(final int currCol) {
+      if (currCol == state.board.width) {
+        // End of the board, valid col
+        return currCol;
+      } else if (state.board.matches[state.currRow][currCol].isBlank) {
+        // Blank tile, valid col
+        return currCol;
+      } else {
+        // Revealed tile, keep going
+        return nextCol(currCol + 1);
+      }
+    }
+
     emit(
       state.copyWith(
-        currCol: state.currCol + 1,
+        currCol: nextCol(state.currCol + 1),
         board: state.board.copyWith(
           // The old letters board with the current spot set to the typed
           // letter
@@ -150,16 +165,29 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   }
 
   void _backspace(final GameBackspaceEvent event, final GameEmitter emit) {
+    // Find the next valid column of the board to be at, going backwards
+    int _prevCol(final int currCol) {
+      if (state.board.matches[state.currRow][currCol].isBlank) {
+        // Blank tile, valid col
+        return currCol;
+      } else {
+        // Revealed tile, keep going
+        return _prevCol(currCol - 1);
+      }
+    }
+
+    final prevCol = _prevCol(state.currCol - 1);
+
     emit(
       state.copyWith(
-        currCol: state.currCol - 1,
+        currCol: prevCol,
         board: state.board.copyWith(
           // The old letters board with the previous spot replaced with null
           letters: [
             for (int i = 0; i < state.board.height; i++)
               [
                 for (int j = 0; j < state.board.width; j++)
-                  i == state.currRow && j == state.currCol - 1
+                  i == state.currRow && j == prevCol
                       ? null
                       : state.board.letters[i][j],
               ],
@@ -234,18 +262,22 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
         required final bool Function(int i, String letterString) predicate,
       }) {
         for (int i in indicies.toList()) {
-          LetterState letter = state.board.letters[state.currRow][i]!;
-          String letterString = letter.letterString;
+          CharacterState character = state.board.letters[state.currRow][i]!;
+          String characterString = character.characterString;
+          LetterState? letter = LetterState.isValid(characterString)
+              ? LetterState(characterString)
+              : null;
 
-          if (predicate(i, letterString)) {
+          if (predicate(i, characterString)) {
             newMatches[state.currRow][i] = match;
-            if (newKeys[letter]!.precedence < match.precedence) {
+            if (letter != null &&
+                newKeys[letter]!.precedence < match.precedence) {
               // Only update keyboard letters of higher precedence
               newKeys[letter] = match;
             }
             indicies.remove(i);
             var effectiveWordList = effectiveWord.characters.toList();
-            effectiveWordList.remove(letterString);
+            effectiveWordList.remove(characterString);
             effectiveWord = effectiveWordList.join();
           }
         }
@@ -265,6 +297,13 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
             effectiveWord.contains(letterString),
       );
 
+      // Revealed pass (Flat)
+      revealPass(
+        match: TileMatchState.revealed,
+        predicate: (final i, final letterString) =>
+            !LetterState.isValid(letterString),
+      );
+
       // Wrong pass (Grey)
       revealPass(
         match: TileMatchState.wrong,
@@ -273,7 +312,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
       // Check end of game condition
       if (newMatches[state.currRow].every(
-        (final match) => match == TileMatchState.match,
+        (final match) => match.isMatch || match.isRevealed,
       )) {
         add(const GameCompletionEvent(GameCompletionState.won));
       } else if (state.currRow == state.board.height - 1) {

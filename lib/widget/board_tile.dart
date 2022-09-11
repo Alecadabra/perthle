@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:perthle/model/letter_state.dart';
+import 'package:perthle/model/character_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
 /// A square on the perthle board for a nullable letter and it's match state.
@@ -15,7 +15,7 @@ class BoardTile extends StatelessWidget {
   }) : super(key: key);
 
   final TileMatchState match;
-  final LetterState? letter;
+  final CharacterState? letter;
   final LightSource lightSource;
   final bool current;
 
@@ -70,6 +70,8 @@ class BoardTile extends StatelessWidget {
           shape: NeumorphicShape.concave,
           lightSource: lightSource,
         );
+      case TileMatchState.revealed:
+        return const NeumorphicStyle(depth: 0);
     }
   }
 
@@ -98,7 +100,9 @@ class BoardTile extends StatelessWidget {
                             ?.copyWith(
                               fontSize: 38,
                               fontWeight: FontWeight.w500,
-                              color: match != TileMatchState.blank
+                              color: match.isMatch ||
+                                      match.isMiss ||
+                                      match.isWrong
                                   ? NeumorphicTheme.baseColor(context)
                                   : NeumorphicTheme.defaultTextColor(context),
                             ),
