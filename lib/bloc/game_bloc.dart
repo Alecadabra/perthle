@@ -328,7 +328,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
           keyboard: state.keyboard.copyWith(keys: newKeys),
           board: state.board.copyWith(matches: newMatches),
           currRow: state.currRow + 1,
-          currCol: 0,
+          currCol: state.firstCol,
         ),
       );
     }

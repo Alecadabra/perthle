@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:perthle/model/board_state.dart';
 import 'package:perthle/model/keyboard_state.dart';
 import 'package:perthle/model/letter_state.dart';
@@ -19,12 +20,13 @@ class GameState extends Equatable {
     final KeyboardState? keyboard,
     final BoardState? board,
     this.currRow = 0,
-    this.currCol = 0,
+    final int currCol = 0,
     this.hardMode = false,
     this.dictionaryLoaded = false,
   })  : completion = completion ?? GameCompletionState.playing,
         keyboard = keyboard ?? KeyboardState.empty(),
-        board = board ?? BoardState.fromWord(word);
+        board = board ?? BoardState.fromWord(word),
+        currCol = _staticFirstCol(word, currCol: currCol);
 
   GameState.fromJson(final Map<String, dynamic> json)
       : this(
@@ -38,6 +40,18 @@ class GameState extends Equatable {
         );
 
   // Immutable state
+
+  static int _staticFirstCol(final String word, {final int currCol = 0}) {
+    if (currCol == word.length) {
+      return currCol;
+    } else if (LetterState.isValid(word.characters.toList()[currCol])) {
+      return currCol;
+    } else {
+      return _staticFirstCol(word, currCol: currCol + 1);
+    }
+  }
+
+  int get firstCol => _staticFirstCol(word);
 
   final int gameNum;
   final String word;
@@ -59,7 +73,7 @@ class GameState extends Equatable {
   late final bool canType =
       currCol < board.width && currRow < board.height && completion.isPlaying;
 
-  late final bool canBackspace = currCol != 0 && completion.isPlaying;
+  late final bool canBackspace = currCol != firstCol && completion.isPlaying;
 
   late final bool canEnter =
       currCol >= board.width && completion.isPlaying && dictionaryLoaded;
