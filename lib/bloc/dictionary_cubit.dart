@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/model/letter_state.dart';
-import 'package:perthle/repository/asset_storage_repository.dart';
+import 'package:perthle/repository/dictionary_storage_repository.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/model/dictionary_state.dart';
 import 'package:perthle/repository/loaded.dart';
@@ -15,9 +15,7 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
       : _dailyCubit = dailyCubit,
         super(
           initialState: null,
-          storage: const AssetStorageRepository(
-            listKey: DictionaryState.jsonKey,
-          ),
+          storage: const DictionaryStorageRepository(),
         ) {
     // Emit new dictionary states when midnight hits
     dailyCubit.stream.listen(
@@ -34,11 +32,14 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
 
   // Getters
 
-  int get wordLength {
+  List<int> get wordLengths {
     if (_dailyCubit.state.gameMode == GameModeState.martoperthle) {
-      return _dailyCubit.state.word.length - 'marto'.length;
+      return [_dailyCubit.state.word.length - 'marto'.length];
     } else {
-      return _dailyCubit.state.word.length;
+      return _dailyCubit.state.word
+          .split(' ')
+          .map((final subWord) => subWord.length)
+          .toList();
     }
   }
 
@@ -55,14 +56,13 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
         return false;
       } else {
         final martolessWord = word.replaceFirst('MARTO', '');
-        return localDict.dictionary.contains(martolessWord.toLowerCase()) ||
+        return localDict.contains(martolessWord) ||
             await _dailyCubit.isAnAnswer(word.toUpperCase());
       }
     }
     // Test the entire word against the dictionary
     final List<LetterState>? wordLettersOrNull = word.lettersOrNull?.toList();
-    if (wordLettersOrNull != null &&
-        localDict.dictionary.contains(word.toLowerCase())) {
+    if (wordLettersOrNull != null && localDict.contains(word)) {
       return true;
     } else {
       // Test the sub words against the dictionary
@@ -77,8 +77,7 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
           )
           .toList();
       if (subWords.isNotEmpty &&
-          subWords.every((final subWord) =>
-              localDict.dictionary.contains(subWord.toLowerCase()))) {
+          subWords.every((final subWord) => localDict.contains(subWord))) {
         return true;
       }
     }
@@ -105,7 +104,7 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
       if (await everyAsync<String>(
         subWords,
         (final subWord) async =>
-            localDict.dictionary.contains(subWord.toLowerCase()) ||
+            localDict.contains(subWord) ||
             await _dailyCubit.isAnAnswer(subWord.toUpperCase()),
       )) {
         return true;
@@ -122,7 +121,7 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
   }
 
   @override
-  String get key => 'assets/dictionary/words_$wordLength.txt';
+  String get key => wordLengths.join(',');
 
   // Provider
 

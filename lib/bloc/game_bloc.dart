@@ -245,7 +245,11 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
         _messengerCubit.send('$word does not start with Marto 💔');
       } else {
         // Invalid word
-        _messengerCubit.send('$word is not a word');
+        if (word.contains(' ')) {
+          _messengerCubit.send('$word is not valid');
+        } else {
+          _messengerCubit.send('$word is not a valid word');
+        }
       }
     } else {
       // Valid word
@@ -283,6 +287,13 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
         }
       }
 
+      // Revealed pass (Flat)
+      revealPass(
+        match: TileMatchState.revealed,
+        predicate: (final i, final letterString) =>
+            !LetterState.isValid(letterString),
+      );
+
       // Match pass (Green)
       revealPass(
         match: TileMatchState.match,
@@ -295,13 +306,6 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
         match: TileMatchState.miss,
         predicate: (final i, final letterString) =>
             effectiveWord.contains(letterString),
-      );
-
-      // Revealed pass (Flat)
-      revealPass(
-        match: TileMatchState.revealed,
-        predicate: (final i, final letterString) =>
-            !LetterState.isValid(letterString),
       );
 
       // Wrong pass (Grey)

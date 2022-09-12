@@ -4,34 +4,48 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 /// Immutable state holding a set of valid english words, all of a set length.
-/// Implementation is a hash set so that `dictionary.contains` is constant time.
+/// Implementation is a hash set so that `contains` is constant time.
 @immutable
 class DictionaryState extends Equatable {
   // Constructors
 
   const DictionaryState({
-    required final HashSet dictionary,
-  }) : _dictionary = dictionary;
+    required final Map<int, HashSet<String>> dictionaries,
+  }) : _dictionaries = dictionaries;
 
   DictionaryState.fromJson(final Map<String, dynamic> json)
       : this(
-          dictionary: HashSet.of(json[jsonKey]),
+          dictionaries: {
+            for (MapEntry<String, dynamic> entry in json.entries)
+              int.parse(entry.key): HashSet.from(entry.value),
+          },
         );
 
   // State & immutable access
 
-  final HashSet _dictionary;
-  UnmodifiableSetView get dictionary => UnmodifiableSetView(_dictionary);
+  final Map<int, HashSet<String>> _dictionaries;
+
+  bool contains(final String word) {
+    final length = word.length;
+    final lowerCaseWord = word.toLowerCase();
+    final dict = _dictionaries[length];
+    if (dict == null) {
+      throw StateError('Dictionary for words of length $length not loaded');
+    }
+    return dict.contains(lowerCaseWord);
+  }
 
   // Serialization
 
-  Map<String, dynamic> toJson() => {jsonKey: _dictionary.toList()};
-
-  /// Key used to reference the [dictionary] in [toJson].
-  static const String jsonKey = 'dictionary';
+  Map<String, dynamic> toJson() {
+    return {
+      for (MapEntry<int, HashSet<String>> entry in _dictionaries.entries)
+        '${entry.key}': entry.value.toList(),
+    };
+  }
 
   // Equatable implementation
 
   @override
-  List<Object?> get props => [_dictionary];
+  List<Object?> get props => [_dictionaries];
 }
