@@ -50,12 +50,13 @@ class SavedGameState extends Equatable {
       .where(
         (final List<TileMatchState> row) => !row.every(
             (final TileMatchState matchState) =>
-                matchState == TileMatchState.blank),
+                matchState.isBlank || matchState.isRevealed),
       )
       .toList();
 
   bool get won => attempts.last.every(
-        (final TileMatchState matchState) => matchState == TileMatchState.match,
+        (final TileMatchState matchState) =>
+            matchState.isMatch || matchState.isRevealed,
       );
 
   String title(final GameModeState gameMode) =>
