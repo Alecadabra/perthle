@@ -1,7 +1,8 @@
 import 'dart:collection';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:perthle/model/letter_state.dart';
 
 /// Immutable state holding a set of valid english words, all of a set length.
 /// Implementation is a hash set so that `contains` is constant time.
@@ -26,13 +27,18 @@ class DictionaryState extends Equatable {
   final Map<int, HashSet<String>> _dictionaries;
 
   bool contains(final String word) {
-    final length = word.length;
-    final lowerCaseWord = word.toLowerCase();
+    final readyWord = word
+        .toUpperCase()
+        .characters
+        .where((final char) => LetterState.isValid(char))
+        .join()
+        .toLowerCase();
+    final length = readyWord.length;
     final dict = _dictionaries[length];
     if (dict == null) {
       throw StateError('Dictionary for words of length $length not loaded');
     }
-    return dict.contains(lowerCaseWord);
+    return dict.contains(readyWord);
   }
 
   // Serialization

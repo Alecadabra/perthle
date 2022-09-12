@@ -38,7 +38,13 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
     } else {
       return _dailyCubit.state.word
           .split(' ')
-          .map((final subWord) => subWord.length)
+          .map(
+            (final subWord) => subWord
+                .toUpperCase()
+                .characters
+                .where((final char) => LetterState.isValid(char))
+                .length,
+          )
           .toList();
     }
   }
@@ -61,8 +67,7 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
       }
     }
     // Test the entire word against the dictionary
-    final List<LetterState>? wordLettersOrNull = word.lettersOrNull?.toList();
-    if (wordLettersOrNull != null && localDict.contains(word)) {
+    if (!word.contains(' ') && localDict.contains(word)) {
       return true;
     } else {
       // Test the sub words against the dictionary
