@@ -12,7 +12,12 @@ class PerthleUserBloc extends Bloc<PerthleUserEvent, PerthleUserState> {
   PerthleUserBloc({
     required final FirebaseAuth firebaseAuth,
   })  : _firebaseAuth = firebaseAuth,
-        super(PerthleUserState(firebaseUser: firebaseAuth.currentUser)) {
+        super(
+          PerthleUserState(
+            firebaseUser: firebaseAuth.currentUser,
+            isAuthor: firebaseAuth.currentUser.isAuthor,
+          ),
+        ) {
     _initUser();
     firebaseAuth.userChanges().listen(
       (final newFirebaseUser) {
@@ -48,6 +53,16 @@ class PerthleUserBloc extends Bloc<PerthleUserEvent, PerthleUserState> {
     final PerthleUserFirebaseUserChangeEvent event,
     final PerthleUserEmitter emit,
   ) {
-    emit(PerthleUserState(firebaseUser: event.newFirebaseUser));
+    emit(
+      PerthleUserState(
+        firebaseUser: event.newFirebaseUser,
+        isAuthor: event.newFirebaseUser.isAuthor,
+      ),
+    );
   }
+}
+
+extension _FirebaseUserAuthor on User? {
+  // The author user
+  bool get isAuthor => this?.uid == 'SZx7Xxk8r3aKlNwCoTvBpABvS473';
 }

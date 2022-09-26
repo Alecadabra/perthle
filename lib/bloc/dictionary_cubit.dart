@@ -51,6 +51,7 @@ class DictionaryCubit extends LoadedCubit<DictionaryState?> {
 
   bool get isLoaded => state != null;
 
+  // TODO: Replace with dictionary database
   Future<bool> isValidWord(final String word) async {
     final DictionaryState? localDict = state;
     if (localDict == null) {

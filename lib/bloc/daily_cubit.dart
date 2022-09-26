@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/model/daily_state.dart';
@@ -19,6 +20,9 @@ class DailyCubit extends Cubit<DailyState> {
   // State
 
   final DailyStorageRepository _dailyRepository;
+  CollectionReference<Map<String, dynamic>> get _collection {
+    return _dailyRepository.firebaseFirestore.collection('daily');
+  }
 
   Future<void> _emitTomorrow() async {
     final tommorowsState = await dailyFromGameNum(state.gameNum + 1);
@@ -35,10 +39,27 @@ class DailyCubit extends Cubit<DailyState> {
   }
 
   Future<bool> isAnAnswer(final String word) async {
-    final collection = _dailyRepository.firebaseFirestore.collection('daily');
-    final query = collection.where('word', isEqualTo: word).limit(1);
+    final query = _collection.where('word', isEqualTo: word).limit(1);
     final data = await query.get();
     return data.size != 0;
+  }
+
+  Future<int> finalGameNum() async {
+    final query = _collection
+        .where('gameNum', isGreaterThan: state.gameNum)
+        // Get around the dictionary hack
+        .where('gameNum', isLessThan: 1000)
+        .orderBy('gameNum');
+    final data = await query.get();
+    return DailyState.fromJson(data.docs.last.data()).gameNum;
+  }
+
+  Future<void> addDaily(final DailyState dailyState) async {
+    final key = '${dailyState.gameNum}';
+    if (await _dailyRepository.load(key) != null) {
+      throw StateError('DailyState $key already present in repository');
+    }
+    await _dailyRepository.save(key, dailyState.toJson());
   }
 
   // State factory
