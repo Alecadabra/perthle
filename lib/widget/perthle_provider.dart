@@ -7,6 +7,7 @@ import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/bloc/dictionary_cubit.dart';
 import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/bloc/history_cubit.dart';
+import 'package:perthle/bloc/library_cubit.dart';
 import 'package:perthle/bloc/perthle_user_bloc.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/perthle_user_state.dart';
@@ -70,6 +71,7 @@ class PerthleProvider extends StatelessWidget {
                       ? const SizedBox.shrink()
                       : _PerthleMultiProvider(
                           dailyState: dailyState,
+                          perthleUser: perthleUser,
                           child: child,
                         ),
                 );
@@ -86,10 +88,12 @@ class _PerthleMultiProvider extends StatelessWidget {
   const _PerthleMultiProvider({
     final Key? key,
     required this.dailyState,
+    required this.perthleUser,
     required this.child,
   }) : super(key: key);
 
   final DailyState dailyState;
+  final PerthleUserState perthleUser;
   final Widget child;
 
   @override
@@ -142,6 +146,14 @@ class _PerthleMultiProvider extends StatelessWidget {
           ),
           lazy: false,
         ),
+        if (perthleUser.isAuthor)
+          BlocProvider(
+            create: (final context) => LibraryCubit(
+              storage: MutableStorageRepository.of(context),
+              dailyCubit: DailyCubit.of(context),
+            ),
+            lazy: false,
+          ),
       ],
       child: child,
     );

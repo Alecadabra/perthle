@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:dartx/dartx.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_mode_state.dart';
@@ -70,29 +72,79 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
     if (oneOffs.isNotEmpty) {
       final chosenLibraryWord = oneOffs.removeLast();
       emit(state.copyWithLists(perthle: oneOffs));
-      final dailyState = DailyState(
+      return DailyState(
         gameNum: gameNum,
         word: chosenLibraryWord.word,
         gameMode: GameModeState.perthle,
       );
-      return dailyState;
     } else {
-      final usedLongestAgo =
-          perthles.minBy((final libraryWord) => libraryWord.lastUsed)!;
+      final usedLongestAgo = perthles.minBy(
+        (final libraryWord) => libraryWord.lastUsed,
+      )!;
       perthles.remove(usedLongestAgo);
+      perthles.add(
+        usedLongestAgo.copyWith(
+          lastUsed: DailyCubit.dateTimeFromGameNum(gameNum),
+        ),
+      );
       emit(state.copyWithLists(perthle: perthles));
-      final dailyState = DailyState(
+      return DailyState(
         gameNum: gameNum,
         word: usedLongestAgo.word,
         gameMode: GameModeState.perthle,
       );
-      return dailyState;
     }
   }
 
   DailyState _nextWeekendDaily(final int gameNum) {
-    // TODO: Implement _nextWeekendDaily
-    throw UnimplementedError('_nextWeekendDaily');
+    final chosenWeekendWordPair = state.words.entries
+        .filter((final gameMode) => gameMode.key != GameModeState.perthle)
+        .flatMap(
+          (final entry) => entry.value.map(
+            (final libraryWord) => Pair(entry.key, libraryWord),
+          ),
+        )
+        .shuffled()
+        .first;
+    final gameMode = chosenWeekendWordPair.first;
+    final libraryWord = chosenWeekendWordPair.second;
+    final LibraryState newState;
+    switch (gameMode) {
+      case GameModeState.perthle:
+        newState = state.copyWithLists(
+          perthle: state.words[GameModeState.perthle]!..remove(libraryWord),
+        );
+        break;
+      case GameModeState.perthlonger:
+        newState = state.copyWithLists(
+          perthlonger: state.words[GameModeState.perthlonger]!
+            ..remove(libraryWord),
+        );
+        break;
+      case GameModeState.special:
+        newState = state.copyWithLists(
+          special: state.words[GameModeState.special]!..remove(libraryWord),
+        );
+        break;
+      case GameModeState.perthshorter:
+        newState = state.copyWithLists(
+          perthshorter: state.words[GameModeState.perthshorter]!
+            ..remove(libraryWord),
+        );
+        break;
+      case GameModeState.martoperthle:
+        newState = state.copyWithLists(
+          martoperthle: state.words[GameModeState.martoperthle]!
+            ..remove(libraryWord),
+        );
+        break;
+    }
+    emit(newState);
+    return DailyState(
+      gameNum: gameNum,
+      word: libraryWord.word,
+      gameMode: gameMode,
+    );
   }
 
   // Persistent implementation
@@ -109,8 +161,15 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
   Map<String, dynamic> toJson(final LibraryState state) {
     return state.toJson();
   }
+
+  // Provider
+
+  static LibraryCubit of(final BuildContext context) =>
+      BlocProvider.of<LibraryCubit>(context);
 }
 
 extension DateTimeWeekdays on DateTime {
-  bool get isWeekday => weekday != 6 && weekday != 7;
+  bool get isWeekday {
+    return weekday != DateTime.saturday && weekday != DateTime.sunday;
+  }
 }
