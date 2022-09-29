@@ -175,7 +175,10 @@ class _LibraryList extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Scroll to view library'),
+                      const Text(
+                        'Scroll to view library',
+                        textAlign: TextAlign.center,
+                      ),
                       Icon(
                         Icons.arrow_downward_rounded,
                         color: NeumorphicTheme.defaultTextColor(context),
