@@ -110,7 +110,7 @@ class LibraryPage extends StatelessWidget {
                               textCapitalization: TextCapitalization.characters,
                               onChanged: (final value) =>
                                   setState(() => word = value.toUpperCase()),
-                              onSubmitted: (final _) {
+                              onEditingComplete: () {
                                 LibraryCubit.of(context).addWord(
                                   word: word,
                                   gameMode: determineGameMode(),
@@ -119,7 +119,6 @@ class LibraryPage extends StatelessWidget {
                                 setState(() => word = '');
                                 textController.text = '';
                               },
-                              onEditingComplete: () {},
                             ),
                           ),
                         ),
