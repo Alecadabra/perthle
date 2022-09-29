@@ -19,7 +19,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
             },
           ),
         ) {
-    // _populateDaily();
+    _populateDaily();
   }
 
   final DailyCubit dailyCubit;
