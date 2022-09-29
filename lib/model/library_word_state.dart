@@ -10,7 +10,7 @@ class LibraryWordState extends Equatable {
   LibraryWordState.fromJson(final Map<String, dynamic> json)
       : this(
           word: json['word'],
-          lastUsed: json['lastUsed'],
+          lastUsed: DateTime.fromMillisecondsSinceEpoch(json['lastUsed']),
           oneOff: json['oneOff'],
         );
 
@@ -21,7 +21,7 @@ class LibraryWordState extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'word': word,
-      'lastUsed': lastUsed,
+      'lastUsed': lastUsed.millisecondsSinceEpoch,
       'oneOff': oneOff,
     };
   }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dartx/dartx.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +19,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
             },
           ),
         ) {
-    _populateDaily();
+    // _populateDaily();
   }
 
   final DailyCubit dailyCubit;
@@ -33,40 +31,61 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
     required final GameModeState gameMode,
     required final bool oneOff,
   }) {
+    // Check the word isn't already in the library
+    if (state.words[gameMode]!.none(
+      (final libraryWord) => libraryWord.word == word,
+    )) {
+      final newWords = Map.of(state.words).map(
+        (final key, final unmodifiableList) {
+          return MapEntry(key, unmodifiableList.toList());
+        },
+      );
+      newWords[gameMode]!.add(
+        LibraryWordState(
+          word: word,
+          // Last used is some low number for never used words
+          lastUsed: DateTime.fromMillisecondsSinceEpoch(0),
+          oneOff: oneOff,
+        ),
+      );
+      emit(state.copyWith(words: newWords));
+    }
+  }
+
+  void deleteWord(final GameModeState gameMode, final String word) {
+    final newGameModeWords = state.words[gameMode]!
+        .filter((final libraryWord) => libraryWord.word != word)
+        .toList();
     final newWords = Map.of(state.words).map(
       (final key, final unmodifiableList) {
         return MapEntry(key, unmodifiableList.toList());
       },
     );
-    newWords[gameMode]!.add(
-      LibraryWordState(
-        word: word,
-        // Last used is some low number for never used words
-        lastUsed: DateTime(2000),
-        oneOff: oneOff,
-      ),
-    );
+    newWords[gameMode] = newGameModeWords.toUnmodifiable();
     emit(state.copyWith(words: newWords));
   }
 
   // Internal functionality
 
   void _populateDaily() async {
-    final now = DateTime.now();
-    final currentGameNum = dailyCubit.state.gameNum;
-    final finalGameNum = await dailyCubit.finalGameNum();
-    final dailysToPopulate = max(0, currentGameNum + 3 - finalGameNum);
-    for (int daysFromNow = 1; daysFromNow <= dailysToPopulate; daysFromNow++) {
-      final isWeekday = now.add(Duration(days: daysFromNow)).isWeekday;
-      final gameNum = currentGameNum + daysFromNow;
-      final newDailyState =
-          isWeekday ? _nextWeekdayDaily(gameNum) : _nextWeekendDaily(gameNum);
+    final nowGameNum = dailyCubit.state.gameNum;
+    final now = DailyCubit.dateTimeFromGameNum(nowGameNum);
+    final lastPopulatedGameNum = await dailyCubit.finalGameNum();
+    final maxGameNum = nowGameNum + 3;
+    for (int currGameNum = lastPopulatedGameNum + 1;
+        currGameNum <= maxGameNum;
+        currGameNum++) {
+      final isWeekday =
+          now.add(Duration(days: nowGameNum - currGameNum)).isWeekday;
+      final newDailyState = isWeekday
+          ? _nextWeekdayDaily(currGameNum)
+          : _nextWeekendDaily(currGameNum);
       await dailyCubit.addDaily(newDailyState);
     }
   }
 
   DailyState _nextWeekdayDaily(final int gameNum) {
-    final perthles = state.words[GameModeState.perthle]!;
+    final perthles = state.words[GameModeState.perthle]!.toList();
     final oneOffs =
         perthles.where((final libraryWord) => libraryWord.oneOff).toList();
     if (oneOffs.isNotEmpty) {
@@ -112,29 +131,31 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
     switch (gameMode) {
       case GameModeState.perthle:
         newState = state.copyWithLists(
-          perthle: state.words[GameModeState.perthle]!..remove(libraryWord),
+          perthle: state.words[GameModeState.perthle]!.toList()
+            ..remove(libraryWord),
         );
         break;
       case GameModeState.perthlonger:
         newState = state.copyWithLists(
-          perthlonger: state.words[GameModeState.perthlonger]!
+          perthlonger: state.words[GameModeState.perthlonger]!.toList()
             ..remove(libraryWord),
         );
         break;
       case GameModeState.special:
         newState = state.copyWithLists(
-          special: state.words[GameModeState.special]!..remove(libraryWord),
+          special: state.words[GameModeState.special]!.toList()
+            ..remove(libraryWord),
         );
         break;
       case GameModeState.perthshorter:
         newState = state.copyWithLists(
-          perthshorter: state.words[GameModeState.perthshorter]!
+          perthshorter: state.words[GameModeState.perthshorter]!.toList()
             ..remove(libraryWord),
         );
         break;
       case GameModeState.martoperthle:
         newState = state.copyWithLists(
-          martoperthle: state.words[GameModeState.martoperthle]!
+          martoperthle: state.words[GameModeState.martoperthle]!.toList()
             ..remove(libraryWord),
         );
         break;

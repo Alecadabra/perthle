@@ -6,7 +6,7 @@ import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/bloc/perthle_user_bloc.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/model/perthle_user_state.dart';
-import 'package:perthle/page/author_page.dart';
+import 'package:perthle/page/library_page.dart';
 import 'package:perthle/page/history_page.dart';
 import 'package:perthle/page/settings_page.dart';
 import 'package:perthle/page/game_page.dart';
@@ -71,7 +71,7 @@ class _PerthleNavigatorState extends State<PerthleNavigator> {
                     const HistoryPage(),
                   const GamePage(),
                   const SettingsPage(),
-                  if (perthleUser.isAuthor) const AuthorPage(),
+                  if (perthleUser.isAuthor) const LibraryPage(),
                 ],
               );
             },
