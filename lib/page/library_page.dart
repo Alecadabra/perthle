@@ -79,7 +79,11 @@ class LibraryPage extends StatelessWidget {
                     Row(
                       children: [
                         const Expanded(child: Text('Game mode')),
-                        Text(determineGameMode().gameModeString),
+                        Text(
+                          word.length < 3
+                              ? ''
+                              : determineGameMode().gameModeString,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -112,7 +116,7 @@ class LibraryPage extends StatelessWidget {
                               onChanged: (final value) =>
                                   setState(() => word = value.toUpperCase()),
                               onSubmitted: (final _) {
-                                if (word.isNotBlank) {
+                                if (word.length >= 3) {
                                   LibraryCubit.of(context).addWord(
                                     word: word,
                                     gameMode: determineGameMode(),
@@ -127,7 +131,7 @@ class LibraryPage extends StatelessWidget {
                         ),
                         const SizedBox(width: 16),
                         NeumorphicButton(
-                          onPressed: word.isBlank
+                          onPressed: word.length < 3
                               ? null
                               : () {
                                   LibraryCubit.of(context).addWord(
