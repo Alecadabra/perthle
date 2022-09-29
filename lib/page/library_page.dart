@@ -107,33 +107,38 @@ class LibraryPage extends StatelessWidget {
                               ),
                               inputFormatters: [_UpperCaseTextFormatter()],
                               textInputAction: TextInputAction.send,
+                              enableSuggestions: false,
                               textCapitalization: TextCapitalization.characters,
                               onChanged: (final value) =>
                                   setState(() => word = value.toUpperCase()),
-                              onEditingComplete: () {
-                                LibraryCubit.of(context).addWord(
-                                  word: word,
-                                  gameMode: determineGameMode(),
-                                  oneOff: oneOff,
-                                );
-                                setState(() => word = '');
-                                textController.text = '';
+                              onSubmitted: (final _) {
+                                if (word.isNotBlank) {
+                                  LibraryCubit.of(context).addWord(
+                                    word: word,
+                                    gameMode: determineGameMode(),
+                                    oneOff: oneOff,
+                                  );
+                                  setState(() => word = '');
+                                  textController.text = '';
+                                }
                               },
                             ),
                           ),
                         ),
                         const SizedBox(width: 16),
                         NeumorphicButton(
+                          onPressed: word.isBlank
+                              ? null
+                              : () {
+                                  LibraryCubit.of(context).addWord(
+                                    word: word,
+                                    gameMode: determineGameMode(),
+                                    oneOff: oneOff,
+                                  );
+                                  setState(() => word = '');
+                                  textController.text = '';
+                                },
                           child: const Text('Submit'),
-                          onPressed: () {
-                            LibraryCubit.of(context).addWord(
-                              word: word,
-                              gameMode: determineGameMode(),
-                              oneOff: oneOff,
-                            );
-                            setState(() => word = '');
-                            textController.text = '';
-                          },
                         )
                       ],
                     ),
