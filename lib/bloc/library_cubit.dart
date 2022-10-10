@@ -76,7 +76,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
         currGameNum <= maxGameNum;
         currGameNum++) {
       final isWeekday =
-          now.add(Duration(days: nowGameNum - currGameNum + 1)).isWeekday;
+          now.add(Duration(days: nowGameNum - currGameNum - 1)).isWeekday;
       final newDailyState = isWeekday
           ? _nextWeekdayDaily(currGameNum)
           : _nextWeekendDaily(currGameNum);
