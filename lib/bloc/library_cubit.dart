@@ -90,7 +90,8 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
         perthles.where((final libraryWord) => libraryWord.oneOff).toList();
     if (oneOffs.isNotEmpty) {
       final chosenLibraryWord = oneOffs.removeLast();
-      emit(state.copyWithLists(perthle: oneOffs));
+      final newPerthles = perthles.exceptElement(chosenLibraryWord).toList();
+      emit(state.copyWithLists(perthle: newPerthles));
       return DailyState(
         gameNum: gameNum,
         word: chosenLibraryWord.word,
