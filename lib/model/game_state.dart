@@ -80,7 +80,7 @@ class GameState extends Equatable {
 
   // Hard Mode Getters
 
-  late final bool canToggleHardMode = hardMode || currRow == 0;
+  late final bool canToggleHardMode = hardMode || currRow <= 1;
 
   late final bool satisfiesHardMode = _satisfiesHardMode;
   bool get _satisfiesHardMode {
