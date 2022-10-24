@@ -128,7 +128,7 @@ class SettingsPage extends StatelessWidget {
                       name: 'Hard mode',
                       description: game.canToggleHardMode
                           ? 'Revealed hints must be used in guesses'
-                          : 'Cannot enable when game has already started',
+                          : 'Can only enable at start of game',
                       child: NeumorphicSwitch(
                         style: NeumorphicSwitchStyle(
                           thumbDepth: game.canToggleHardMode
