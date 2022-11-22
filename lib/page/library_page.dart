@@ -113,8 +113,9 @@ class LibraryPage extends StatelessWidget {
                               textInputAction: TextInputAction.send,
                               enableSuggestions: false,
                               textCapitalization: TextCapitalization.characters,
-                              onChanged: (final value) =>
-                                  setState(() => word = value.toUpperCase()),
+                              onChanged: (final value) => setState(
+                                () => word = value.toUpperCase().trim(),
+                              ),
                               onSubmitted: (final _) {
                                 if (word.length >= 3) {
                                   LibraryCubit.of(context).addWord(
@@ -172,7 +173,7 @@ class _LibraryList extends StatelessWidget {
               alignment: Alignment.center,
               padding: const EdgeInsets.all(100),
               width: double.infinity,
-              height: 500,
+              height: 400,
               child: Neumorphic(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
