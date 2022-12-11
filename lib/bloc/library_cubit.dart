@@ -94,7 +94,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
       emit(state.copyWithLists(perthle: newPerthles));
       return DailyState(
         gameNum: gameNum,
-        word: chosenLibraryWord.word,
+        word: chosenLibraryWord.word.trim(),
         gameMode: GameModeState.perthle,
       );
     } else {
@@ -104,13 +104,14 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
       perthles.remove(usedLongestAgo);
       perthles.add(
         usedLongestAgo.copyWith(
+          word: usedLongestAgo.word.trim(),
           lastUsed: DailyCubit.dateTimeFromGameNum(gameNum),
         ),
       );
       emit(state.copyWithLists(perthle: perthles));
       return DailyState(
         gameNum: gameNum,
-        word: usedLongestAgo.word,
+        word: usedLongestAgo.word.trim(),
         gameMode: GameModeState.perthle,
       );
     }
