@@ -71,7 +71,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
     final nowGameNum = dailyCubit.state.gameNum;
     final now = DailyCubit.dateTimeFromGameNum(nowGameNum);
     final lastPopulatedGameNum = await dailyCubit.finalGameNum();
-    final maxGameNum = nowGameNum + 3;
+    final maxGameNum = nowGameNum + 2;
     for (int currGameNum = lastPopulatedGameNum + 1;
         currGameNum <= maxGameNum;
         currGameNum++) {
