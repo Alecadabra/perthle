@@ -27,3 +27,11 @@ enum GameModeState {
     }
   }
 }
+
+extension GameModeStateSugar on GameModeState {
+  bool get isPerthle => this == GameModeState.perthle;
+  bool get isPerthlonger => this == GameModeState.perthlonger;
+  bool get isSpecial => this == GameModeState.special;
+  bool get isPerthshorter => this == GameModeState.perthshorter;
+  bool get isMartoperthle => this == GameModeState.martoperthle;
+}

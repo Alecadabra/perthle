@@ -77,96 +77,64 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
         currGameNum++) {
       final isWeekday =
           now.add(Duration(days: nowGameNum - currGameNum - 1)).isWeekday;
-      final newDailyState = isWeekday
-          ? _nextWeekdayDaily(currGameNum)
-          : _nextWeekendDaily(currGameNum);
+      final newDailyState = _nextDaily(currGameNum, isWeekday);
       await dailyCubit.addDaily(newDailyState);
     }
   }
 
-  DailyState _nextWeekdayDaily(final int gameNum) {
-    final perthles = state.words[GameModeState.perthle]!.toList();
-    final oneOffs =
-        perthles.where((final libraryWord) => libraryWord.oneOff).toList();
-    if (oneOffs.isNotEmpty) {
-      final chosenLibraryWord = oneOffs.removeLast();
-      final newPerthles = perthles.exceptElement(chosenLibraryWord).toList();
-      emit(state.copyWithLists(perthle: newPerthles));
-      return DailyState(
-        gameNum: gameNum,
-        word: chosenLibraryWord.word.trim(),
-        gameMode: GameModeState.perthle,
-      );
-    } else {
-      final usedLongestAgo = perthles.minBy(
-        (final libraryWord) => libraryWord.lastUsed,
-      )!;
-      perthles.remove(usedLongestAgo);
-      perthles.add(
-        usedLongestAgo.copyWith(
-          word: usedLongestAgo.word.trim(),
+  DailyState _nextDaily(final int gameNum, final bool isWeekday) {
+    final _QualifiedLibraryWordState qualLibWord = state.words.entries
+        // Filter to perthles if weekday, or others otherwise
+        .filter((final gameMode) => gameMode.key.isPerthle == isWeekday)
+        // Associate each library word with it's gameMode
+        .flatMap(
+          (final entry) => entry.value.map(
+            (final libraryWord) => _QualifiedLibraryWordState(
+              gameMode: entry.key,
+              word: libraryWord.word,
+              lastUsed: libraryWord.lastUsed,
+              oneOff: libraryWord.oneOff,
+            ),
+          ),
+        )
+        // One-offs at the start
+        .sortedBy((final qualified) => qualified.oneOff ? 0 : 1)
+        // Then sorted by used longest ago
+        .thenBy((final qualified) => qualified.lastUsed)
+        .first;
+    final List<LibraryWordState> newList =
+        state.words[qualLibWord.gameMode]!.toList()..remove(qualLibWord);
+    if (!qualLibWord.oneOff) {
+      newList.add(
+        qualLibWord.copyWith(
+          word: qualLibWord.word.trim(),
           lastUsed: DailyCubit.dateTimeFromGameNum(gameNum),
         ),
       );
-      emit(state.copyWithLists(perthle: perthles));
-      return DailyState(
-        gameNum: gameNum,
-        word: usedLongestAgo.word.trim(),
-        gameMode: GameModeState.perthle,
-      );
     }
-  }
-
-  DailyState _nextWeekendDaily(final int gameNum) {
-    final chosenWeekendWordPair = state.words.entries
-        .filter((final gameMode) => gameMode.key != GameModeState.perthle)
-        .flatMap(
-          (final entry) => entry.value.map(
-            (final libraryWord) => Pair(entry.key, libraryWord),
-          ),
-        )
-        .shuffled()
-        .first;
-    final gameMode = chosenWeekendWordPair.first;
-    final libraryWord = chosenWeekendWordPair.second;
     final LibraryState newState;
-    switch (gameMode) {
+    switch (qualLibWord.gameMode) {
       case GameModeState.perthle:
-        newState = state.copyWithLists(
-          perthle: state.words[GameModeState.perthle]!.toList()
-            ..remove(libraryWord),
-        );
+        newState = state.copyWithLists(perthle: newList);
         break;
       case GameModeState.perthlonger:
-        newState = state.copyWithLists(
-          perthlonger: state.words[GameModeState.perthlonger]!.toList()
-            ..remove(libraryWord),
-        );
+        newState = state.copyWithLists(perthlonger: newList);
         break;
       case GameModeState.special:
-        newState = state.copyWithLists(
-          special: state.words[GameModeState.special]!.toList()
-            ..remove(libraryWord),
-        );
+        newState = state.copyWithLists(special: newList);
         break;
       case GameModeState.perthshorter:
-        newState = state.copyWithLists(
-          perthshorter: state.words[GameModeState.perthshorter]!.toList()
-            ..remove(libraryWord),
-        );
+        newState = state.copyWithLists(perthshorter: newList);
         break;
       case GameModeState.martoperthle:
-        newState = state.copyWithLists(
-          martoperthle: state.words[GameModeState.martoperthle]!.toList()
-            ..remove(libraryWord),
-        );
+        newState = state.copyWithLists(martoperthle: newList);
         break;
     }
     emit(newState);
     return DailyState(
       gameNum: gameNum,
-      word: libraryWord.word,
-      gameMode: gameMode,
+      word: qualLibWord.word,
+      gameMode: qualLibWord.gameMode,
     );
   }
 
@@ -195,4 +163,16 @@ extension DateTimeWeekdays on DateTime {
   bool get isWeekday {
     return weekday != DateTime.saturday && weekday != DateTime.sunday;
   }
+}
+
+// Associates a library word with a game mode
+class _QualifiedLibraryWordState extends LibraryWordState {
+  const _QualifiedLibraryWordState({
+    required this.gameMode,
+    required final super.lastUsed,
+    required final super.oneOff,
+    required final super.word,
+  });
+
+  final GameModeState gameMode;
 }
