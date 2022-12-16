@@ -75,8 +75,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
     for (int currGameNum = lastPopulatedGameNum + 1;
         currGameNum <= maxGameNum;
         currGameNum++) {
-      final isWeekday =
-          now.add(Duration(days: nowGameNum - currGameNum - 1)).isWeekday;
+      final isWeekday = DailyCubit.dateTimeFromGameNum(currGameNum).isWeekday;
       final newDailyState = _nextDaily(currGameNum, isWeekday);
       await dailyCubit.addDaily(newDailyState);
     }
@@ -102,8 +101,9 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
         // Then sorted by used longest ago
         .thenBy((final qualified) => qualified.lastUsed)
         .first;
-    final List<LibraryWordState> newList =
-        state.words[qualLibWord.gameMode]!.toList()..remove(qualLibWord);
+    final List<LibraryWordState> newList = state.words[qualLibWord.gameMode]!
+        .toList()
+      ..removeWhere(((final libWord) => libWord.word == qualLibWord.word));
     if (!qualLibWord.oneOff) {
       newList.add(
         qualLibWord.copyWith(
