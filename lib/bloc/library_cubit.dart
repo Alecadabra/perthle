@@ -69,7 +69,6 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
 
   void _populateDaily() async {
     final nowGameNum = dailyCubit.state.gameNum;
-    final now = DailyCubit.dateTimeFromGameNum(nowGameNum);
     final lastPopulatedGameNum = await dailyCubit.finalGameNum();
     final maxGameNum = nowGameNum + 3;
     for (int currGameNum = lastPopulatedGameNum + 1;
