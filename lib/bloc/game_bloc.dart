@@ -273,7 +273,9 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
               : null;
 
           if (predicate(i, characterString)) {
-            newMatches[state.currRow][i] = match;
+            if (!newMatches[state.currRow][i].isRevealed) {
+              newMatches[state.currRow][i] = match;
+            }
             if (letter != null &&
                 newKeys[letter]!.precedence < match.precedence) {
               // Only update keyboard letters of higher precedence
@@ -287,11 +289,16 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
         }
       }
 
+      bool isInMarto(final int i) =>
+          state.word != 'MARTO' &&
+          state.word.startsWith('MARTO') &&
+          i < 'MARTO'.length;
+
       // Revealed pass (Flat)
       revealPass(
         match: TileMatchState.revealed,
         predicate: (final i, final letterString) =>
-            !LetterState.isValid(letterString),
+            !LetterState.isValid(letterString) || isInMarto(i),
       );
 
       // Match pass (Green)

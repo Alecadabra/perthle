@@ -113,12 +113,15 @@ class BoardState extends Equatable {
   static BoardState fromWord(final String word) {
     final characters = word.characterStates.toList();
     final numCharacters = characters.length;
+    final isMartoperthle = word.startsWith('MARTO') && word != 'MARTO';
     final numLetters = characters
-        .where(
-          (final character) => LetterState.isValid(character.characterString),
-        )
-        .toList()
-        .length;
+            .where(
+              (final character) =>
+                  LetterState.isValid(character.characterString),
+            )
+            .toList()
+            .length -
+        (isMartoperthle ? 'MARTO'.length : 0);
 
     // Init empty everything
     final height = numLetters + 1;
@@ -128,10 +131,13 @@ class BoardState extends Equatable {
     List<List<TileMatchState>> matches =
         List.filled(height, List.filled(width, TileMatchState.blank));
 
+    bool isInMarto(final int j) => isMartoperthle && j < 'MARTO'.length;
+
     // Reveal non-letters if there are any
     if (numLetters != numCharacters) {
       for (int j = 0; j < width; j++) {
-        if (!LetterState.isValid(characters[j].characterString)) {
+        if (!LetterState.isValid(characters[j].characterString) ||
+            isInMarto(j)) {
           for (int i = 0; i < height; i++) {
             letters[i][j] = characters[j];
             matches[i][j] = TileMatchState.revealed;

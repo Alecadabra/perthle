@@ -41,10 +41,17 @@ class GameState extends Equatable {
 
   // Immutable state
 
+  static bool _martoCheck(final String word, final int currCol) {
+    return word != 'MARTO' &&
+        word.startsWith('MARTO') &&
+        currCol < 'MARTO'.length;
+  }
+
   static int _staticFirstCol(final String word, {final int currCol = 0}) {
     if (currCol == word.length) {
       return currCol;
-    } else if (LetterState.isValid(word.characters.toList()[currCol])) {
+    } else if (LetterState.isValid(word.characters.toList()[currCol]) &&
+        !_martoCheck(word, currCol)) {
       return currCol;
     } else {
       return _staticFirstCol(word, currCol: currCol + 1);
