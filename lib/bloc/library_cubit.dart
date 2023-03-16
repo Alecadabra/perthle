@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dartx/dartx.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +9,8 @@ import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/model/library_state.dart';
 import 'package:perthle/model/library_word_state.dart';
 import 'package:perthle/repository/persistent.dart';
+
+import 'package:flutter/services.dart' show rootBundle;
 
 class LibraryCubit extends PersistentCubit<LibraryState> {
   LibraryCubit({
@@ -68,6 +72,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
   // Internal functionality
 
   void _populateDaily() async {
+    await _populateDictionary();
     final nowGameNum = dailyCubit.state.gameNum;
     final lastPopulatedGameNum = await dailyCubit.finalGameNum();
     final maxGameNum = nowGameNum + 3;
@@ -135,6 +140,38 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
       word: qualLibWord.word,
       gameMode: qualLibWord.gameMode,
     );
+  }
+
+  // TODO: Remove
+  Future<void> _populateDictionary() async {
+    if (DateTime.now().month == DateTime.april) {
+      final dayOfApril = DateTime.now().day - 0;
+      final startIdx = dayOfApril * 6738;
+      final endIdx = min(startIdx + 6738, 202135);
+      final words = (await rootBundle.loadString('assets/dictionary/words.txt'))
+          .split('\n')
+          .getRange(startIdx, endIdx)
+          .toList();
+
+      final firestore = dailyCubit.dailyRepository.firebaseFirestore;
+      final collection = firestore.collection('dictionary');
+
+      if ((await collection.doc(words.first).get()).exists) {
+        return;
+      }
+
+      final Map<String, dynamic> empty = {};
+
+      for (int i = 0; i < words.length; i += 500) {
+        final batch = firestore.batch();
+
+        for (final word in words.getRange(i, min(words.length, i + 500))) {
+          final doc = collection.doc(word.toUpperCase());
+          batch.set(doc, empty);
+        }
+        await batch.commit();
+      }
+    }
   }
 
   // Persistent implementation

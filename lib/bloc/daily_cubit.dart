@@ -12,16 +12,17 @@ class DailyCubit extends Cubit<DailyState> {
   DailyCubit({
     required final DailyState todaysState,
     required final DailyStorageRepository dailyRepository,
-  })  : _dailyRepository = dailyRepository,
+  })  : dailyRepository = dailyRepository,
         super(todaysState) {
     _emitTomorrow();
   }
 
   // State
 
-  final DailyStorageRepository _dailyRepository;
+  // TODO: Make private
+  final DailyStorageRepository dailyRepository;
   CollectionReference<Map<String, dynamic>> get _collection {
-    return _dailyRepository.firebaseFirestore.collection('daily');
+    return dailyRepository.firebaseFirestore.collection('daily');
   }
 
   Future<void> _emitTomorrow() async {
@@ -56,16 +57,16 @@ class DailyCubit extends Cubit<DailyState> {
 
   Future<void> addDaily(final DailyState dailyState) async {
     final key = '${dailyState.gameNum}';
-    if (await _dailyRepository.load(key) != null) {
+    if (await dailyRepository.load(key) != null) {
       throw StateError('DailyState $key already present in repository');
     }
-    await _dailyRepository.save(key, dailyState.toJson());
+    await dailyRepository.save(key, dailyState.toJson());
   }
 
   // State factory
 
   Future<DailyState> dailyFromGameNum(final int gameNum) async {
-    return DailyState.fromJson((await _dailyRepository.load('$gameNum'))!);
+    return DailyState.fromJson((await dailyRepository.load('$gameNum'))!);
   }
 
   Future<DailyState> dailyFromDateTime(final DateTime dateTime) async {
