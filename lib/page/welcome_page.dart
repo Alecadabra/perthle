@@ -158,6 +158,7 @@ class _BoardRow extends StatelessWidget {
               ),
               child: BoardTile(
                 match: matches[i],
+                scale: 5,
                 letter: LetterState(word.toUpperCase()[i]),
                 lightSource: LightSource(
                   -(i - focus) / matches.length,

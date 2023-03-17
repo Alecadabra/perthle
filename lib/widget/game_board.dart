@@ -46,6 +46,7 @@ class GameBoard extends StatelessWidget {
                                       child: BoardTile(
                                         match: inGame.board.matches[i][j],
                                         letter: inGame.board.letters[i][j],
+                                        scale: inGame.board.width,
                                         lightSource: LightSource(
                                           inGame.currCol ==
                                                       inGame.board.width ||

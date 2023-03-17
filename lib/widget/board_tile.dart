@@ -12,12 +12,14 @@ class BoardTile extends StatelessWidget {
     this.letter,
     this.lightSource = LightSource.topLeft,
     this.current = false,
+    required this.scale,
   }) : super(key: key);
 
   final TileMatchState match;
   final CharacterState? letter;
   final LightSource lightSource;
   final bool current;
+  final int scale;
 
   static const double _depth = 6;
   static const double _emboss = -16;
@@ -80,6 +82,7 @@ class BoardTile extends StatelessWidget {
     return _Tile(
       letter: letter,
       lightSource: lightSource,
+      scale: scale,
     );
     return LayoutBuilder(
       builder: (final context, final constraints) {
@@ -125,10 +128,12 @@ class _Tile extends StatelessWidget {
     final Key? key,
     required this.lightSource,
     required this.letter,
+    required this.scale,
   }) : super(key: key);
 
   final LightSource lightSource;
   final CharacterState? letter;
+  final int scale;
 
   @override
   Widget build(final BuildContext context) {
@@ -137,9 +142,9 @@ class _Tile extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         alignment: Alignment.center,
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(1),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(1 / scale * 72),
           color: NeumorphicTheme.baseColor(context),
           boxShadow: [
             BoxShadow(
@@ -147,8 +152,8 @@ class _Tile extends StatelessWidget {
               color: NeumorphicTheme.of(context)!
                   .current!
                   .shadowLightColor
-                  .withAlpha(0x77),
-              blurRadius: 6,
+                  .withAlpha(0x50),
+              blurRadius: 7,
               spreadRadius: 1,
             ),
             BoxShadow(
@@ -156,15 +161,25 @@ class _Tile extends StatelessWidget {
               color: NeumorphicTheme.of(context)!
                   .current!
                   .shadowDarkColor
-                  .withAlpha(0x20),
-              blurRadius: 6,
+                  .withAlpha(0x18),
+              blurRadius: 7,
               spreadRadius: 1,
             ),
           ],
         ),
-        child: Text(
-          letter == null ? ' ' : letter.toString(),
-          style: Theme.of(context).textTheme.labelLarge,
+        child: FittedBox(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: Text(
+              letter?.toString() ?? ' ',
+              key: ValueKey(letter),
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .displaySmall!
+                  .copyWith(fontSize: 38, fontWeight: FontWeight.w500),
+            ),
+          ),
         ),
       ),
     );
