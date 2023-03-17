@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
-import 'package:perthle/bloc/dictionary_cubit.dart';
 import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/bloc/library_cubit.dart';
@@ -16,6 +15,7 @@ import 'package:perthle/repository/local_storage_repository.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/repository/mutable_storage_repository.dart';
+import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
 import 'package:provider/provider.dart';
 
 class PerthleProvider extends StatelessWidget {
@@ -46,6 +46,11 @@ class PerthleProvider extends StatelessWidget {
             firebaseFirestore: FirebaseFirestore.instanceFor(app: firebaseApp),
           ),
           lazy: false,
+        ),
+        RepositoryProvider(
+          create: (final context) => RemoteDictionaryStorageRepository(
+            firebaseFirestore: FirebaseFirestore.instanceFor(app: firebaseApp),
+          ),
         ),
         // Blocs/Cubits
         BlocProvider(
@@ -114,12 +119,6 @@ class _PerthleMultiProvider extends StatelessWidget {
           lazy: false,
         ),
         BlocProvider(
-          create: (final context) => DictionaryCubit(
-            dailyCubit: DailyCubit.of(context),
-          ),
-          lazy: false,
-        ),
-        BlocProvider(
           create: (final context) => SettingsCubit(
             storage: MutableStorageRepository.of(context),
           ),
@@ -133,7 +132,7 @@ class _PerthleMultiProvider extends StatelessWidget {
           create: (final context) => GameBloc(
             storage: MutableStorageRepository.of(context),
             dailyCubit: DailyCubit.of(context),
-            dictionaryCubit: DictionaryCubit.of(context),
+            dictStorageRepo: RemoteDictionaryStorageRepository.of(context),
             messengerCubit: MessengerCubit.of(context),
             settingsCubit: SettingsCubit.of(context),
           ),

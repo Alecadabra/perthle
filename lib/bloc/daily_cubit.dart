@@ -11,9 +11,8 @@ class DailyCubit extends Cubit<DailyState> {
 
   DailyCubit({
     required final DailyState todaysState,
-    required final DailyStorageRepository dailyRepository,
-  })  : dailyRepository = dailyRepository,
-        super(todaysState) {
+    required this.dailyRepository,
+  }) : super(todaysState) {
     _emitTomorrow();
   }
 

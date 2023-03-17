@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
-import 'package:perthle/bloc/dictionary_cubit.dart';
 import 'package:perthle/event/game_event.dart';
 import 'package:perthle/model/character_state.dart';
 import 'package:perthle/repository/persistent.dart';
@@ -12,6 +11,7 @@ import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
 import 'package:perthle/model/game_completion_state.dart';
+import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
 
 typedef GameEmitter = Emitter<GameState>;
 
@@ -22,10 +22,10 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   GameBloc({
     required final MutableStorageRepository storage,
     required final DailyCubit dailyCubit,
-    required final DictionaryCubit dictionaryCubit,
+    required final RemoteDictionaryStorageRepository dictStorageRepo,
     required final MessengerCubit messengerCubit,
     required final SettingsCubit settingsCubit,
-  })  : _dictionaryCubit = dictionaryCubit,
+  })  : _dictStorageRepo = dictStorageRepo,
         _messengerCubit = messengerCubit,
         super(
           storage: storage,
@@ -38,10 +38,6 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     // New games at midnight
     dailyCubit.stream.listen(
       (final daily) => add(GameNewDailyEvent(daily)),
-    );
-    // Respond to the dictionary loading
-    dictionaryCubit.stream.listen(
-      (final dictionary) => add(GameDictionaryLoadedEvent(dictionary != null)),
     );
     // Hard mode setting
     settingsCubit.stream.listen(
@@ -58,12 +54,11 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     on<GameEnterEvent>(_enter);
     on<GameCompletionEvent>(_completion);
     on<GameHardModeToggleEvent>(_hardModeToggle);
-    on<GameDictionaryLoadedEvent>(_dictionaryLoaded);
   }
 
   // State
 
-  final DictionaryCubit _dictionaryCubit;
+  final RemoteDictionaryStorageRepository _dictStorageRepo;
 
   final MessengerCubit _messengerCubit;
 
@@ -86,8 +81,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
       final word = state.board.letters[state.currRow].join();
       add(
         GameEnterEvent(
-          validWord:
-              word == state.word || await _dictionaryCubit.isValidWord(word),
+          validWord: word == state.word || await state.validWord!,
           satisfiesHardMode: state.satisfiesHardMode,
         ),
       );
@@ -144,22 +138,44 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
       }
     }
 
+    final nextState = state.copyWith(
+      currCol: nextCol(state.currCol + 1),
+      board: state.board.copyWith(
+        // The old letters board with the current spot set to the typed
+        // letter
+        letters: [
+          for (int i = 0; i < state.board.height; i++)
+            [
+              for (int j = 0; j < state.board.width; j++)
+                i == state.currRow && j == state.currCol
+                    ? event.letterData
+                    : state.board.letters[i][j],
+            ],
+        ],
+      ),
+      validWord: null,
+    );
+
+    Future<bool> isValidWord() async {
+      final word = nextState.board.letters[nextState.currRow].join();
+      final subWords = {
+        word,
+        ...word.split(' '),
+        if (word.startsWith(RegExp(r'MARTO.+'))) word.substring('MARTO'.length),
+      };
+
+      for (final subWord in subWords) {
+        final value = await _dictStorageRepo.load(subWord);
+        if (value != null) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     emit(
-      state.copyWith(
-        currCol: nextCol(state.currCol + 1),
-        board: state.board.copyWith(
-          // The old letters board with the current spot set to the typed
-          // letter
-          letters: [
-            for (int i = 0; i < state.board.height; i++)
-              [
-                for (int j = 0; j < state.board.width; j++)
-                  i == state.currRow && j == state.currCol
-                      ? event.letterData
-                      : state.board.letters[i][j],
-              ],
-          ],
-        ),
+      nextState.copyWith(
+        validWord: nextState.canEnter ? isValidWord() : null,
       ),
     );
   }
@@ -350,12 +366,5 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
     final GameEmitter emit,
   ) {
     emit(state.copyWith(hardMode: event.hardMode));
-  }
-
-  void _dictionaryLoaded(
-    final GameDictionaryLoadedEvent event,
-    final GameEmitter emit,
-  ) {
-    emit(state.copyWith(dictionaryLoaded: event.dictionaryLoaded));
   }
 }
