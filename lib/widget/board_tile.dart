@@ -77,7 +77,7 @@ class BoardTile extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return Neumorphic(
+    return Material(
       child: Text(letter.toString()),
     );
     return LayoutBuilder(
