@@ -11,9 +11,11 @@ import 'package:perthle/widget/perthle_provider.dart';
 
 const String _env = String.fromEnvironment('ENV', defaultValue: 'stage');
 const bool _isProd = _env == 'prod';
+const String _firebaseProd = 'perthgang-wordle';
+const String _firebaseStage = 'perthle-stage';
 
 final FirebaseApp _firebaseApp = Firebase.app(
-  _isProd ? 'perthgang-wordle' : 'perthle-stage',
+  _isProd ? _firebaseProd : _firebaseStage,
 );
 
 Future<void> main() async {
@@ -27,12 +29,12 @@ Future<void> _initFirebase() async {
   debugPrint('Connecting to $_env');
   if (_isProd) {
     await Firebase.initializeApp(
-      name: 'perthgang-wordle',
+      name: _firebaseProd,
       options: const FirebaseOptions(
         apiKey: 'AIzaSyDEgadgd-37be4MgIMokV_XpDgr9iskUtQ',
         appId: '1:951244738282:web:e8d46fe0729b0fac89d193',
         messagingSenderId: '951244738282',
-        projectId: 'perthgang-wordle',
+        projectId: _firebaseProd,
         authDomain: 'perthgang-wordle.firebaseapp.com',
         storageBucket: 'perthgang-wordle.appspot.com',
       ),
@@ -45,11 +47,11 @@ Future<void> _initFirebase() async {
     );
   } else {
     await Firebase.initializeApp(
-      name: 'perthle-stage',
+      name: _firebaseStage,
       options: const FirebaseOptions(
         apiKey: 'AIzaSyAIwu6tIc5h5Z1evzoS81izUPlFVK-3BK0',
         authDomain: 'perthle-stage.firebaseapp.com',
-        projectId: 'perthle-stage',
+        projectId: _firebaseStage,
         storageBucket: 'perthle-stage.appspot.com',
         messagingSenderId: '1028603132539',
         appId: '1:1028603132539:web:e171352221c5f0b6a5c0de',
