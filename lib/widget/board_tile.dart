@@ -77,6 +77,9 @@ class BoardTile extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    return Neumorphic(
+      child: Text(letter.toString()),
+    );
     return LayoutBuilder(
       builder: (final context, final constraints) {
         return SizedBox(
