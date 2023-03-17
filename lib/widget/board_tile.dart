@@ -77,8 +77,9 @@ class BoardTile extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return Material(
-      child: Text(letter.toString()),
+    return _Tile(
+      letter: letter,
+      lightSource: lightSource,
     );
     return LayoutBuilder(
       builder: (final context, final constraints) {
@@ -115,6 +116,57 @@ class BoardTile extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _Tile extends StatelessWidget {
+  const _Tile({
+    final Key? key,
+    required this.lightSource,
+    required this.letter,
+  }) : super(key: key);
+
+  final LightSource lightSource;
+  final CharacterState? letter;
+
+  @override
+  Widget build(final BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: NeumorphicTheme.baseColor(context),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(lightSource.dx * 6, lightSource.dy * 6),
+              color: NeumorphicTheme.of(context)!
+                  .current!
+                  .shadowLightColor
+                  .withAlpha(0x77),
+              blurRadius: 6,
+              spreadRadius: 1,
+            ),
+            BoxShadow(
+              offset: Offset(-lightSource.dx * 6, -lightSource.dy * 6),
+              color: NeumorphicTheme.of(context)!
+                  .current!
+                  .shadowDarkColor
+                  .withAlpha(0x20),
+              blurRadius: 6,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: Text(
+          letter == null ? ' ' : letter.toString(),
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+      ),
     );
   }
 }
