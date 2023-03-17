@@ -150,6 +150,7 @@ class _PerthleMultiProvider extends StatelessWidget {
             create: (final context) => LibraryCubit(
               storage: MutableStorageRepository.of(context),
               dailyCubit: DailyCubit.of(context),
+              dictStorageRepo: RemoteDictionaryStorageRepository.of(context),
             ),
             lazy: false,
           ),
