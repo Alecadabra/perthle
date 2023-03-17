@@ -83,6 +83,7 @@ class BoardTile extends StatelessWidget {
       letter: letter,
       lightSource: lightSource,
       scale: scale,
+      match: match,
     );
     return LayoutBuilder(
       builder: (final context, final constraints) {
@@ -129,11 +130,13 @@ class _Tile extends StatelessWidget {
     required this.lightSource,
     required this.letter,
     required this.scale,
+    required this.match,
   }) : super(key: key);
 
   final LightSource lightSource;
   final CharacterState? letter;
   final int scale;
+  final TileMatchState match;
 
   @override
   Widget build(final BuildContext context) {
@@ -144,28 +147,27 @@ class _Tile extends StatelessWidget {
         alignment: Alignment.center,
         padding: const EdgeInsets.all(1),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(1 / scale * 72),
+          borderRadius: BorderRadius.circular(1 / scale * 80),
+          boxShadow: match.isBlank ? _elevatedShadow(context) : null,
           color: NeumorphicTheme.baseColor(context),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(lightSource.dx * 6, lightSource.dy * 6),
-              color: NeumorphicTheme.of(context)!
-                  .current!
-                  .shadowLightColor
-                  .withAlpha(0x50),
-              blurRadius: 7,
-              spreadRadius: 1,
-            ),
-            BoxShadow(
-              offset: Offset(-lightSource.dx * 6, -lightSource.dy * 6),
-              color: NeumorphicTheme.of(context)!
-                  .current!
-                  .shadowDarkColor
-                  .withAlpha(0x18),
-              blurRadius: 7,
-              spreadRadius: 1,
-            ),
-          ],
+          gradient: match.isMatch || match.isMiss || match.isWrong
+              ? RadialGradient(
+                  center: Alignment(lightSource.dx / 2, lightSource.dy / 2),
+                  colors: [
+                    _colorForMatch(match, context),
+                    Color.lerp(
+                      NeumorphicTheme.of(context)!
+                          .current!
+                          .shadowDarkColorEmboss,
+                      _colorForMatch(match, context),
+                      0.9,
+                    )!,
+                  ],
+                  stops: const [0.6, 1],
+                  radius: 0.75,
+                  focal: Alignment.center,
+                )
+              : null,
         ),
         child: FittedBox(
           child: AnimatedSwitcher(
@@ -174,14 +176,74 @@ class _Tile extends StatelessWidget {
               letter?.toString() ?? ' ',
               key: ValueKey(letter),
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .displaySmall!
-                  .copyWith(fontSize: 38, fontWeight: FontWeight.w500),
+              style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                    fontSize: 38,
+                    fontWeight: FontWeight.w500,
+                    color: match.isMatch || match.isMiss || match.isWrong
+                        ? NeumorphicTheme.baseColor(context)
+                        : NeumorphicTheme.defaultTextColor(context),
+                  ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Color _colorForMatch(final TileMatchState match, final BuildContext context) {
+    switch (match) {
+      case TileMatchState.blank:
+      case TileMatchState.revealed:
+        return NeumorphicTheme.baseColor(context);
+      case TileMatchState.wrong:
+        return NeumorphicTheme.disabledColor(context);
+      case TileMatchState.miss:
+        return NeumorphicTheme.variantColor(context);
+      case TileMatchState.match:
+        return NeumorphicTheme.accentColor(context);
+    }
+  }
+
+  // List<BoxShadow> _embossedShadow(final BuildContext context) {
+  //   return [
+  //     // BoxShadow(
+  //     //   offset: Offset(lightSource.dx, lightSource.dy),
+  //     //   color: NeumorphicTheme.of(context)!
+  //     //       .current!
+  //     //       .shadowLightColor
+  //     //       .withAlpha(0x50),
+  //     //   blurRadius: 2,
+  //     //   spreadRadius: 1,
+  //     // ),
+  //     BoxShadow(
+  //       offset: Offset(-lightSource.dx, -lightSource.dy),
+  //       color: NeumorphicTheme.of(context)!.current!.shadowDarkColor,
+  //       blurRadius: 2,
+  //       spreadRadius: 1,
+  //     ),
+  //   ];
+  // }
+
+  List<BoxShadow> _elevatedShadow(final BuildContext context) {
+    return [
+      BoxShadow(
+        offset: Offset(lightSource.dx * 6, lightSource.dy * 6),
+        color: NeumorphicTheme.of(context)!
+            .current!
+            .shadowLightColor
+            .withAlpha(0x50),
+        blurRadius: 7,
+        spreadRadius: 1,
+      ),
+      BoxShadow(
+        offset: Offset(-lightSource.dx * 6, -lightSource.dy * 6),
+        color: NeumorphicTheme.of(context)!
+            .current!
+            .shadowDarkColor
+            .withAlpha(0x18),
+        blurRadius: 7,
+        spreadRadius: 1,
+      ),
+    ];
   }
 }
