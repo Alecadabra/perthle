@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:flutter/services.dart' show rootBundle;
+
 import 'package:dartx/dartx.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,14 +11,15 @@ import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/model/library_state.dart';
 import 'package:perthle/model/library_word_state.dart';
 import 'package:perthle/repository/persistent.dart';
-
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
 
 class LibraryCubit extends PersistentCubit<LibraryState> {
   LibraryCubit({
     required final super.storage,
     required this.dailyCubit,
-  }) : super(
+    required final RemoteDictionaryStorageRepository dictStorageRepo,
+  })  : _dictStorageRepo = dictStorageRepo,
+        super(
           initialState: LibraryState(
             words: {
               for (GameModeState gameMode in GameModeState.values) gameMode: [],
@@ -27,6 +30,8 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
   }
 
   final DailyCubit dailyCubit;
+
+  final RemoteDictionaryStorageRepository _dictStorageRepo;
 
   // Mutation
 
@@ -82,6 +87,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
       final isWeekday = DailyCubit.dateTimeFromGameNum(currGameNum).isWeekday;
       final newDailyState = _nextDaily(currGameNum, isWeekday);
       await dailyCubit.addDaily(newDailyState);
+      await _dictStorageRepo.save(newDailyState.word, {});
     }
   }
 
