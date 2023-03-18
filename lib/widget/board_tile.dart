@@ -28,7 +28,7 @@ class BoardTile extends StatelessWidget {
         alignment: Alignment.center,
         padding: const EdgeInsets.all(1),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(1 / scale * 80),
+          borderRadius: BorderRadius.circular(1 / scale * 90),
           boxShadow: match.isBlank ? _elevatedShadow(current, context) : null,
           color: NeumorphicTheme.baseColor(context),
           gradient: match.isMatch || match.isMiss || match.isWrong
@@ -67,8 +67,8 @@ class BoardTile extends StatelessWidget {
           NeumorphicTheme.isUsingDark(context) ? 0.6 : 0.9,
         )!,
       ],
-      stops: const [0.55, 1],
-      radius: 0.8,
+      stops: const [0.5, 1],
+      radius: 0.85,
       focal: Alignment.center,
     );
   }
