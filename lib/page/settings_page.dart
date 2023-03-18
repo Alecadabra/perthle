@@ -6,6 +6,7 @@ import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/settings_state.dart';
+import 'package:perthle/widget/emoji_text.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -93,10 +94,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                     minDistance: selected ? -depth / 3 : depth / 3,
                     pressed: !selected,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      child: Text(emoji),
-                    ),
+                    child: EmojiText(emoji),
                     onPressed: () {
                       // _Actually_ using XOR for boolean logic whaaaaaaaat??!!
                       SettingsCubit.of(context).edit(
