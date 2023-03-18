@@ -144,6 +144,9 @@ class SettingsPage extends StatelessWidget {
                       ),
                     );
                   },
+                  buildWhen: (final a, final b) {
+                    return a.hardMode != b.hardMode;
+                  },
                 );
               },
               buildWhen: (final a, final b) {
