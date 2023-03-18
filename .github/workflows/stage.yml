@@ -46,11 +46,11 @@ jobs:
           path: build/web
       - name: Extract branch name
         shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
         id: extract_branch
       - name: Deploy to Firebase
         id: deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HOSTING }}
-          channelId: ${{ steps.extract_branch.outputs.branch }}
+          channelId: ${{ env.branch_name }}
