@@ -1,9 +1,6 @@
 {
-  "features": {
-      "ghcr.io/jarrodcolburn/features/flutter-sdk:0": {
-        "release": "3.7.7"
-      }
-  },
+  "image": "cirrusci/flutter:beta",
+  "forwardPorts": [3000],
 	"customizations": {
 		"vscode": {
 			"extensions": [
