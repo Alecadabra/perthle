@@ -1,0 +1,16 @@
+{
+  "features": {
+      "ghcr.io/jarrodcolburn/features/flutter-sdk:0": {
+        "release": "3.7.7"
+      }
+  },
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"Dart-Code.flutter",
+        "Dart-Code.dart-code",
+        "redhat.vscode-yaml"
+			]
+		}
+	}
+}
