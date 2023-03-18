@@ -24,12 +24,14 @@ class WelcomePage extends StatelessWidget {
           children: [
             const _Heading('Welcome to Perthle'),
             const Text(
-              'It\'s like Wordle, but much more graphically intensive, '
-              'and the answers are all words relevant to Perthgang.',
+              'It\'s like Wordle, but the answers are all words relevant to '
+              'Perthgang.',
             ),
             const _Heading('How to Play'),
-            const Text('Guess the word before you run out of tries - and you '
-                'can\'t just make up words.'),
+            const Text(
+              'Guess the word before you run out of tries - and you '
+              'can\'t just make up words.',
+            ),
             const SizedBox(height: 16),
             _BoardRow(
               word: 'Alec',

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/model/character_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
@@ -21,123 +19,6 @@ class BoardTile extends StatelessWidget {
   final bool current;
   final int scale;
 
-  static const double _depth = 6;
-  static const double _emboss = -16;
-  static const double _intensity = 0.65;
-
-  NeumorphicBoxShape _boxShape(final BoxConstraints constraints) {
-    double length = min(constraints.maxHeight, constraints.maxWidth);
-    return NeumorphicBoxShape.roundRect(BorderRadius.circular(length / 2.8));
-  }
-
-  NeumorphicStyle _style(
-    final BuildContext context,
-    final BoxConstraints constraints,
-  ) {
-    switch (match) {
-      case TileMatchState.blank:
-        return NeumorphicStyle(
-          boxShape: _boxShape(constraints),
-          intensity: _intensity,
-          depth: current ? _depth * 3 : _depth,
-          lightSource: lightSource,
-          shape: NeumorphicShape.concave,
-          surfaceIntensity:
-              NeumorphicTheme.isUsingDark(context) ? 0.008 : 0.018,
-        );
-      case TileMatchState.wrong:
-        return NeumorphicStyle(
-          boxShape: _boxShape(constraints),
-          color: NeumorphicTheme.disabledColor(context),
-          intensity: _intensity,
-          depth: _emboss,
-          shape: NeumorphicShape.concave,
-          lightSource: lightSource,
-        );
-      case TileMatchState.miss:
-        return NeumorphicStyle(
-          boxShape: _boxShape(constraints),
-          color: NeumorphicTheme.variantColor(context),
-          intensity: _intensity,
-          depth: _emboss,
-          shape: NeumorphicShape.concave,
-          lightSource: lightSource,
-        );
-      case TileMatchState.match:
-        return NeumorphicStyle(
-          boxShape: _boxShape(constraints),
-          color: NeumorphicTheme.accentColor(context),
-          intensity: _intensity,
-          depth: _emboss,
-          shape: NeumorphicShape.concave,
-          lightSource: lightSource,
-        );
-      case TileMatchState.revealed:
-        return const NeumorphicStyle(depth: 0);
-    }
-  }
-
-  @override
-  Widget build(final BuildContext context) {
-    return _Tile(
-      letter: letter,
-      lightSource: lightSource,
-      scale: scale,
-      match: match,
-    );
-    return LayoutBuilder(
-      builder: (final context, final constraints) {
-        return SizedBox(
-          // Force 1:1 aspect ratio
-          width: constraints.biggest.shortestSide,
-          height: constraints.biggest.shortestSide,
-          child: Neumorphic(
-            duration: const Duration(milliseconds: 200),
-            style: _style(context, constraints),
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              child: letter == null
-                  ? null
-                  : FittedBox(
-                      child: Text(
-                        letter.toString(),
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall
-                            ?.copyWith(
-                              fontSize: 38,
-                              fontWeight: FontWeight.w500,
-                              color: match.isMatch ||
-                                      match.isMiss ||
-                                      match.isWrong
-                                  ? NeumorphicTheme.baseColor(context)
-                                  : NeumorphicTheme.defaultTextColor(context),
-                            ),
-                      ),
-                    ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _Tile extends StatelessWidget {
-  const _Tile({
-    final Key? key,
-    required this.lightSource,
-    required this.letter,
-    required this.scale,
-    required this.match,
-  }) : super(key: key);
-
-  final LightSource lightSource;
-  final CharacterState? letter;
-  final int scale;
-  final TileMatchState match;
-
   @override
   Widget build(final BuildContext context) {
     return AspectRatio(
@@ -148,25 +29,10 @@ class _Tile extends StatelessWidget {
         padding: const EdgeInsets.all(1),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(1 / scale * 80),
-          boxShadow: match.isBlank ? _elevatedShadow(context) : null,
+          boxShadow: match.isBlank ? _elevatedShadow(current, context) : null,
           color: NeumorphicTheme.baseColor(context),
           gradient: match.isMatch || match.isMiss || match.isWrong
-              ? RadialGradient(
-                  center: Alignment(lightSource.dx / 2, lightSource.dy / 2),
-                  colors: [
-                    _colorForMatch(match, context),
-                    Color.lerp(
-                      NeumorphicTheme.of(context)!
-                          .current!
-                          .shadowDarkColorEmboss,
-                      _colorForMatch(match, context),
-                      0.9,
-                    )!,
-                  ],
-                  stops: const [0.6, 1],
-                  radius: 0.75,
-                  focal: Alignment.center,
-                )
+              ? _embossGradient(context)
               : null,
         ),
         child: FittedBox(
@@ -190,6 +56,23 @@ class _Tile extends StatelessWidget {
     );
   }
 
+  RadialGradient _embossGradient(final BuildContext context) {
+    return RadialGradient(
+      center: Alignment(-lightSource.dx / 2, -lightSource.dy / 2),
+      colors: [
+        _colorForMatch(match, context),
+        Color.lerp(
+          const Color(0xff000000),
+          _colorForMatch(match, context),
+          NeumorphicTheme.isUsingDark(context) ? 0.6 : 0.9,
+        )!,
+      ],
+      stops: const [0.55, 1],
+      radius: 0.8,
+      focal: Alignment.center,
+    );
+  }
+
   Color _colorForMatch(final TileMatchState match, final BuildContext context) {
     switch (match) {
       case TileMatchState.blank:
@@ -204,45 +87,26 @@ class _Tile extends StatelessWidget {
     }
   }
 
-  // List<BoxShadow> _embossedShadow(final BuildContext context) {
-  //   return [
-  //     // BoxShadow(
-  //     //   offset: Offset(lightSource.dx, lightSource.dy),
-  //     //   color: NeumorphicTheme.of(context)!
-  //     //       .current!
-  //     //       .shadowLightColor
-  //     //       .withAlpha(0x50),
-  //     //   blurRadius: 2,
-  //     //   spreadRadius: 1,
-  //     // ),
-  //     BoxShadow(
-  //       offset: Offset(-lightSource.dx, -lightSource.dy),
-  //       color: NeumorphicTheme.of(context)!.current!.shadowDarkColor,
-  //       blurRadius: 2,
-  //       spreadRadius: 1,
-  //     ),
-  //   ];
-  // }
-
-  List<BoxShadow> _elevatedShadow(final BuildContext context) {
+  List<BoxShadow> _elevatedShadow(
+    final bool current,
+    final BuildContext context,
+  ) {
     return [
       BoxShadow(
         offset: Offset(lightSource.dx * 6, lightSource.dy * 6),
-        color: NeumorphicTheme.of(context)!
-            .current!
-            .shadowLightColor
-            .withAlpha(0x50),
-        blurRadius: 7,
-        spreadRadius: 1,
+        color: NeumorphicTheme.isUsingDark(context)
+            ? const Color(0x408F8F8F)
+            : const Color(0x50FFFFFF),
+        blurRadius: current ? 14 : 7,
+        spreadRadius: current ? 2 : 1,
       ),
       BoxShadow(
         offset: Offset(-lightSource.dx * 6, -lightSource.dy * 6),
-        color: NeumorphicTheme.of(context)!
-            .current!
-            .shadowDarkColor
-            .withAlpha(0x18),
-        blurRadius: 7,
-        spreadRadius: 1,
+        color: NeumorphicTheme.isUsingDark(context)
+            ? const Color(0x18000000)
+            : const Color(0x18000000),
+        blurRadius: current ? 14 : 7,
+        spreadRadius: current ? 2 : 1,
       ),
     ];
   }
