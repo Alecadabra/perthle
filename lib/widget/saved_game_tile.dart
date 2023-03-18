@@ -335,10 +335,6 @@ class _EmojiTiles extends StatelessWidget {
               builder: (final context, final settings) {
                 return Text(
                   savedGame.boardEmojis(settings.lightEmojis),
-                  style: DefaultTextStyle.of(context).style.copyWith(
-                    fontFamily: 'Segoe UI Nue',
-                    fontFamilyFallback: ['Noto Color Emoji'],
-                  ),
                 );
               },
               buildWhen: (final a, final b) {

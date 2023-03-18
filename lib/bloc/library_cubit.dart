@@ -14,7 +14,7 @@ import 'package:flutter/services.dart' show rootBundle;
 
 class LibraryCubit extends PersistentCubit<LibraryState> {
   LibraryCubit({
-    required final super.storage,
+    required super.storage,
     required this.dailyCubit,
   }) : super(
           initialState: LibraryState(
@@ -205,9 +205,9 @@ extension DateTimeWeekdays on DateTime {
 class _QualifiedLibraryWordState extends LibraryWordState {
   const _QualifiedLibraryWordState({
     required this.gameMode,
-    required final super.lastUsed,
-    required final super.oneOff,
-    required final super.word,
+    required super.lastUsed,
+    required super.oneOff,
+    required super.word,
   });
 
   final GameModeState gameMode;
