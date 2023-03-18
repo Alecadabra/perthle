@@ -5,15 +5,16 @@ import 'package:flutter/foundation.dart';
 class MessengerState {
   // Constructor
 
-  const MessengerState(this.message);
+  const MessengerState({this.text, this.errorText});
 
   // Immutable state
-  final String message;
+  final String? text;
+  final String? errorText;
 
   // Hack so bloc always sends the message
   @override
   bool operator ==(final Object other) => false;
 
   @override
-  int get hashCode => message.hashCode;
+  int get hashCode => text.hashCode ^ errorText.hashCode;
 }

@@ -14,8 +14,16 @@ import 'package:perthle/model/settings_state.dart';
 
 /// A small, normally hidden popup that shows messages sent through the
 /// messenger cubit.
-class MessengerPopup extends StatelessWidget {
+class MessengerPopup extends StatefulWidget {
   const MessengerPopup({final Key? key}) : super(key: key);
+
+  @override
+  State<MessengerPopup> createState() => MessengerPopupState();
+}
+
+class MessengerPopupState extends State<MessengerPopup> {
+  Timer? showTimer;
+  bool show = false;
 
   @override
   Widget build(final BuildContext context) {
@@ -25,15 +33,51 @@ class MessengerPopup extends StatelessWidget {
           builder: (final context, final history) {
             return BlocBuilder<SettingsCubit, SettingsState>(
               builder: (final context, final settings) {
-                if (settings.hardMode ||
-                    history.savedGames.isEmpty ||
-                    daily.gameMode == GameModeState.martoperthle) {
-                  // Only use popup box if it's their first game, hard mode is
-                  // on, or it's Martoperthle
-                  return const _MessengerPopupBox();
-                } else {
-                  return const SizedBox.shrink();
-                }
+                return BlocConsumer<MessengerCubit, MessengerState>(
+                  listener: (final context, final message) {
+                    // Only use popup box if it's not an error, their first
+                    // game, hard mode is, or it's Martoperthle
+                    if (message.text != null ||
+                        settings.hardMode ||
+                        history.savedGames.isEmpty ||
+                        daily.gameMode == GameModeState.martoperthle) {
+                      setState(() {
+                        show = true;
+                        showTimer?.cancel();
+                        showTimer = Timer(
+                          const Duration(milliseconds: 1500),
+                          () => setState(() => show = false),
+                        );
+                      });
+                    }
+                  },
+                  builder: (final context, final message) {
+                    return Center(
+                      child: Neumorphic(
+                        duration: const Duration(milliseconds: 300),
+                        style: NeumorphicStyle(
+                          depth: show ? 4 : 0,
+                          boxShape: NeumorphicBoxShape.roundRect(
+                            BorderRadius.circular(16),
+                          ),
+                        ),
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        child: AnimatedOpacity(
+                          duration: const Duration(milliseconds: 300),
+                          opacity: show ? 1 : 0,
+                          child: Text(
+                            message.text ?? message.errorText ?? '',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
               buildWhen: (final a, final b) {
                 return a.hardMode != b.hardMode;
@@ -47,57 +91,6 @@ class MessengerPopup extends StatelessWidget {
       },
       buildWhen: (final a, final b) {
         return a.gameMode != b.gameMode;
-      },
-    );
-  }
-}
-
-class _MessengerPopupBox extends StatefulWidget {
-  const _MessengerPopupBox({final Key? key}) : super(key: key);
-
-  @override
-  State<_MessengerPopupBox> createState() => _MessengerPopupBoxState();
-}
-
-class _MessengerPopupBoxState extends State<_MessengerPopupBox> {
-  Timer? showTimer;
-  bool show = false;
-  @override
-  Widget build(final BuildContext context) {
-    return BlocConsumer<MessengerCubit, MessengerState>(
-      listener: (final context, final message) => setState(() {
-        show = true;
-        showTimer?.cancel();
-        showTimer = Timer(
-          const Duration(milliseconds: 1500),
-          () => setState(() => show = false),
-        );
-      }),
-      builder: (final context, final message) {
-        return Center(
-          child: Neumorphic(
-            duration: const Duration(milliseconds: 300),
-            style: NeumorphicStyle(
-              depth: show ? 4 : 0,
-              boxShape: NeumorphicBoxShape.roundRect(
-                BorderRadius.circular(16),
-              ),
-            ),
-            margin: const EdgeInsets.only(bottom: 8),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 4,
-            ),
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 300),
-              opacity: show ? 1 : 0,
-              child: Text(
-                message.message,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-          ),
-        );
       },
     );
   }

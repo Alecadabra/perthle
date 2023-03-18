@@ -54,7 +54,11 @@ class _ShakingPerthleAppbarState extends State<ShakingPerthleAppbar>
   @override
   Widget build(final BuildContext context) {
     return BlocListener<MessengerCubit, MessengerState>(
-      listener: (final _, final __) => shake(),
+      listener: (final context, final message) {
+        if (message.errorText != null) {
+          shake();
+        }
+      },
       child: BlocBuilder<DailyCubit, DailyState>(
         builder: (final context, final daily) {
           return BlocBuilder<GameBloc, GameState>(

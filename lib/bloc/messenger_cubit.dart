@@ -6,11 +6,27 @@ import 'package:perthle/model/messenger_state.dart';
 class MessengerCubit extends Cubit<MessengerState> {
   // Constructor
 
-  MessengerCubit() : super(const MessengerState(''));
+  MessengerCubit() : super(const MessengerState());
 
   // Action
 
-  void send(final String message) => emit(MessengerState(message));
+  void sendError(final String message) {
+    emit(
+      MessengerState(
+        text: null,
+        errorText: message,
+      ),
+    );
+  }
+
+  void sendMessage(final String message) {
+    emit(
+      MessengerState(
+        text: message,
+        errorText: null,
+      ),
+    );
+  }
 
   // Provider
 

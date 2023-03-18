@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_mode_state.dart';
@@ -134,17 +135,20 @@ class _CopyButton extends StatelessWidget {
           ),
           minDistance: -depth / 4,
           duration: opacity < 0.5 ? Duration.zero : Neumorphic.DEFAULT_DURATION,
-          tooltip: 'Copy to Clipboard',
+          tooltip: 'Copy to clipboard',
           onPressed: gameMode == null
               ? null
-              : () async => await Clipboard.setData(
+              : () async {
+                  MessengerCubit.of(context).sendMessage('Copied to clipboard');
+                  await Clipboard.setData(
                     ClipboardData(
                       text: savedGame.shareableString(
                         gameMode: gameMode,
                         lightEmojis: settings.lightEmojis,
                       ),
                     ),
-                  ),
+                  );
+                },
           child: Container(
             height: double.infinity,
             alignment: Alignment.center,

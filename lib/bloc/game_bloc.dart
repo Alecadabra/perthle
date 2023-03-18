@@ -214,7 +214,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
       if (missingLetters.isNotEmpty) {
         // There are any amount of missed letters
-        _messengerCubit.send(
+        _messengerCubit.sendError(
           '${currGuess.join()} doesn\'t contain '
           '${missingLetters.join(', ')}',
         );
@@ -232,7 +232,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
                 ? prevOnlyMatches[i]
                 : null,
         ].where((final letter) => letter != null);
-        _messengerCubit.send(
+        _messengerCubit.sendError(
           '${currGuess.join()} uses the wrong '
           'position${wrongPositionLetters.length != 1 ? 's' : ''} for '
           '${wrongPositionLetters.join(', ')}',
@@ -242,13 +242,13 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
       final word = state.board.letters[state.currRow].join();
       if (state.word.startsWith('MARTO') && !word.startsWith('MARTO')) {
         // Not a martoword
-        _messengerCubit.send('$word does not start with Marto 💔');
+        _messengerCubit.sendError('$word does not start with Marto 💔');
       } else {
         // Invalid word
         if (word.contains(' ')) {
-          _messengerCubit.send('$word is not valid');
+          _messengerCubit.sendError('$word is not valid');
         } else {
-          _messengerCubit.send('$word is not a valid word');
+          _messengerCubit.sendError('$word is not a valid word');
         }
       }
     } else {
