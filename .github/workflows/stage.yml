@@ -9,7 +9,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: subosito/flutter-action@main
       with:
-          flutter-version: '3.0.x'
+          flutter-version: '3.7.x'
           channel: 'stable'
     - run: flutter pub get
     - run: flutter build web --dart-define=ENV=stage
@@ -25,7 +25,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: subosito/flutter-action@main
       with:
-          flutter-version: '3.0.x'
+          flutter-version: '3.7.x'
           channel: 'stable'
     - run: flutter pub get
     - run: flutter test

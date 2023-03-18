@@ -6,6 +6,7 @@ import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/settings_state.dart';
+import 'package:perthle/widget/emoji_text.dart';
 import 'package:share_plus/share_plus.dart';
 
 /// Widget to show the details of a saved game and ways to share it.
@@ -333,7 +334,7 @@ class _EmojiTiles extends StatelessWidget {
           child: FittedBox(
             child: BlocBuilder<SettingsCubit, SettingsState>(
               builder: (final context, final settings) {
-                return Text(
+                return EmojiText(
                   savedGame.boardEmojis(settings.lightEmojis),
                 );
               },

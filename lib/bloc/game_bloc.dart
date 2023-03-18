@@ -166,28 +166,28 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
   void _backspace(final GameBackspaceEvent event, final GameEmitter emit) {
     // Find the next valid column of the board to be at, going backwards
-    int _prevCol(final int currCol) {
+    int prevCol(final int currCol) {
       if (state.board.matches[state.currRow][currCol].isBlank) {
         // Blank tile, valid col
         return currCol;
       } else {
         // Revealed tile, keep going
-        return _prevCol(currCol - 1);
+        return prevCol(currCol - 1);
       }
     }
 
-    final prevCol = _prevCol(state.currCol - 1);
+    final computedPrevCol = prevCol(state.currCol - 1);
 
     emit(
       state.copyWith(
-        currCol: prevCol,
+        currCol: computedPrevCol,
         board: state.board.copyWith(
           // The old letters board with the previous spot replaced with null
           letters: [
             for (int i = 0; i < state.board.height; i++)
               [
                 for (int j = 0; j < state.board.width; j++)
-                  i == state.currRow && j == prevCol
+                  i == state.currRow && j == computedPrevCol
                       ? null
                       : state.board.letters[i][j],
               ],
