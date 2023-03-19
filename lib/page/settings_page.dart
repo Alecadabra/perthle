@@ -184,7 +184,7 @@ class SettingsPage extends StatelessWidget {
                     const Text('GitHub'),
                     const SizedBox(width: 12),
                     Icon(
-                      Icons.open_in_new,
+                      Icons.arrow_outward_sharp,
                       color: NeumorphicTheme.defaultTextColor(context),
                       size: 20,
                     ),
@@ -206,14 +206,10 @@ class SettingsPage extends StatelessWidget {
                 },
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.policy,
-                      color: NeumorphicTheme.defaultTextColor(context),
-                      size: 20,
-                    ),
+                    const Text('View'),
                     const SizedBox(width: 12),
                     Icon(
-                      Icons.chevron_right,
+                      Icons.chevron_right_sharp,
                       color: NeumorphicTheme.defaultTextColor(context),
                       size: 20,
                     ),

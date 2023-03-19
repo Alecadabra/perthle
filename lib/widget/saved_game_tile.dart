@@ -153,13 +153,11 @@ class _CopyButton extends StatelessWidget {
             height: double.infinity,
             alignment: Alignment.center,
             child: Opacity(
-              opacity: opacity,
+              opacity: gameMode == null ? 0 : opacity,
               child: Icon(
-                Icons.copy,
-                size: 20,
-                color: NeumorphicTheme.defaultTextColor(
-                  context,
-                ),
+                Icons.copy_sharp,
+                size: 18,
+                color: NeumorphicTheme.defaultTextColor(context),
               ),
             ),
           ),
@@ -217,7 +215,7 @@ class _ShareButton extends StatelessWidget {
             height: double.infinity,
             alignment: Alignment.center,
             child: Opacity(
-              opacity: opacity,
+              opacity: gameMode == null ? 0 : opacity,
               child: const Text(
                 'Share',
                 textAlign: TextAlign.center,
@@ -332,7 +330,7 @@ class _EmojiTiles extends StatelessWidget {
         surfaceIntensity: opacity / 15,
       ),
       child: AspectRatio(
-        aspectRatio: 5 / 6,
+        aspectRatio: 1,
         child: Opacity(
           opacity: opacity,
           child: FittedBox(

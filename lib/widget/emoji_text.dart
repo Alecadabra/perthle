@@ -32,7 +32,7 @@ class _Emoji extends StatelessWidget {
     return match == null
         ? Text(char)
         : Container(
-            margin: const EdgeInsets.all(2),
+            margin: const EdgeInsets.all(1),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
               gradient: LinearGradient(

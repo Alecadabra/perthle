@@ -11,6 +11,7 @@ import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/animated_saved_game_tile.dart';
 import 'package:perthle/widget/history_stats.dart';
+import 'package:perthle/widget/messenger_popup.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/perthle_scroll_configuration.dart';
@@ -29,17 +30,15 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return PerthleScaffold(
-      appBar: GestureDetector(
-        child: const PerthleAppbar(
-          title: 'History',
-          lightSource: HistoryPage.lightSource,
-        ),
+      appBar: const PerthleAppbar(
+        title: 'History',
+        lightSource: lightSource,
       ),
       body: SizedBox(
         width: 600,
         child: Column(
           children: const [
-            Spacer(),
+            Expanded(child: MessengerPopup()),
             HistoryStats(),
             Expanded(
               flex: 21,
