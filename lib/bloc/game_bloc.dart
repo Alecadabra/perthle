@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
@@ -342,6 +343,26 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   }
 
   void _completion(final GameCompletionEvent event, final GameEmitter emit) {
+    if (event.completion.isWon) {
+      const messages = [
+        'Omg nice!',
+        'Oooh nice',
+        'V. good',
+        'Impressive',
+        'Nice nice',
+        'Epic games',
+        'Cool beans',
+        'Phew',
+      ];
+      var lastRow = state.board.letters.lastIndexWhere(
+        (final row) => row.first != null,
+      );
+      final winMargin = lastRow / (state.board.height - 1);
+      final idx = (winMargin * messages.length)
+          .round()
+          .coerceAtMost(messages.lastIndex);
+      _messengerCubit.sendMessage(messages[idx]);
+    }
     emit(state.copyWith(completion: event.completion));
   }
 
