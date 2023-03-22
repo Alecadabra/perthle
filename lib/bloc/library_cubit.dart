@@ -4,6 +4,7 @@ import 'package:dartx/dartx.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
+import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/model/library_state.dart';
@@ -16,7 +17,9 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
   LibraryCubit({
     required super.storage,
     required this.dailyCubit,
-  }) : super(
+    required final MessengerCubit messengerCubit,
+  })  : _messengerCubit = messengerCubit,
+        super(
           initialState: LibraryState(
             words: {
               for (GameModeState gameMode in GameModeState.values) gameMode: [],
@@ -27,6 +30,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
   }
 
   final DailyCubit dailyCubit;
+  final MessengerCubit _messengerCubit;
 
   // Mutation
 
@@ -157,6 +161,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
       final collection = firestore.collection('dictionary');
 
       if ((await collection.doc(words.first).get()).exists) {
+        _messengerCubit.sendMessage('Aborting finishing the dictionary');
         return;
       }
 
@@ -171,6 +176,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
         }
         await batch.commit();
       }
+      _messengerCubit.sendMessage('Finished filling the dictionary!');
     }
   }
 
