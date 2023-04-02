@@ -35,7 +35,6 @@ jobs:
     environment:
       name: stage
       url: ${{ steps.deploy.outputs.details_url }}
-    if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HOSTING != 0 }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -50,6 +49,7 @@ jobs:
         id: extract_branch
       - name: Deploy to Firebase
         id: deploy
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HOSTING != 0 }}
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HOSTING }}
