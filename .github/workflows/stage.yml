@@ -35,6 +35,7 @@ jobs:
     environment:
       name: stage
       url: ${{ steps.deploy.outputs.details_url }}
+    if: ${{ github.event_name == 'pull_request_target' || github.actor == 'Alecadabra' }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
