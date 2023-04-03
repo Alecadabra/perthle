@@ -35,9 +35,7 @@ jobs:
     environment:
       name: stage
       url: ${{ steps.deploy.outputs.details_url }}
-    env:
-      FIREBASE_SECRET_AVAILABLE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HOSTING != 0 }}
-    if: ${{ env.FIREBASE_SECRET_AVAILABLE }}
+    if: ${{ github.event_name == 'pull_request_target' || github.actor == 'Alecadabra' }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
