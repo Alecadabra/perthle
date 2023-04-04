@@ -323,8 +323,8 @@ class _PerthleLicensePage extends StatelessWidget {
       ),
       child: const LicensePage(
         applicationName: 'Perthle',
-        applicationLegalese: 'Perthle by Alec Maughan, a respectful homage '
-            'to Wordle by Josh Wardle',
+        applicationLegalese: 'Perthle by Alec Maughan, an homage to Wordle '
+            'by Josh Wardle',
       ),
     );
   }
