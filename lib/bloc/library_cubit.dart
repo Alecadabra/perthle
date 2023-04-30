@@ -149,34 +149,40 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
   // TODO: Remove
   Future<void> _populateDictionary() async {
     if (DateTime.now().month == DateTime.april) {
-      final dayOfApril = DateTime.now().day - 0;
-      final startIdx = dayOfApril * 6738;
-      final endIdx = min(startIdx + 6738, 202135);
-      final words = (await rootBundle.loadString('assets/dictionary/words.txt'))
-          .split('\n')
-          .getRange(startIdx, endIdx)
-          .toList();
-
       final firestore = dailyCubit.dailyRepository.firebaseFirestore;
-      final collection = firestore.collection('dictionary');
+      final dailyCollection = firestore.collection('daily');
+      final dictCollection = firestore.collection('dictionary');
 
-      if ((await collection.doc(words.first).get()).exists) {
-        _messengerCubit.sendMessage('Aborting finishing the dictionary');
-        return;
+      final answers = [];
+
+      for (int gameNum = 1; gameNum < 430; gameNum++) {
+        final dailyDoc = await dailyCollection.doc('$gameNum').get();
+        final dailyJson = dailyDoc.data();
+        if (dailyJson == null) {
+          _messengerCubit.sendMessage('Game num $gameNum has no daily data');
+          return;
+        }
+        final daily = DailyState.fromJson(dailyJson);
+        final word = daily.word;
+
+        if (!answers.contains(word)) {
+          answers.add(word);
+        }
       }
+
+      _messengerCubit.sendMessage('Adding ${answers.length} words to dict');
 
       final Map<String, dynamic> empty = {};
+      final batch = firestore.batch();
 
-      for (int i = 0; i < words.length; i += 500) {
-        final batch = firestore.batch();
-
-        for (final word in words.getRange(i, min(words.length, i + 500))) {
-          final doc = collection.doc(word.toUpperCase());
-          batch.set(doc, empty);
-        }
-        await batch.commit();
+      for (final String word in answers) {
+        final doc = dictCollection.doc(word.toUpperCase());
+        batch.set(doc, empty);
       }
-      _messengerCubit.sendMessage('Finished filling the dictionary!');
+
+      await batch.commit();
+
+      _messengerCubit.sendMessage('Done!');
     }
   }
 
