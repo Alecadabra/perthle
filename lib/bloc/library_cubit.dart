@@ -148,7 +148,9 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
 
   // TODO: Remove
   Future<void> _populateDictionary() async {
+    _messengerCubit.sendMessage('Populate dict');
     if (DateTime.now().month == DateTime.april) {
+      _messengerCubit.sendMessage('It\'s april');
       final firestore = dailyCubit.dailyRepository.firebaseFirestore;
       final dailyCollection = firestore.collection('daily');
       final dictCollection = firestore.collection('dictionary');
