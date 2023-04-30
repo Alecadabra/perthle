@@ -17,12 +17,6 @@ class RemoteDictionaryStorageRepository extends MutableStorageRepository {
     return doc.data();
   }
 
-  // Provider
-
-  static RemoteDictionaryStorageRepository of(final BuildContext context) {
-    return RepositoryProvider.of<RemoteDictionaryStorageRepository>(context);
-  }
-
   @override
   Future<void> save(final String key, final Map<String, dynamic> data) async {
     await collection.doc(key).set(data);
@@ -31,5 +25,11 @@ class RemoteDictionaryStorageRepository extends MutableStorageRepository {
   @override
   Future<void> delete(final String key) async {
     await collection.doc(key).delete();
+  }
+
+  // Provider
+
+  static RemoteDictionaryStorageRepository of(final BuildContext context) {
+    return RepositoryProvider.of<RemoteDictionaryStorageRepository>(context);
   }
 }
