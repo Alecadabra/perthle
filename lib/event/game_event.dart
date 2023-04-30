@@ -65,12 +65,3 @@ class GameHardModeToggleEvent extends GameEvent {
   @override
   List<Object?> get props => [hardMode];
 }
-
-/// The dictionary has been loaded or unloaded
-class GameDictionaryLoadedEvent extends GameEvent {
-  const GameDictionaryLoadedEvent(this.dictionaryLoaded) : super();
-  final bool dictionaryLoaded;
-
-  @override
-  List<Object?> get props => [dictionaryLoaded];
-}

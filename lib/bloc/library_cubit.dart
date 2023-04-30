@@ -1,24 +1,20 @@
-import 'dart:math';
-
 import 'package:dartx/dartx.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
-import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/model/library_state.dart';
 import 'package:perthle/model/library_word_state.dart';
 import 'package:perthle/repository/persistent.dart';
-
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
 
 class LibraryCubit extends PersistentCubit<LibraryState> {
   LibraryCubit({
     required super.storage,
     required this.dailyCubit,
-    required final MessengerCubit messengerCubit,
-  })  : _messengerCubit = messengerCubit,
+    required final RemoteDictionaryStorageRepository dictStorageRepo,
+  })  : _dictStorageRepo = dictStorageRepo,
         super(
           initialState: LibraryState(
             words: {
@@ -30,7 +26,8 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
   }
 
   final DailyCubit dailyCubit;
-  final MessengerCubit _messengerCubit;
+
+  final RemoteDictionaryStorageRepository _dictStorageRepo;
 
   // Mutation
 
@@ -76,7 +73,6 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
   // Internal functionality
 
   void _populateDaily() async {
-    await _populateDictionary();
     final nowGameNum = dailyCubit.state.gameNum;
     final lastPopulatedGameNum = await dailyCubit.finalGameNum();
     final maxGameNum = nowGameNum + 3;
@@ -86,6 +82,7 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
       final isWeekday = DailyCubit.dateTimeFromGameNum(currGameNum).isWeekday;
       final newDailyState = _nextDaily(currGameNum, isWeekday);
       await dailyCubit.addDaily(newDailyState);
+      await _dictStorageRepo.save(newDailyState.word, {});
     }
   }
 
@@ -144,39 +141,6 @@ class LibraryCubit extends PersistentCubit<LibraryState> {
       word: qualLibWord.word,
       gameMode: qualLibWord.gameMode,
     );
-  }
-
-  // TODO: Remove
-  Future<void> _populateDictionary() async {
-    if (DateTime.now().month == DateTime.april) {
-      const startIdx = 0;
-      const endIdx = 6739;
-      final words = (await rootBundle.loadString('assets/dictionary/words.txt'))
-          .split('\n')
-          .getRange(startIdx, endIdx)
-          .toList();
-
-      final firestore = dailyCubit.dailyRepository.firebaseFirestore;
-      final collection = firestore.collection('dictionary');
-
-      if ((await collection.doc(words.first).get()).exists) {
-        _messengerCubit.sendMessage('Aborting finishing the dictionary');
-        return;
-      }
-
-      final Map<String, dynamic> empty = {};
-
-      for (int i = 0; i < words.length; i += 500) {
-        final batch = firestore.batch();
-
-        for (final word in words.getRange(i, min(words.length, i + 500))) {
-          final doc = collection.doc(word.toUpperCase());
-          batch.set(doc, empty);
-        }
-        await batch.commit();
-      }
-      _messengerCubit.sendMessage('Finished filling the dictionary!');
-    }
   }
 
   // Persistent implementation

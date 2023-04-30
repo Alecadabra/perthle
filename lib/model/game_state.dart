@@ -22,7 +22,7 @@ class GameState extends Equatable {
     this.currRow = 0,
     final int currCol = 0,
     this.hardMode = false,
-    this.dictionaryLoaded = false,
+    this.validWord,
   })  : completion = completion ?? GameCompletionState.playing,
         keyboard = keyboard ?? KeyboardState.empty(),
         board = board ?? BoardState.fromWord(word),
@@ -73,7 +73,7 @@ class GameState extends Equatable {
 
   final bool hardMode;
 
-  final bool dictionaryLoaded;
+  final Future<bool>? validWord;
 
   // Action Getters
 
@@ -82,8 +82,7 @@ class GameState extends Equatable {
 
   late final bool canBackspace = currCol != firstCol && completion.isPlaying;
 
-  late final bool canEnter =
-      currCol >= board.width && completion.isPlaying && dictionaryLoaded;
+  late final bool canEnter = currCol >= board.width && completion.isPlaying;
 
   // Hard Mode Getters
 
@@ -127,7 +126,7 @@ class GameState extends Equatable {
     final int? currRow,
     final int? currCol,
     final bool? hardMode,
-    final bool? dictionaryLoaded,
+    final Future<bool>? validWord,
   }) {
     return GameState(
       gameNum: gameNum ?? this.gameNum,
@@ -138,7 +137,7 @@ class GameState extends Equatable {
       currRow: currRow ?? this.currRow,
       currCol: currCol ?? this.currCol,
       hardMode: hardMode ?? this.hardMode,
-      dictionaryLoaded: dictionaryLoaded ?? this.dictionaryLoaded,
+      validWord: validWord ?? this.validWord,
     );
   }
 
@@ -174,6 +173,6 @@ class GameState extends Equatable {
         currRow,
         currCol,
         hardMode,
-        dictionaryLoaded,
+        validWord,
       ];
 }

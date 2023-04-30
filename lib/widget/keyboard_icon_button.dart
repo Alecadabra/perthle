@@ -68,8 +68,9 @@ class KeyboardEnterButton extends StatelessWidget {
         builder: (final context, final gameData) {
           return KeyboardIconButton(
             icon: const Icon(Icons.keyboard_return_outlined),
-            onPressed:
-                gameData.canEnter ? () => GameBloc.of(context).enter() : null,
+            onPressed: gameData.canEnter
+                ? () async => await GameBloc.of(context).enter()
+                : null,
           );
         });
   }
