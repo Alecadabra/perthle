@@ -37,9 +37,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  assets:
-    - assets/dictionary/
-
   fonts:
   - family: Poppins
     fonts:
