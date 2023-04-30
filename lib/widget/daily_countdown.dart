@@ -1,4 +1,7 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/bloc/daily_cubit.dart';
+import 'package:perthle/model/daily_state.dart';
 
 /// A stateful countdown timer until the next perthle (local midnight).
 class DailyCountdown extends StatefulWidget {
@@ -38,14 +41,14 @@ class _DailyCountdownState extends State<DailyCountdown> {
         final dayInSeconds = const Duration(days: 1).inSeconds;
         final duration = timerSnapshot.data ?? timeUntilMidnight;
         final percent = (dayInSeconds - duration.inSeconds) / dayInSeconds;
-        final durationMap = {
-          'h': duration.inHours,
-          'm': duration.inMinutes - 60 * duration.inHours,
-          's': duration.inSeconds - 60 * duration.inMinutes,
-        }..removeWhere((final key, final value) => value == 0);
-        final String durationString = durationMap.entries
-            .map((final entry) => '${entry.value}${entry.key}')
-            .join(', ');
+        final durationList = [
+          duration.inHours,
+          duration.inMinutes - 60 * duration.inHours,
+          duration.inSeconds - 60 * duration.inMinutes,
+        ];
+        final String durationString = durationList
+            .map((final dur) => dur.toString().padLeft(2, '0'))
+            .join(':');
 
         return Neumorphic(
           style: const NeumorphicStyle(
@@ -60,7 +63,31 @@ class _DailyCountdownState extends State<DailyCountdown> {
                 const Spacer(),
                 Expanded(
                   flex: 2,
-                  child: Text('Come back in $durationString'),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if ([DateTime.friday, DateTime.saturday]
+                          .contains(DateTime.now().weekday))
+                        const Text(
+                          'Tune in tomorrow for a special weekend Perthle',
+                        )
+                      else
+                        BlocBuilder<DailyCubit, DailyState>(
+                          builder: (final context, final daily) {
+                            return Text(
+                              'Tune in tomorrow for Perthle '
+                              '${daily.gameNum + 1}',
+                            );
+                          },
+                        ),
+                      Text(
+                        durationString,
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .copyWith(fontFamily: 'Monospaced'),
+                      ),
+                    ],
+                  ),
                 ),
                 const Spacer(),
                 Expanded(
@@ -69,7 +96,8 @@ class _DailyCountdownState extends State<DailyCountdown> {
                     percent: percent,
                     style: ProgressStyle(
                       depth: -4,
-                      variant: NeumorphicTheme.accentColor(context),
+                      accent: NeumorphicTheme.accentColor(context),
+                      variant: NeumorphicTheme.defaultTextColor(context),
                     ),
                   ),
                 ),

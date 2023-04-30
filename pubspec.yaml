@@ -7,7 +7,7 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
-  flutter: ^3.0.5
+  flutter: ^3.7.7
 
 dependencies:
   flutter:
@@ -17,15 +17,15 @@ dependencies:
     sdk: flutter
 
   flutter_neumorphic: ^3.2.0
-  share_plus: ^4.0.4
-  flutter_bloc: ^8.0.1
+  share_plus: ^6.3.4
+  flutter_bloc: ^8.1.2
   equatable: ^2.0.3
-  url_launcher: ^6.0.20
+  url_launcher: ^6.1.10
   provider: ^6.0.2
-  firebase_core: ^1.19.2
-  firebase_auth: ^3.4.2
-  firebase_app_check: ^0.0.6+18
-  cloud_firestore: ^3.4.6
+  firebase_auth: ^4.4.2
+  firebase_core: ^2.10.0
+  firebase_app_check: ^0.1.2
+  cloud_firestore: ^4.5.3
   dartx: ^1.1.0
 
 dev_dependencies:

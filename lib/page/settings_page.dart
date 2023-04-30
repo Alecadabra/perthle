@@ -6,6 +6,7 @@ import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/settings_state.dart';
+import 'package:perthle/widget/emoji_text.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -93,10 +94,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                     minDistance: selected ? -depth / 3 : depth / 3,
                     pressed: !selected,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      child: Text(emoji),
-                    ),
+                    child: EmojiText(emoji),
                     onPressed: () {
                       // _Actually_ using XOR for boolean logic whaaaaaaaat??!!
                       SettingsCubit.of(context).edit(
@@ -186,7 +184,7 @@ class SettingsPage extends StatelessWidget {
                     const Text('GitHub'),
                     const SizedBox(width: 12),
                     Icon(
-                      Icons.open_in_new,
+                      Icons.arrow_outward_sharp,
                       color: NeumorphicTheme.defaultTextColor(context),
                       size: 20,
                     ),
@@ -208,14 +206,10 @@ class SettingsPage extends StatelessWidget {
                 },
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.policy,
-                      color: NeumorphicTheme.defaultTextColor(context),
-                      size: 20,
-                    ),
+                    const Text('View'),
                     const SizedBox(width: 12),
                     Icon(
-                      Icons.chevron_right,
+                      Icons.chevron_right_sharp,
                       color: NeumorphicTheme.defaultTextColor(context),
                       size: 20,
                     ),
@@ -329,8 +323,8 @@ class _PerthleLicensePage extends StatelessWidget {
       ),
       child: const LicensePage(
         applicationName: 'Perthle',
-        applicationLegalese: 'Perthle by Alec Maughan, a respectful homage '
-            'to Wordle by Josh Wardle',
+        applicationLegalese: 'Perthle by Alec Maughan, an homage to Wordle '
+            'by Josh Wardle',
       ),
     );
   }

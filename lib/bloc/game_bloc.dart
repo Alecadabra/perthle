@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
@@ -184,28 +185,28 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
   void _backspace(final GameBackspaceEvent event, final GameEmitter emit) {
     // Find the next valid column of the board to be at, going backwards
-    int _prevCol(final int currCol) {
+    int prevCol(final int currCol) {
       if (state.board.matches[state.currRow][currCol].isBlank) {
         // Blank tile, valid col
         return currCol;
       } else {
         // Revealed tile, keep going
-        return _prevCol(currCol - 1);
+        return prevCol(currCol - 1);
       }
     }
 
-    final prevCol = _prevCol(state.currCol - 1);
+    final computedPrevCol = prevCol(state.currCol - 1);
 
     emit(
       state.copyWith(
-        currCol: prevCol,
+        currCol: computedPrevCol,
         board: state.board.copyWith(
           // The old letters board with the previous spot replaced with null
           letters: [
             for (int i = 0; i < state.board.height; i++)
               [
                 for (int j = 0; j < state.board.width; j++)
-                  i == state.currRow && j == prevCol
+                  i == state.currRow && j == computedPrevCol
                       ? null
                       : state.board.letters[i][j],
               ],
@@ -232,7 +233,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
 
       if (missingLetters.isNotEmpty) {
         // There are any amount of missed letters
-        _messengerCubit.send(
+        _messengerCubit.sendError(
           '${currGuess.join()} doesn\'t contain '
           '${missingLetters.join(', ')}',
         );
@@ -250,7 +251,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
                 ? prevOnlyMatches[i]
                 : null,
         ].where((final letter) => letter != null);
-        _messengerCubit.send(
+        _messengerCubit.sendError(
           '${currGuess.join()} uses the wrong '
           'position${wrongPositionLetters.length != 1 ? 's' : ''} for '
           '${wrongPositionLetters.join(', ')}',
@@ -260,13 +261,13 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
       final word = state.board.letters[state.currRow].join();
       if (state.word.startsWith('MARTO') && !word.startsWith('MARTO')) {
         // Not a martoword
-        _messengerCubit.send('$word does not start with Marto 💔');
+        _messengerCubit.sendError('$word does not start with Marto 💔');
       } else {
         // Invalid word
         if (word.contains(' ')) {
-          _messengerCubit.send('$word is not valid');
+          _messengerCubit.sendError('$word is not valid');
         } else {
-          _messengerCubit.send('$word is not a valid word');
+          _messengerCubit.sendError('$word is not a valid word');
         }
       }
     } else {
@@ -360,6 +361,26 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   }
 
   void _completion(final GameCompletionEvent event, final GameEmitter emit) {
+    if (event.completion.isWon) {
+      const messages = [
+        'Omg nice!',
+        'Oooh nice',
+        'V. good',
+        'Impressive',
+        'Nice nice',
+        'Epic games',
+        'Cool beans',
+        'Phew',
+      ];
+      var lastRow = state.board.letters.lastIndexWhere(
+        (final row) => row.first != null,
+      );
+      final winMargin = lastRow / (state.board.height - 1);
+      final idx = (winMargin * messages.length)
+          .round()
+          .coerceAtMost(messages.lastIndex);
+      _messengerCubit.sendMessage(messages[idx]);
+    }
     emit(state.copyWith(completion: event.completion));
   }
 

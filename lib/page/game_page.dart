@@ -58,7 +58,7 @@ class GamePage extends StatelessWidget {
 
             // Keyboard / Stats switcher
             Expanded(
-              flex: 7,
+              flex: 6,
               child: Container(
                 width: _maxKeyboardWidth,
                 padding: const EdgeInsets.symmetric(horizontal: 3),
@@ -69,7 +69,7 @@ class GamePage extends StatelessWidget {
                       child: gameData.completion.isPlaying
                           ? const GameKeyboard()
                           : Padding(
-                              padding: const EdgeInsets.all(24),
+                              padding: const EdgeInsets.all(16),
                               child: Column(
                                 children: [
                                   Expanded(

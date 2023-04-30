@@ -1,11 +1,13 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/game_mode_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:perthle/model/settings_state.dart';
+import 'package:perthle/widget/emoji_text.dart';
 import 'package:share_plus/share_plus.dart';
 
 /// Widget to show the details of a saved game and ways to share it.
@@ -133,28 +135,29 @@ class _CopyButton extends StatelessWidget {
           ),
           minDistance: -depth / 4,
           duration: opacity < 0.5 ? Duration.zero : Neumorphic.DEFAULT_DURATION,
-          tooltip: 'Copy to Clipboard',
+          tooltip: 'Copy to clipboard',
           onPressed: gameMode == null
               ? null
-              : () async => await Clipboard.setData(
+              : () async {
+                  MessengerCubit.of(context).sendMessage('Copied to clipboard');
+                  await Clipboard.setData(
                     ClipboardData(
                       text: savedGame.shareableString(
                         gameMode: gameMode,
                         lightEmojis: settings.lightEmojis,
                       ),
                     ),
-                  ),
+                  );
+                },
           child: Container(
             height: double.infinity,
             alignment: Alignment.center,
             child: Opacity(
-              opacity: opacity,
+              opacity: gameMode == null ? 0 : opacity,
               child: Icon(
-                Icons.copy,
-                size: 20,
-                color: NeumorphicTheme.defaultTextColor(
-                  context,
-                ),
+                Icons.copy_sharp,
+                size: 18,
+                color: NeumorphicTheme.defaultTextColor(context),
               ),
             ),
           ),
@@ -212,7 +215,7 @@ class _ShareButton extends StatelessWidget {
             height: double.infinity,
             alignment: Alignment.center,
             child: Opacity(
-              opacity: opacity,
+              opacity: gameMode == null ? 0 : opacity,
               child: const Text(
                 'Share',
                 textAlign: TextAlign.center,
@@ -327,13 +330,13 @@ class _EmojiTiles extends StatelessWidget {
         surfaceIntensity: opacity / 15,
       ),
       child: AspectRatio(
-        aspectRatio: 5 / 6,
+        aspectRatio: 1,
         child: Opacity(
           opacity: opacity,
           child: FittedBox(
             child: BlocBuilder<SettingsCubit, SettingsState>(
               builder: (final context, final settings) {
-                return Text(
+                return EmojiText(
                   savedGame.boardEmojis(settings.lightEmojis),
                 );
               },

@@ -97,7 +97,7 @@ class KeyboardLetterButton extends StatelessWidget {
           style: _buttonStyle(context, canType, tileMatch),
           child: Text(
             letter.letterString,
-            style: Theme.of(context).textTheme.headline6!.apply(
+            style: Theme.of(context).textTheme.titleLarge!.apply(
                   color: _textColor(context, canType, tileMatch),
                   fontFamily: 'Poppins',
                   fontWeightDelta: -1,
