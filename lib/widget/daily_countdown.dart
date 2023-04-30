@@ -66,20 +66,13 @@ class _DailyCountdownState extends State<DailyCountdown> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      if ([DateTime.friday, DateTime.saturday]
-                          .contains(DateTime.now().weekday))
-                        const Text(
-                          'Tune in tomorrow for a special weekend Perthle',
-                        )
-                      else
-                        BlocBuilder<DailyCubit, DailyState>(
-                          builder: (final context, final daily) {
-                            return Text(
-                              'Tune in tomorrow for Perthle '
-                              '${daily.gameNum + 1}',
-                            );
-                          },
-                        ),
+                      BlocBuilder<DailyCubit, DailyState>(
+                        builder: (final context, final daily) {
+                          return Text(
+                            'Tune in tomorrow for Perthle ${daily.gameNum + 1}',
+                          );
+                        },
+                      ),
                       Text(
                         durationString,
                         style: DefaultTextStyle.of(context)
@@ -97,7 +90,6 @@ class _DailyCountdownState extends State<DailyCountdown> {
                     style: ProgressStyle(
                       depth: -4,
                       accent: NeumorphicTheme.accentColor(context),
-                      variant: NeumorphicTheme.defaultTextColor(context),
                     ),
                   ),
                 ),
