@@ -163,8 +163,9 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
         word,
         ...word.split(' '),
         if (word.startsWith(RegExp(r'MARTO.+'))) word.substring('MARTO'.length),
-        // TODO: Word without special chars
-        // eg. answer is :EYES:, guess is :ORCA:
+        word.characters
+            .filter((final letter) => LetterState.isValid(letter))
+            .join(),
       };
 
       for (final subWord in subWords) {
