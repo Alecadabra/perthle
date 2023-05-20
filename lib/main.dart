@@ -9,7 +9,7 @@ import 'package:perthle/model/settings_state.dart';
 import 'package:perthle/widget/perthle_navigator.dart';
 import 'package:perthle/widget/perthle_provider.dart';
 
-const String _env = String.fromEnvironment('ENV', defaultValue: 'prod');
+const String _env = String.fromEnvironment('ENV', defaultValue: 'stage');
 const bool _isProd = _env == 'prod';
 const String _firebaseProd = 'perthgang-wordle';
 const String _firebaseStage = 'perthle-stage';
