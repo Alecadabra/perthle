@@ -29,15 +29,15 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return PerthleScaffold(
-      appBar: const PerthleAppbar(
+    return const PerthleScaffold(
+      appBar: PerthleAppbar(
         title: 'History',
         lightSource: lightSource,
       ),
       body: SizedBox(
         width: 600,
         child: Column(
-          children: const [
+          children: [
             Expanded(child: MessengerPopup()),
             HistoryStats(),
             Expanded(
