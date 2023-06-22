@@ -25,14 +25,13 @@ class DailyCubit extends Cubit<DailyState> {
   }
 
   Future<void> _emitTomorrow() async {
-    final tommorowsState = await dailyFromGameNum(state.gameNum + 1);
-
     final now = DateTime.now();
     final midnightTonight = DateTime(now.year, now.month, now.day + 1);
     final timeUntilMidnight = midnightTonight.difference(now);
 
     Future.delayed(timeUntilMidnight, () async {
       // Good morning!
+      final tommorowsState = await dailyFromGameNum(state.gameNum + 1);
       emit(tommorowsState);
       await _emitTomorrow();
     });
