@@ -24,7 +24,7 @@ class DailyCubit extends Cubit<DailyState> {
     return _dailyRepository.firebaseFirestore.collection('daily');
   }
 
-  Future<void> _emitTomorrow() async {
+  _emitTomorrow() {
     final now = DateTime.now();
     final midnightTonight = DateTime(now.year, now.month, now.day + 1);
     final timeUntilMidnight = midnightTonight.difference(now);
@@ -33,7 +33,7 @@ class DailyCubit extends Cubit<DailyState> {
       // Good morning!
       final tommorowsState = await dailyFromGameNum(state.gameNum + 1);
       emit(tommorowsState);
-      await _emitTomorrow();
+      _emitTomorrow();
     });
   }
 
