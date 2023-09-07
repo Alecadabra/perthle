@@ -11,14 +11,12 @@ class PerthleUserBloc extends Bloc<PerthleUserEvent, PerthleUserState> {
 
   PerthleUserBloc({
     required final FirebaseAuth firebaseAuth,
-  })  : _firebaseAuth = firebaseAuth,
-        super(
+  }) : super(
           PerthleUserState(
             firebaseUser: firebaseAuth.currentUser,
             isAuthor: firebaseAuth.currentUser.isAuthor,
           ),
         ) {
-    _initUser();
     firebaseAuth.userChanges().listen(
       (final newFirebaseUser) {
         add(
@@ -30,16 +28,6 @@ class PerthleUserBloc extends Bloc<PerthleUserEvent, PerthleUserState> {
       },
     );
     on<PerthleUserFirebaseUserChangeEvent>(_firebaseUserChangeEvent);
-  }
-
-  // State
-
-  final FirebaseAuth _firebaseAuth;
-
-  void _initUser() {
-    if (state.firebaseUser == null) {
-      Future.microtask(() async => await _firebaseAuth.signInAnonymously());
-    }
   }
 
   // Provider

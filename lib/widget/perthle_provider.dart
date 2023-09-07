@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +11,7 @@ import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/bloc/library_cubit.dart';
 import 'package:perthle/bloc/perthle_user_bloc.dart';
 import 'package:perthle/model/daily_state.dart';
+import 'package:perthle/model/environment_state.dart';
 import 'package:perthle/model/perthle_user_state.dart';
 import 'package:perthle/repository/daily_storage_repository.dart';
 import 'package:perthle/repository/local_storage_repository.dart';
@@ -19,21 +22,24 @@ import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
 import 'package:provider/provider.dart';
 
 class PerthleProvider extends StatelessWidget {
-  const PerthleProvider({
-    final Key? key,
-    required this.child,
-    required this.firebaseApp,
-  }) : super(key: key);
+  const PerthleProvider({final Key? key, required this.child})
+      : super(key: key);
 
   final Widget child;
-  final FirebaseApp firebaseApp;
+  FirebaseApp get firebaseApp =>
+      Firebase.app(EnvironmentState.fromEnvVars().environmentName == 'prod'
+          ? 'perthgang-wordle'
+          : 'perthle-stage');
 
   Future<DailyState> _dailyFuture(
     final DailyStorageRepository dailyRepo,
   ) async {
+    final stopwatch = Stopwatch()..start();
     final todaysGameNum = DailyCubit.gameNumFromDateTime(DateTime.now());
     final dailyJson = await dailyRepo.load('$todaysGameNum');
-    return DailyState.fromJson(dailyJson!);
+    final daily = DailyState.fromJson(dailyJson!);
+    debugPrint('That took ${stopwatch.elapsed}');
+    return daily;
   }
 
   @override
@@ -105,11 +111,6 @@ class _PerthleMultiProvider extends StatelessWidget {
   Widget build(final BuildContext context) {
     return MultiProvider(
       providers: [
-        // Repositories
-        RepositoryProvider<MutableStorageRepository>(
-          create: (final context) => LocalStorageRepository(),
-          lazy: false,
-        ),
         // Blocs/Cubits
         BlocProvider(
           create: (final context) => DailyCubit(

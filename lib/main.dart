@@ -4,8 +4,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:perthle/bloc/init_cubit.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
+import 'package:perthle/model/environment_state.dart';
 import 'package:perthle/model/settings_state.dart';
+import 'package:perthle/repository/local_storage_repository.dart';
+import 'package:perthle/repository/mutable_storage_repository.dart';
+import 'package:perthle/widget/init_loader.dart';
 import 'package:perthle/widget/perthle_navigator.dart';
 import 'package:perthle/widget/perthle_provider.dart';
 
@@ -18,10 +23,10 @@ final FirebaseApp _firebaseApp = Firebase.app(
   _isProd ? _firebaseProd : _firebaseStage,
 );
 
-Future<void> main() async {
+main() {
   WidgetsFlutterBinding.ensureInitialized();
   setUrlStrategy(PathUrlStrategy());
-  await _initFirebase();
+  // await _initFirebase();
   runApp(const PerthleApp());
 }
 
@@ -112,21 +117,37 @@ class PerthleApp extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return PerthleProvider(
-      firebaseApp: _firebaseApp,
-      child: BlocBuilder<SettingsCubit, SettingsState>(
-        buildWhen: (final a, final b) {
-          return a.themeMode != b.themeMode;
-        },
-        builder: (final context, final SettingsState settings) {
-          return NeumorphicApp(
-            title: 'Perthle',
-            themeMode: settings.themeMode,
-            theme: _themeDataLight,
-            darkTheme: _themeDataDark,
-            home: const PerthleNavigator(),
-          );
-        },
+    return RepositoryProvider<MutableStorageRepository>(
+      create: (final context) => LocalStorageRepository(),
+      lazy: false,
+      child: BlocProvider(
+        create: (final context) => SettingsCubit(
+          storage: MutableStorageRepository.of(context),
+        ),
+        lazy: false,
+        child: BlocBuilder<SettingsCubit, SettingsState>(
+          buildWhen: (final a, final b) {
+            return a.themeMode != b.themeMode;
+          },
+          builder: (final context, final SettingsState settings) {
+            return NeumorphicApp(
+              title: 'Perthle',
+              themeMode: settings.themeMode,
+              theme: _themeDataLight,
+              darkTheme: _themeDataDark,
+              home: BlocProvider(
+                create: (final context) => InitCubit(
+                  environment: EnvironmentState.fromEnvVars(),
+                ),
+                child: InitLoader(
+                  child: PerthleProvider(
+                    child: PerthleNavigator(),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
