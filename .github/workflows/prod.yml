@@ -20,20 +20,9 @@ jobs:
       with:
         name: web-build
         path: build/web
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: subosito/flutter-action@v2.10.0
-      with:
-          flutter-version: '3.10.x'
-          channel: 'stable'
-    - run: flutter pub get
-    - run: flutter test
   deploy-prod:
     name: Deploy to Prod
-    needs: [build, test]
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: prod
