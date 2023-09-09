@@ -24,7 +24,7 @@ final FirebaseApp _firebaseApp = Firebase.app(
 );
 
 main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   setUrlStrategy(PathUrlStrategy());
   // await _initFirebase();
   runApp(const PerthleApp());
