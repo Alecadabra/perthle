@@ -151,7 +151,7 @@ class _BoardRow extends StatelessWidget {
       child: Row(
         children: [
           for (int i = 0; i < matches.length; i++)
-            Container(
+            Padding(
               padding: const EdgeInsets.only(
                 top: 8,
                 bottom: 8,

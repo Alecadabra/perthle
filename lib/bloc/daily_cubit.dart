@@ -37,17 +37,9 @@ class DailyCubit extends Cubit<DailyState> {
     });
   }
 
-  Future<bool> isAnAnswer(final String word) async {
-    final query = _collection.where('word', isEqualTo: word).limit(1);
-    final data = await query.get();
-    return data.size != 0;
-  }
-
   Future<int> finalGameNum() async {
     final query = _collection
         .where('gameNum', isGreaterThan: state.gameNum)
-        // Get around the dictionary hack
-        .where('gameNum', isLessThan: 1000)
         .orderBy('gameNum');
     final data = await query.get();
     return DailyState.fromJson(data.docs.last.data()).gameNum;
