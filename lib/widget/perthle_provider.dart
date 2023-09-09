@@ -19,28 +19,20 @@ import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
+import 'package:perthle/widget/init_loader.dart';
 import 'package:provider/provider.dart';
 
 class PerthleProvider extends StatelessWidget {
-  const PerthleProvider({final Key? key, required this.child})
-      : super(key: key);
+  const PerthleProvider({
+    final Key? key,
+    required this.child,
+  }) : super(key: key);
 
   final Widget child;
   FirebaseApp get firebaseApp =>
       Firebase.app(EnvironmentState.fromEnvVars().environmentName == 'prod'
           ? 'perthgang-wordle'
           : 'perthle-stage');
-
-  Future<DailyState> _dailyFuture(
-    final DailyStorageRepository dailyRepo,
-  ) async {
-    final stopwatch = Stopwatch()..start();
-    final todaysGameNum = DailyCubit.gameNumFromDateTime(DateTime.now());
-    final dailyJson = await dailyRepo.load('$todaysGameNum');
-    final daily = DailyState.fromJson(dailyJson!);
-    debugPrint('That took ${stopwatch.elapsed}');
-    return daily;
-  }
 
   @override
   Widget build(final BuildContext context) {
@@ -63,33 +55,12 @@ class PerthleProvider extends StatelessWidget {
           create: (final context) => PerthleUserBloc(
             firebaseAuth: FirebaseAuth.instanceFor(app: firebaseApp),
           ),
-          lazy: false,
         ),
       ],
-      child: BlocBuilder<PerthleUserBloc, PerthleUserState>(
-        builder: (final context, final perthleUser) {
-          if (perthleUser.firebaseUser == null) {
-            return const SizedBox.shrink();
-          } else {
-            return FutureBuilder<DailyState>(
-              future: _dailyFuture(DailyStorageRepository.of(context)),
-              builder:
-                  (final context, final AsyncSnapshot<DailyState> snapshot) {
-                final dailyState = snapshot.data;
-                return AnimatedSwitcher(
-                  duration: Neumorphic.DEFAULT_DURATION,
-                  child: dailyState == null
-                      ? const SizedBox.shrink()
-                      : _PerthleMultiProvider(
-                          dailyState: dailyState,
-                          perthleUser: perthleUser,
-                          child: child,
-                        ),
-                );
-              },
-            );
-          }
-        },
+      child: InitLoader(
+        child: _PerthleMultiProvider(
+          child: child,
+        ),
       ),
     );
   }
@@ -98,13 +69,9 @@ class PerthleProvider extends StatelessWidget {
 class _PerthleMultiProvider extends StatelessWidget {
   const _PerthleMultiProvider({
     final Key? key,
-    required this.dailyState,
-    required this.perthleUser,
     required this.child,
   }) : super(key: key);
 
-  final DailyState dailyState;
-  final PerthleUserState perthleUser;
   final Widget child;
 
   @override
@@ -112,13 +79,6 @@ class _PerthleMultiProvider extends StatelessWidget {
     return MultiProvider(
       providers: [
         // Blocs/Cubits
-        BlocProvider(
-          create: (final context) => DailyCubit(
-            todaysState: dailyState,
-            dailyRepository: DailyStorageRepository.of(context),
-          ),
-          lazy: false,
-        ),
         BlocProvider(
           create: (final context) => SettingsCubit(
             storage: MutableStorageRepository.of(context),
@@ -146,7 +106,7 @@ class _PerthleMultiProvider extends StatelessWidget {
           ),
           lazy: false,
         ),
-        if (perthleUser.isAuthor)
+        if (PerthleUserBloc.of(context).state.isAuthor)
           BlocProvider(
             create: (final context) => LibraryCubit(
               storage: MutableStorageRepository.of(context),

@@ -1,12 +1,16 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:perthle/bloc/daily_cubit.dart';
+import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/environment_state.dart';
 import 'package:perthle/model/init_state.dart';
+import 'package:perthle/repository/daily_storage_repository.dart';
 
 class InitCubit extends Cubit<InitState> {
   // Constructor
@@ -14,7 +18,7 @@ class InitCubit extends Cubit<InitState> {
   InitCubit({
     required final EnvironmentState environment,
   })  : _environment = environment,
-        super(InitState.initial) {
+        super(InitState.firebase) {
     _init();
   }
 
@@ -54,7 +58,17 @@ class InitCubit extends Cubit<InitState> {
       await auth.signInAnonymously();
     }
 
-    emit(InitState.finished);
+    emit(InitState.daily);
+
+    final firestore = FirebaseFirestore.instanceFor(
+      app: _environment.firebaseApp,
+    );
+    final dailyRepo = DailyStorageRepository(firebaseFirestore: firestore);
+    final todaysGameNum = DailyCubit.gameNumFromDateTime(DateTime.now());
+    final dailyJson = await dailyRepo.load('$todaysGameNum');
+    final daily = DailyState.fromJson(dailyJson!);
+
+    emit(InitState.finished(daily));
   }
 }
 
