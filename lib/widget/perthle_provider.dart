@@ -10,11 +10,8 @@ import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/bloc/library_cubit.dart';
 import 'package:perthle/bloc/perthle_user_bloc.dart';
-import 'package:perthle/model/daily_state.dart';
 import 'package:perthle/model/environment_state.dart';
-import 'package:perthle/model/perthle_user_state.dart';
 import 'package:perthle/repository/daily_storage_repository.dart';
-import 'package:perthle/repository/local_storage_repository.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/repository/mutable_storage_repository.dart';
@@ -79,12 +76,6 @@ class _PerthleMultiProvider extends StatelessWidget {
     return MultiProvider(
       providers: [
         // Blocs/Cubits
-        BlocProvider(
-          create: (final context) => SettingsCubit(
-            storage: MutableStorageRepository.of(context),
-          ),
-          lazy: false,
-        ),
         BlocProvider(
           create: (final context) => MessengerCubit(),
           lazy: false,

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -40,19 +40,18 @@ class InitCubit extends Cubit<InitState> {
 
     if (appCheckKey != null) {
       emit(InitState.appCheck);
-
       final appCheck = FirebaseAppCheck.instanceFor(
         app: _environment.firebaseApp,
       );
       await appCheck.activate(webRecaptchaSiteKey: appCheckKey);
     }
 
-    emit(InitState.auth);
-
     final auth = FirebaseAuth.instanceFor(app: _environment.firebaseApp);
-    await auth.setPersistence(_environment.firebaseAuthPersistence);
+    if (auth.currentUser == null) {
+      emit(InitState.login);
+    }
 
-    emit(InitState.login);
+    await auth.setPersistence(_environment.firebaseAuthPersistence);
 
     if (auth.currentUser == null) {
       await auth.signInAnonymously();
@@ -68,7 +67,12 @@ class InitCubit extends Cubit<InitState> {
     final dailyJson = await dailyRepo.load('$todaysGameNum');
     final daily = DailyState.fromJson(dailyJson!);
 
-    emit(InitState.finished(daily));
+    emit(InitState.perthle);
+
+    Timer(
+      const Duration(milliseconds: 500),
+      () => emit(InitState.finished(daily)),
+    );
   }
 }
 
