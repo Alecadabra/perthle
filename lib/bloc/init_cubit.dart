@@ -47,13 +47,10 @@ class InitCubit extends Cubit<InitState> {
     }
 
     final auth = FirebaseAuth.instanceFor(app: _environment.firebaseApp);
-    if (auth.currentUser == null) {
-      emit(InitState.login);
-    }
-
     await auth.setPersistence(_environment.firebaseAuthPersistence);
 
     if (auth.currentUser == null) {
+      emit(InitState.login);
       await auth.signInAnonymously();
     }
 
