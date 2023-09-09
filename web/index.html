@@ -32,9 +32,6 @@
   <title>Perthle</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Splash Screen stylsheet -->
-  <link rel="stylesheet" type="text/css" href="styles.css">
-
   <script>
     // The value below is injected by flutter build, do not touch.
     var serviceWorkerVersion = null;
@@ -43,8 +40,42 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
-  <!-- Splash Screen -->
-  <img src="icons/Icon-192.png" class="splash"/>
+  <!-- Background colour based on Perthle setting -->
+  <script type="text/javascript">
+    function systemMode() {
+      if (window.matchMedia
+        && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        darkMode();
+      } else {
+        lightMode();
+      }
+    }
+    function lightMode() {
+      setBackgroundColourTo('#DDE6E8');
+    }
+    function darkMode() {
+      setBackgroundColourTo('#32353A');
+    }
+    function setBackgroundColourTo(colour) {
+      document.body.style.backgroundColor = colour;
+    }
+    window.addEventListener('load', () => {
+      let settings = localStorage.getItem('settings.json');
+      if (settings != null) {
+        let settingsObject = JSON.parse(settings);
+        let themeMode = settingsObject.settings.themeMode;
+        if (themeMode == 1) {
+          lightMode();
+        } else if (themeMode == 2) {
+          darkMode();
+        } else {
+          systemMode();
+        }
+      } else {
+        systemMode();
+      }
+    });
+  </script>
 
   <script type="text/javascript">
     // Always use canvaskit
