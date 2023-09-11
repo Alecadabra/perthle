@@ -10,6 +10,7 @@ import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/widget/init_loader.dart';
 import 'package:perthle/widget/perthle_navigator.dart';
 import 'package:perthle/widget/perthle_provider.dart';
+import 'package:provider/provider.dart';
 
 main() {
   setUrlStrategy(PathUrlStrategy());
@@ -66,36 +67,51 @@ class PerthleApp extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return RepositoryProvider<MutableStorageRepository>(
-      create: (final context) => LocalStorageRepository(),
-      lazy: false,
-      child: BlocProvider(
-        create: (final context) => SettingsCubit(
-          storage: MutableStorageRepository.of(context),
+    return MultiProvider(
+      providers: [
+        Provider.value(value: EnvironmentState.fromEnvVars()),
+        RepositoryProvider<MutableStorageRepository>(
+          create: (final context) => LocalStorageRepository(),
+          lazy: false,
         ),
+        BlocProvider(
+          create: (final context) => SettingsCubit(
+            storage: MutableStorageRepository.of(context),
+          ),
+          lazy: false,
+        ),
+      ],
+      child: RepositoryProvider<MutableStorageRepository>(
+        create: (final context) => LocalStorageRepository(),
         lazy: false,
-        child: BlocBuilder<SettingsCubit, SettingsState>(
-          buildWhen: (final a, final b) {
-            return a.themeMode != b.themeMode;
-          },
-          builder: (final context, final SettingsState settings) {
-            return NeumorphicApp(
-              title: 'Perthle',
-              themeMode: settings.themeMode,
-              theme: _themeDataLight,
-              darkTheme: _themeDataDark,
-              home: BlocProvider(
-                create: (final context) => InitCubit(
-                  environment: EnvironmentState.fromEnvVars(),
-                ),
-                child: const InitLoader(
-                  child: PerthleProvider(
-                    child: PerthleNavigator(),
+        child: BlocProvider(
+          create: (final context) => SettingsCubit(
+            storage: MutableStorageRepository.of(context),
+          ),
+          lazy: false,
+          child: BlocBuilder<SettingsCubit, SettingsState>(
+            buildWhen: (final a, final b) {
+              return a.themeMode != b.themeMode;
+            },
+            builder: (final context, final SettingsState settings) {
+              return NeumorphicApp(
+                title: 'Perthle',
+                themeMode: settings.themeMode,
+                theme: _themeDataLight,
+                darkTheme: _themeDataDark,
+                home: BlocProvider(
+                  create: (final context) => InitCubit(
+                    environment: EnvironmentState.fromEnvVars(),
+                  ),
+                  child: const InitLoader(
+                    child: PerthleProvider(
+                      child: PerthleNavigator(),
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

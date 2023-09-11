@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 enum EnvironmentState {
   prod(
@@ -46,11 +48,19 @@ enum EnvironmentState {
   final String? firebaseAppCheckWebRecaptchaSiteKey;
   final FirebaseOptions firebaseOptions;
 
+  FirebaseApp get firebaseApp => Firebase.app(firebaseName);
+
   factory EnvironmentState.fromEnvVars() {
     if (const String.fromEnvironment('ENV') == 'prod') {
       return EnvironmentState.prod;
     } else {
       return EnvironmentState.stage;
     }
+  }
+
+  // Provider
+
+  static EnvironmentState of(final BuildContext context) {
+    return Provider.of<EnvironmentState>(context);
   }
 }

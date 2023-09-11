@@ -76,7 +76,3 @@ class InitCubit extends Cubit<InitState> {
     );
   }
 }
-
-extension _EnvironmentStateToFirebaseApp on EnvironmentState {
-  FirebaseApp get firebaseApp => Firebase.app(firebaseName);
-}
