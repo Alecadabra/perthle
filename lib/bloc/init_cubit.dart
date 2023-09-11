@@ -36,21 +36,25 @@ class InitCubit extends Cubit<InitState> {
       options: _environment.firebaseOptions,
     );
 
-    final appCheckKey = _environment.firebaseAppCheckWebRecaptchaSiteKey;
+    emit(InitState.appCheck);
 
+    final appCheckKey = _environment.firebaseAppCheckWebRecaptchaSiteKey;
     if (appCheckKey != null) {
-      emit(InitState.appCheck);
       final appCheck = FirebaseAppCheck.instanceFor(
         app: _environment.firebaseApp,
       );
       await appCheck.activate(webRecaptchaSiteKey: appCheckKey);
     }
 
+    emit(InitState.login);
+
     final auth = FirebaseAuth.instanceFor(app: _environment.firebaseApp);
     await auth.setPersistence(_environment.firebaseAuthPersistence);
 
-    if (auth.currentUser == null) {
-      emit(InitState.login);
+    final currentUser = auth.currentUser;
+    if (currentUser != null) {
+      await currentUser.reload();
+    } else {
       await auth.signInAnonymously();
     }
 
