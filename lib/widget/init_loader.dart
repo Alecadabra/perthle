@@ -18,7 +18,9 @@ class InitLoader extends StatelessWidget {
       builder: (final context, final initState) {
         final dailyState = initState.initialDaily;
         return AnimatedSwitcher(
-          duration: const Duration(seconds: 2),
+          switchInCurve: Curves.easeInOut,
+          switchOutCurve: Curves.easeInOut,
+          duration: const Duration(seconds: 1),
           child: dailyState != null
               ? BlocProvider(
                   create: (final context) => DailyCubit(
