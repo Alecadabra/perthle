@@ -52,5 +52,5 @@ class PerthleUserBloc extends Bloc<PerthleUserEvent, PerthleUserState> {
 
 extension _FirebaseUserAuthor on User? {
   // The author user
-  bool get isAuthor => this?.uid == 'SZx7Xxk8r3aKlNwCoTvBpABvS473';
+  bool get isAuthor => this?.uid == 'ebw0S0RWl6YU02mthPK7GOi8Aof1';
 }
