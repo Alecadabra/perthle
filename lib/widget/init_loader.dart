@@ -14,33 +14,30 @@ class InitLoader extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return Container(
-      color: NeumorphicTheme.baseColor(context),
-      child: BlocBuilder<InitCubit, InitState>(
-        builder: (final context, final initState) {
-          final dailyState = initState.initialDaily;
-          return AnimatedSwitcher(
-            duration: const Duration(seconds: 2),
-            child: dailyState != null
-                ? BlocProvider(
-                    create: (final context) => DailyCubit(
-                      todaysState: dailyState,
-                      dailyRepository: DailyStorageRepository.of(context),
-                    ),
-                    child: child,
-                  )
-                : Container(
-                    key: const ValueKey(
-                      1, // Doesn't look right without this :shrug:
-                    ),
-                    alignment: Alignment.center,
-                    child: _InitLoadStage(
-                      loadStage: initState.loadStage,
-                    ),
+    return BlocBuilder<InitCubit, InitState>(
+      builder: (final context, final initState) {
+        final dailyState = initState.initialDaily;
+        return AnimatedSwitcher(
+          duration: const Duration(seconds: 2),
+          child: dailyState != null
+              ? BlocProvider(
+                  create: (final context) => DailyCubit(
+                    todaysState: dailyState,
+                    dailyRepository: DailyStorageRepository.of(context),
                   ),
-          );
-        },
-      ),
+                  child: child,
+                )
+              : Container(
+                  key: const ValueKey(
+                    1, // Doesn't look right without this :shrug:
+                  ),
+                  alignment: Alignment.center,
+                  child: _InitLoadStage(
+                    loadStage: initState.loadStage,
+                  ),
+                ),
+        );
+      },
     );
   }
 }
