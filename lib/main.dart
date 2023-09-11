@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -5,8 +6,10 @@ import 'package:perthle/bloc/init_cubit.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/model/environment_state.dart';
 import 'package:perthle/model/settings_state.dart';
+import 'package:perthle/repository/daily_storage_repository.dart';
 import 'package:perthle/repository/local_storage_repository.dart';
 import 'package:perthle/repository/mutable_storage_repository.dart';
+import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
 import 'package:perthle/widget/init_loader.dart';
 import 'package:perthle/widget/perthle_navigator.dart';
 import 'package:perthle/widget/perthle_provider.dart';
@@ -70,15 +73,33 @@ class PerthleApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider.value(value: EnvironmentState.fromEnvVars()),
+        BlocProvider(
+          create: (final context) => InitCubit(
+            environment: EnvironmentState.fromEnvVars(),
+          ),
+          lazy: false,
+        ),
         RepositoryProvider<MutableStorageRepository>(
           create: (final context) => LocalStorageRepository(),
-          lazy: false,
         ),
         BlocProvider(
           create: (final context) => SettingsCubit(
             storage: MutableStorageRepository.of(context),
           ),
-          lazy: false,
+        ),
+        RepositoryProvider(
+          create: (final context) => DailyStorageRepository(
+            firebaseFirestore: FirebaseFirestore.instanceFor(
+              app: EnvironmentState.of(context).firebaseApp,
+            ),
+          ),
+        ),
+        RepositoryProvider(
+          create: (final context) => RemoteDictionaryStorageRepository(
+            firebaseFirestore: FirebaseFirestore.instanceFor(
+              app: EnvironmentState.of(context).firebaseApp,
+            ),
+          ),
         ),
       ],
       child: BlocBuilder<SettingsCubit, SettingsState>(
@@ -91,14 +112,9 @@ class PerthleApp extends StatelessWidget {
             themeMode: settings.themeMode,
             theme: _themeDataLight,
             darkTheme: _themeDataDark,
-            home: BlocProvider(
-              create: (final context) => InitCubit(
-                environment: EnvironmentState.fromEnvVars(),
-              ),
-              child: const InitLoader(
-                child: PerthleProvider(
-                  child: PerthleNavigator(),
-                ),
+            home: const InitLoader(
+              child: PerthleProvider(
+                child: PerthleNavigator(),
               ),
             ),
           );

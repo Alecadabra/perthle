@@ -61,6 +61,6 @@ enum EnvironmentState {
   // Provider
 
   static EnvironmentState of(final BuildContext context) {
-    return Provider.of<EnvironmentState>(context);
+    return Provider.of<EnvironmentState>(context, listen: false);
   }
 }

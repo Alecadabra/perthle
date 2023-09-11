@@ -1,65 +1,22 @@
 import 'dart:core';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/bloc/daily_cubit.dart';
 import 'package:perthle/bloc/game_bloc.dart';
 import 'package:perthle/bloc/history_cubit.dart';
-import 'package:perthle/bloc/init_cubit.dart';
 import 'package:perthle/bloc/library_cubit.dart';
 import 'package:perthle/bloc/perthle_user_bloc.dart';
 import 'package:perthle/model/environment_state.dart';
-import 'package:perthle/repository/daily_storage_repository.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
-import 'package:perthle/widget/init_loader.dart';
 import 'package:provider/provider.dart';
 
 class PerthleProvider extends StatelessWidget {
   const PerthleProvider({
-    final Key? key,
-    required this.child,
-  }) : super(key: key);
-
-  final Widget child;
-
-  @override
-  Widget build(final BuildContext context) {
-    return MultiProvider(
-      providers: [
-        // Repositories
-        RepositoryProvider(
-          create: (final context) => DailyStorageRepository(
-            firebaseFirestore: FirebaseFirestore.instanceFor(
-              app: EnvironmentState.of(context).firebaseApp,
-            ),
-          ),
-          lazy: false,
-        ),
-        RepositoryProvider(
-          create: (final context) => RemoteDictionaryStorageRepository(
-            firebaseFirestore: FirebaseFirestore.instanceFor(
-              app: EnvironmentState.of(context).firebaseApp,
-            ),
-          ),
-        ),
-      ],
-      child: InitLoader(
-        child: _PerthleMultiProvider(
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
-class _PerthleMultiProvider extends StatelessWidget {
-  const _PerthleMultiProvider({
     final Key? key,
     required this.child,
   }) : super(key: key);
