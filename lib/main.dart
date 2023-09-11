@@ -81,38 +81,28 @@ class PerthleApp extends StatelessWidget {
           lazy: false,
         ),
       ],
-      child: RepositoryProvider<MutableStorageRepository>(
-        create: (final context) => LocalStorageRepository(),
-        lazy: false,
-        child: BlocProvider(
-          create: (final context) => SettingsCubit(
-            storage: MutableStorageRepository.of(context),
-          ),
-          lazy: false,
-          child: BlocBuilder<SettingsCubit, SettingsState>(
-            buildWhen: (final a, final b) {
-              return a.themeMode != b.themeMode;
-            },
-            builder: (final context, final SettingsState settings) {
-              return NeumorphicApp(
-                title: 'Perthle',
-                themeMode: settings.themeMode,
-                theme: _themeDataLight,
-                darkTheme: _themeDataDark,
-                home: BlocProvider(
-                  create: (final context) => InitCubit(
-                    environment: EnvironmentState.fromEnvVars(),
-                  ),
-                  child: const InitLoader(
-                    child: PerthleProvider(
-                      child: PerthleNavigator(),
-                    ),
-                  ),
+      child: BlocBuilder<SettingsCubit, SettingsState>(
+        buildWhen: (final a, final b) {
+          return a.themeMode != b.themeMode;
+        },
+        builder: (final context, final SettingsState settings) {
+          return NeumorphicApp(
+            title: 'Perthle',
+            themeMode: settings.themeMode,
+            theme: _themeDataLight,
+            darkTheme: _themeDataDark,
+            home: BlocProvider(
+              create: (final context) => InitCubit(
+                environment: EnvironmentState.fromEnvVars(),
+              ),
+              child: const InitLoader(
+                child: PerthleProvider(
+                  child: PerthleNavigator(),
                 ),
-              );
-            },
-          ),
-        ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
