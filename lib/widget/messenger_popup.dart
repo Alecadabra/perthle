@@ -26,6 +26,12 @@ class MessengerPopupState extends State<MessengerPopup> {
   bool show = false;
 
   @override
+  void dispose() {
+    showTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(final BuildContext context) {
     return BlocBuilder<DailyCubit, DailyState>(
       builder: (final context, final daily) {
