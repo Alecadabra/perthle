@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 /// Displays a page's body and appbar
 class PerthleScaffold extends StatelessWidget {
   const PerthleScaffold({
-    final Key? key,
+    super.key,
     required this.appBar,
     required this.body,
-  }) : super(key: key);
+  });
 
   final Widget appBar;
   final Widget body;

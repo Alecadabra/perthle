@@ -6,6 +6,11 @@ analyzer:
 
 linter:
   rules:
+    unnecessary_this: false
     prefer_single_quotes: true
     prefer_final_parameters: true
-    unnecessary_this: false
+    always_use_package_imports: true
+    always_declare_return_types: true
+    lines_longer_than_80_chars: true
+    use_super_parameters: true
+    require_trailing_commas: true

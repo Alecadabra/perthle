@@ -12,7 +12,7 @@ import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({final Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   final LightSource lightSource = LightSource.topLeft;
 
@@ -225,7 +225,7 @@ class SettingsPage extends StatelessWidget {
 }
 
 class _SettingsHeading extends StatelessWidget {
-  const _SettingsHeading(this.text, {final Key? key}) : super(key: key);
+  const _SettingsHeading(this.text);
 
   final String text;
 
@@ -244,7 +244,6 @@ class _SettingsHeading extends StatelessWidget {
 
 class _SettingsRow extends StatelessWidget {
   const _SettingsRow({
-    final Key? key,
     required this.name,
     this.description,
     this.child,
@@ -253,8 +252,7 @@ class _SettingsRow extends StatelessWidget {
   })  : assert(
           builder == null && child != null || builder != null && child == null,
         ),
-        assert(buildWhen == null || builder != null),
-        super(key: key);
+        assert(buildWhen == null || builder != null);
 
   final String name;
   final String? description;
@@ -297,7 +295,7 @@ class _SettingsRow extends StatelessWidget {
 }
 
 class _PerthleLicensePage extends StatelessWidget {
-  const _PerthleLicensePage({final Key? key}) : super(key: key);
+  const _PerthleLicensePage();
 
   @override
   Widget build(final BuildContext context) {

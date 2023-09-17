@@ -7,10 +7,10 @@ import 'package:perthle/widget/keyboard_button.dart';
 /// A key on the keyboard that is not a letter, e.g. backspace.
 class KeyboardIconButton extends StatelessWidget {
   const KeyboardIconButton({
-    final Key? key,
+    super.key,
     required this.icon,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   final Icon icon;
   final Function()? onPressed;
@@ -41,37 +41,39 @@ class KeyboardIconButton extends StatelessWidget {
 }
 
 class KeyboardBackspaceButton extends StatelessWidget {
-  const KeyboardBackspaceButton({final Key? key}) : super(key: key);
+  const KeyboardBackspaceButton({super.key});
 
   @override
   Widget build(final BuildContext context) {
     return BlocBuilder<GameBloc, GameState>(
-        builder: (final context, final gameData) {
-      return KeyboardIconButton(
-        icon: const Icon(Icons.backspace_outlined),
-        onPressed: gameData.canBackspace
-            ? () => GameBloc.of(context).backspace()
-            : null,
-      );
-    });
+      builder: (final context, final gameData) {
+        return KeyboardIconButton(
+          icon: const Icon(Icons.backspace_outlined),
+          onPressed: gameData.canBackspace
+              ? () => GameBloc.of(context).backspace()
+              : null,
+        );
+      },
+    );
   }
 }
 
 class KeyboardEnterButton extends StatelessWidget {
-  const KeyboardEnterButton({final Key? key}) : super(key: key);
+  const KeyboardEnterButton({super.key});
 
   @override
   Widget build(final BuildContext context) {
     return BlocBuilder<GameBloc, GameState>(
-        buildWhen: (final previous, final current) =>
-            previous.canEnter != current.canEnter,
-        builder: (final context, final gameData) {
-          return KeyboardIconButton(
-            icon: const Icon(Icons.keyboard_return_outlined),
-            onPressed: gameData.canEnter
-                ? () async => await GameBloc.of(context).enter()
-                : null,
-          );
-        });
+      buildWhen: (final previous, final current) =>
+          previous.canEnter != current.canEnter,
+      builder: (final context, final gameData) {
+        return KeyboardIconButton(
+          icon: const Icon(Icons.keyboard_return_outlined),
+          onPressed: gameData.canEnter
+              ? () async => await GameBloc.of(context).enter()
+              : null,
+        );
+      },
+    );
   }
 }

@@ -49,8 +49,8 @@ class SavedGameState extends Equatable {
   List<List<TileMatchState>> get attempts => _matches
       .where(
         (final List<TileMatchState> row) => !row.every(
-            (final TileMatchState matchState) =>
-                matchState.isBlank || matchState.isRevealed),
+          (final matchState) => matchState.isBlank || matchState.isRevealed,
+        ),
       )
       .toList();
 

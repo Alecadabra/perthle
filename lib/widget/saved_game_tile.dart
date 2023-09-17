@@ -13,7 +13,7 @@ import 'package:share_plus/share_plus.dart';
 /// Widget to show the details of a saved game and ways to share it.
 class SavedGameTile extends StatelessWidget {
   const SavedGameTile({
-    final Key? key,
+    super.key,
     required this.savedGame,
     required this.daily,
     required this.showWord,
@@ -21,8 +21,7 @@ class SavedGameTile extends StatelessWidget {
     final double? depth,
     this.lightSource = LightSource.topLeft,
   })  : opacity = opacity ?? 1,
-        depth = depth ?? 4,
-        super(key: key);
+        depth = depth ?? 4;
 
   final SavedGameState savedGame;
   final DailyState? daily;
@@ -105,13 +104,12 @@ class SavedGameTile extends StatelessWidget {
 
 class _CopyButton extends StatelessWidget {
   const _CopyButton({
-    final Key? key,
     required this.opacity,
     required this.depth,
     required this.lightSource,
     required this.gameMode,
     required this.savedGame,
-  }) : super(key: key);
+  });
 
   final double opacity;
   final double depth;
@@ -172,13 +170,12 @@ class _CopyButton extends StatelessWidget {
 
 class _ShareButton extends StatelessWidget {
   const _ShareButton({
-    final Key? key,
     required this.opacity,
     required this.depth,
     required this.lightSource,
     required this.gameMode,
     required this.savedGame,
-  }) : super(key: key);
+  });
 
   final double opacity;
   final double depth;
@@ -233,14 +230,13 @@ class _ShareButton extends StatelessWidget {
 
 class _Title extends StatelessWidget {
   const _Title({
-    final Key? key,
     required this.depth,
     required this.lightSource,
     required this.opacity,
     required this.gameMode,
     required this.word,
     required this.savedGame,
-  }) : super(key: key);
+  });
 
   final double depth;
   final LightSource lightSource;
@@ -306,12 +302,11 @@ class _Title extends StatelessWidget {
 
 class _EmojiTiles extends StatelessWidget {
   const _EmojiTiles({
-    final Key? key,
     required this.depth,
     required this.lightSource,
     required this.opacity,
     required this.savedGame,
-  }) : super(key: key);
+  });
 
   final double depth;
   final LightSource lightSource;

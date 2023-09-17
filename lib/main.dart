@@ -15,14 +15,14 @@ import 'package:perthle/widget/perthle_navigator.dart';
 import 'package:perthle/widget/perthle_provider.dart';
 import 'package:provider/provider.dart';
 
-main() {
+void main() {
   setUrlStrategy(PathUrlStrategy());
   runApp(const PerthleApp());
 }
 
 @immutable
 class PerthleApp extends StatelessWidget {
-  const PerthleApp({final Key? key}) : super(key: key);
+  const PerthleApp({super.key});
 
   // Theme constants
 

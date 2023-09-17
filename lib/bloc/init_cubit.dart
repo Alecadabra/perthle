@@ -26,7 +26,7 @@ class InitCubit extends Cubit<InitState> {
 
   final EnvironmentState _environment;
 
-  _init() async {
+  Future<void> _init() async {
     debugPrint('Connecting to ${_environment.environmentName}');
 
     emit(InitState.firebase);

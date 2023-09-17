@@ -17,7 +17,7 @@ import 'package:perthle/widget/perthle_scaffold.dart';
 import 'package:perthle/widget/perthle_scroll_configuration.dart';
 
 class HistoryPage extends StatelessWidget {
-  const HistoryPage({final Key? key}) : super(key: key);
+  const HistoryPage({super.key});
 
   static const LightSource lightSource = LightSource.topRight;
 
@@ -53,10 +53,7 @@ class HistoryPage extends StatelessWidget {
 }
 
 class _HistoryList extends StatefulWidget {
-  const _HistoryList({
-    final Key? key,
-    required this.lightSource,
-  }) : super(key: key);
+  const _HistoryList({required this.lightSource});
 
   final LightSource lightSource;
 

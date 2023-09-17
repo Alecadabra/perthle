@@ -5,7 +5,7 @@ import 'package:perthle/widget/keyboard_letter_button.dart';
 
 /// The QWERTY keyboard that acts as input for the game board.
 class GameKeyboard extends StatelessWidget {
-  const GameKeyboard({final Key? key}) : super(key: key);
+  const GameKeyboard({super.key});
 
   @override
   Widget build(final BuildContext context) {

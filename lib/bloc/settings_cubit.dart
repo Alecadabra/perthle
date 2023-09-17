@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:perthle/repository/persistent.dart';
-import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/model/settings_state.dart';
 
 /// Bloc cubit for managing the settings state and allowing it's editing
 class SettingsCubit extends PersistentCubit<SettingsState> {
   // Constructor
 
-  SettingsCubit({required final MutableStorageRepository storage})
-      : super(initialState: const SettingsState(), storage: storage);
+  SettingsCubit({required super.storage})
+      : super(initialState: const SettingsState());
 
   // Action
 

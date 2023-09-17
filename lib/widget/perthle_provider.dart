@@ -17,9 +17,9 @@ import 'package:provider/provider.dart';
 
 class PerthleProvider extends StatelessWidget {
   const PerthleProvider({
-    final Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
 
@@ -31,46 +31,49 @@ class PerthleProvider extends StatelessWidget {
           app: EnvironmentState.of(context).firebaseApp,
         ),
       ),
-      child: Builder(builder: (final context) {
-        return MultiProvider(
-          providers: [
-            // Blocs/Cubits
-            BlocProvider(
-              create: (final context) => MessengerCubit(),
-              lazy: false,
-            ),
-            BlocProvider(
-              create: (final context) => GameBloc(
-                storage: MutableStorageRepository.of(context),
-                dailyCubit: DailyCubit.of(context),
-                dictStorageRepo: RemoteDictionaryStorageRepository.of(context),
-                messengerCubit: MessengerCubit.of(context),
-                settingsCubit: SettingsCubit.of(context),
-              ),
-              lazy: false,
-            ),
-            BlocProvider(
-              create: (final context) => HistoryCubit(
-                gameBloc: GameBloc.of(context),
-                storage: MutableStorageRepository.of(context),
-              ),
-              lazy: false,
-            ),
-            if (PerthleUserBloc.of(context).state.isAuthor)
+      child: Builder(
+        builder: (final context) {
+          return MultiProvider(
+            providers: [
+              // Blocs/Cubits
               BlocProvider(
-                create: (final context) => LibraryCubit(
+                create: (final context) => MessengerCubit(),
+                lazy: false,
+              ),
+              BlocProvider(
+                create: (final context) => GameBloc(
                   storage: MutableStorageRepository.of(context),
                   dailyCubit: DailyCubit.of(context),
-                  dictStorageRepo: RemoteDictionaryStorageRepository.of(
-                    context,
-                  ),
+                  dictStorageRepo:
+                      RemoteDictionaryStorageRepository.of(context),
+                  messengerCubit: MessengerCubit.of(context),
+                  settingsCubit: SettingsCubit.of(context),
                 ),
                 lazy: false,
               ),
-          ],
-          child: child,
-        );
-      }),
+              BlocProvider(
+                create: (final context) => HistoryCubit(
+                  gameBloc: GameBloc.of(context),
+                  storage: MutableStorageRepository.of(context),
+                ),
+                lazy: false,
+              ),
+              if (PerthleUserBloc.of(context).state.isAuthor)
+                BlocProvider(
+                  create: (final context) => LibraryCubit(
+                    storage: MutableStorageRepository.of(context),
+                    dailyCubit: DailyCubit.of(context),
+                    dictStorageRepo: RemoteDictionaryStorageRepository.of(
+                      context,
+                    ),
+                  ),
+                  lazy: false,
+                ),
+            ],
+            child: child,
+          );
+        },
+      ),
     );
   }
 }

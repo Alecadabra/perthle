@@ -10,13 +10,15 @@ class LibraryState extends Equatable {
   }) : _words = words;
 
   LibraryState.fromJson(final Map<String, dynamic> json)
-      : this(words: {
-          for (MapEntry<String, dynamic> entry in json.entries)
-            GameModeState.fromIndex(int.parse(entry.key)): [
-              for (Map<String, dynamic> jsonWord in entry.value)
-                LibraryWordState.fromJson(jsonWord),
-            ],
-        });
+      : this(
+          words: {
+            for (MapEntry<String, dynamic> entry in json.entries)
+              GameModeState.fromIndex(int.parse(entry.key)): [
+                for (Map<String, dynamic> jsonWord in entry.value)
+                  LibraryWordState.fromJson(jsonWord),
+              ],
+          },
+        );
 
   final Map<GameModeState, List<LibraryWordState>> _words;
 

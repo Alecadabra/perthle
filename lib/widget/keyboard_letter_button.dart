@@ -9,10 +9,10 @@ import 'package:perthle/widget/keyboard_button.dart';
 /// A keyboard key that types a letter and shows that key's match colour.
 class KeyboardLetterButton extends StatelessWidget {
   const KeyboardLetterButton({
-    final Key? key,
+    super.key,
     required this.letter,
     this.flex = 10,
-  }) : super(key: key);
+  });
 
   final LetterState letter;
   final int flex;

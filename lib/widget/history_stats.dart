@@ -5,7 +5,7 @@ import 'package:perthle/model/history_state.dart';
 
 /// The panel to show the stats values for the game history.
 class HistoryStats extends StatelessWidget {
-  const HistoryStats({final Key? key}) : super(key: key);
+  const HistoryStats({super.key});
 
   @override
   Widget build(final BuildContext context) {
@@ -31,10 +31,9 @@ class HistoryStats extends StatelessWidget {
 /// A single statistic
 class _Stat extends StatelessWidget {
   const _Stat({
-    final Key? key,
     required this.name,
     required this.value,
-  }) : super(key: key);
+  });
 
   final String name;
   final String value;

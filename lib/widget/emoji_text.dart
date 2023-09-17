@@ -2,7 +2,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/model/tile_match_state.dart';
 
 class EmojiText extends StatelessWidget {
-  const EmojiText(this.text, {final Key? key}) : super(key: key);
+  const EmojiText(this.text, {super.key});
 
   final String text;
 
@@ -22,7 +22,7 @@ class EmojiText extends StatelessWidget {
 }
 
 class _Emoji extends StatelessWidget {
-  const _Emoji(this.char, {final Key? key}) : super(key: key);
+  const _Emoji(this.char);
 
   final String char;
 

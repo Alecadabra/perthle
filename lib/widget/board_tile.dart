@@ -5,13 +5,13 @@ import 'package:perthle/model/tile_match_state.dart';
 /// A square on the perthle board for a nullable letter and it's match state.
 class BoardTile extends StatelessWidget {
   const BoardTile({
-    final Key? key,
+    super.key,
     required this.match,
     this.letter,
     this.lightSource = LightSource.topLeft,
     this.current = false,
     required this.scale,
-  }) : super(key: key);
+  });
 
   final TileMatchState match;
   final CharacterState? letter;

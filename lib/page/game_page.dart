@@ -16,7 +16,7 @@ import 'package:perthle/widget/game_board.dart';
 import 'package:perthle/widget/game_keyboard.dart';
 
 class GamePage extends StatelessWidget {
-  const GamePage({final Key? key}) : super(key: key);
+  const GamePage({super.key});
 
   static const double _maxKeyboardWidth = 600;
 

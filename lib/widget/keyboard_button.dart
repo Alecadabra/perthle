@@ -4,14 +4,14 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 /// A single key on the game keyboard, either a letter or icon button.
 class KeyboardButton extends StatelessWidget {
   const KeyboardButton({
-    final Key? key,
+    super.key,
     required this.child,
     this.style,
     this.onPressed,
     this.flex = 10,
     this.margin = const EdgeInsets.all(2),
     this.enableFeedback = true,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final ButtonStyle? style;

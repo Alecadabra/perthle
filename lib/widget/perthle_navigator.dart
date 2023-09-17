@@ -15,7 +15,7 @@ import 'package:perthle/page/welcome_page.dart';
 /// The stateful page swiping navigator to show the three pages of the Perthle
 /// app.
 class PerthleNavigator extends StatefulWidget {
-  const PerthleNavigator({final Key? key}) : super(key: key);
+  const PerthleNavigator({super.key});
 
   @override
   State<PerthleNavigator> createState() => _PerthleNavigatorState();

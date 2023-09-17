@@ -7,7 +7,6 @@ import 'package:perthle/model/character_state.dart';
 import 'package:perthle/repository/persistent.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
-import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/model/game_state.dart';
 import 'package:perthle/model/letter_state.dart';
 import 'package:perthle/model/tile_match_state.dart';
@@ -21,7 +20,7 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   // Constructor
 
   GameBloc({
-    required final MutableStorageRepository storage,
+    required super.storage,
     required final DailyCubit dailyCubit,
     required final RemoteDictionaryStorageRepository dictStorageRepo,
     required final MessengerCubit messengerCubit,
@@ -29,7 +28,6 @@ class GameBloc extends PersistentBloc<GameEvent, GameState> {
   })  : _dictStorageRepo = dictStorageRepo,
         _messengerCubit = messengerCubit,
         super(
-          storage: storage,
           initialState: GameState(
             gameNum: dailyCubit.state.gameNum,
             word: dailyCubit.state.word,

@@ -15,7 +15,7 @@ import 'package:perthle/model/settings_state.dart';
 /// A small, normally hidden popup that shows messages sent through the
 /// messenger cubit.
 class MessengerPopup extends StatefulWidget {
-  const MessengerPopup({final Key? key}) : super(key: key);
+  const MessengerPopup({super.key});
 
   @override
   State<MessengerPopup> createState() => MessengerPopupState();

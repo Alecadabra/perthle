@@ -4,9 +4,9 @@ import 'package:flutter/widgets.dart';
 /// Configures children to use the perthle scroll behaviour
 class PerthleScrollConfiguration extends StatelessWidget {
   const PerthleScrollConfiguration({
-    final Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
 

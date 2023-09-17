@@ -6,7 +6,7 @@ import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({final Key? key}) : super(key: key);
+  const WelcomePage({super.key});
 
   static const LightSource _lightSource = LightSource.topRight;
 
@@ -96,12 +96,11 @@ class WelcomePage extends StatelessWidget {
 
 class _BoardRowCaption extends StatelessWidget {
   const _BoardRowCaption({
-    final Key? key,
     required this.start,
     required this.letter,
     required this.end,
     required this.color,
-  }) : super(key: key);
+  });
 
   final String start;
   final String letter;
@@ -132,11 +131,9 @@ class _BoardRowCaption extends StatelessWidget {
 
 class _BoardRow extends StatelessWidget {
   const _BoardRow({
-    final Key? key,
     required this.word,
     required this.matches,
-  })  : assert(word.length == matches.length),
-        super(key: key);
+  }) : assert(word.length == matches.length);
 
   final String word;
   final List<TileMatchState> matches;
@@ -175,7 +172,7 @@ class _BoardRow extends StatelessWidget {
 }
 
 class _Heading extends StatelessWidget {
-  const _Heading(this.text, {final Key? key}) : super(key: key);
+  const _Heading(this.text);
 
   final String text;
 

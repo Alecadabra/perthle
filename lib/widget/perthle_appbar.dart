@@ -3,10 +3,10 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 /// The appbar that shows a title string for use within a perthle scaffold.
 class PerthleAppbar extends StatelessWidget {
   const PerthleAppbar({
-    final Key? key,
+    super.key,
     required this.title,
     required this.lightSource,
-  }) : super(key: key);
+  });
 
   final String title;
   final LightSource lightSource;

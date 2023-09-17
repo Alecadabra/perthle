@@ -5,7 +5,7 @@ import 'package:perthle/model/daily_state.dart';
 
 /// A stateful countdown timer until the next perthle (local midnight).
 class DailyCountdown extends StatefulWidget {
-  const DailyCountdown({final Key? key}) : super(key: key);
+  const DailyCountdown({super.key});
 
   @override
   State<DailyCountdown> createState() => _DailyCountdownState();

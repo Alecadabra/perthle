@@ -11,7 +11,7 @@ import 'package:perthle/widget/perthle_appbar.dart';
 import 'package:perthle/widget/perthle_scaffold.dart';
 
 class LibraryPage extends StatelessWidget {
-  const LibraryPage({final Key? key}) : super(key: key);
+  const LibraryPage({super.key});
 
   final LightSource lightSource = LightSource.left;
 
@@ -161,7 +161,7 @@ class LibraryPage extends StatelessWidget {
 }
 
 class _LibraryList extends StatelessWidget {
-  const _LibraryList({final Key? key}) : super(key: key);
+  const _LibraryList();
 
   @override
   Widget build(final BuildContext context) {
