@@ -12,7 +12,6 @@ import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
 import 'package:perthle/widget/init_loader.dart';
 import 'package:perthle/widget/perthle_navigator.dart';
-import 'package:perthle/widget/perthle_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -26,23 +25,15 @@ class PerthleApp extends StatelessWidget {
 
   // Theme constants
 
-  static final TextTheme _textThemeLight = Typography.whiteMountainView.apply(
-    fontFamily: 'Poppins',
-    bodyColor: const Color(0xFF525252),
-    displayColor: const Color(0xaa525252),
-  );
-
-  static final TextTheme _textThemeDark = Typography.blackMountainView.apply(
-    fontFamily: 'Poppins',
-    bodyColor: const Color(0xB3FFFFFF),
-    displayColor: const Color(0xaaFFFFFF),
-  );
-
   static const Color _matchGreen = Color(0xFF8FDA93);
   static const Color _missYellow = Color(0xFFDBC381);
 
   static final _themeDataLight = NeumorphicThemeData(
-    textTheme: _textThemeLight,
+    textTheme: Typography.whiteMountainView.apply(
+      fontFamily: 'Poppins',
+      bodyColor: const Color(0xFF525252),
+      displayColor: const Color(0xAA525252),
+    ),
     baseColor: const Color(0xFFDDE6E8),
     defaultTextColor: const Color(0xC3363A3F),
     disabledColor: const Color(0xFFACACAC),
@@ -53,11 +44,15 @@ class PerthleApp extends StatelessWidget {
   );
 
   static final _themeDataDark = NeumorphicThemeData.dark(
-    textTheme: _textThemeDark,
+    textTheme: Typography.blackMountainView.apply(
+      fontFamily: 'Poppins',
+      bodyColor: const Color(0xB3FFFFFF),
+      displayColor: const Color(0xAAFFFFFF),
+    ),
     baseColor: const Color(0xFF32353A),
     shadowLightColor: const Color(0xFF8F8F8F),
     shadowDarkColor: const Color(0xC5000000),
-    shadowDarkColorEmboss: const Color(0xff000000),
+    shadowDarkColorEmboss: const Color(0xFF000000),
     shadowLightColorEmboss: const Color(0xB9FFFFFF),
     defaultTextColor: const Color(0x92DDE6E8),
     accentColor: _matchGreen,
@@ -113,9 +108,7 @@ class PerthleApp extends StatelessWidget {
             theme: _themeDataLight,
             darkTheme: _themeDataDark,
             home: const InitLoader(
-              child: PerthleProvider(
-                child: PerthleNavigator(),
-              ),
+              child: PerthleNavigator(),
             ),
           );
         },
