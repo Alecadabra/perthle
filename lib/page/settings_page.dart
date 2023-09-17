@@ -34,6 +34,8 @@ class SettingsPage extends StatelessWidget {
               name: 'Theme mode',
               builder: (final context, final settings) {
                 return NeumorphicToggle(
+                  movingCurve: Curves.easeInOutCubicEmphasized,
+                  alphaAnimationCurve: Curves.easeInOutCubicEmphasized,
                   width: 240,
                   style: NeumorphicToggleStyle(lightSource: lightSource),
                   selectedIndex: settings.themeMode.index,
@@ -84,6 +86,7 @@ class SettingsPage extends StatelessWidget {
                   bool selected = settings.lightEmojis == isLight;
                   double depth = NeumorphicTheme.depth(context) ?? 6;
                   return NeumorphicButton(
+                    curve: Curves.easeInOutCubicEmphasized,
                     style: NeumorphicStyle(
                       boxShape: const NeumorphicBoxShape.circle(),
                       lightSource: lightSource,
@@ -128,10 +131,12 @@ class SettingsPage extends StatelessWidget {
                           ? 'Revealed hints must be used in guesses'
                           : 'Can only enable at start of game',
                       child: NeumorphicSwitch(
+                        curve: Curves.easeInOutCubicEmphasized,
                         style: NeumorphicSwitchStyle(
                           thumbDepth: game.canToggleHardMode
                               ? NeumorphicTheme.depth(context)
                               : -NeumorphicTheme.depth(context)!,
+                          lightSource: lightSource,
                         ),
                         value: settings.hardMode,
                         onChanged: (final bool newValue) {
@@ -156,7 +161,11 @@ class SettingsPage extends StatelessWidget {
               name: 'Show past answers',
               builder: (final context, final settings) {
                 return NeumorphicSwitch(
+                  curve: Curves.easeInOutCubicEmphasized,
                   value: settings.historyShowWords,
+                  style: NeumorphicSwitchStyle(
+                    lightSource: lightSource,
+                  ),
                   onChanged: (final bool newValue) {
                     SettingsCubit.of(context).edit(historyShowWords: newValue);
                   },
