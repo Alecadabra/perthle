@@ -26,7 +26,40 @@ class PerthleApp extends StatelessWidget {
   Widget build(final BuildContext context) {
     return MultiProvider(
       providers: _preInitProviders,
-      child: BlocBuilder<SettingsCubit, SettingsState>(
+      child: BlocConsumer<SettingsCubit, SettingsState>(
+        listenWhen: (final a, final b) => a.themeMode != b.themeMode,
+        listener: (final context, final state) {
+          final lightTheme = state.themeMode == ThemeMode.light ||
+              (state.themeMode == ThemeMode.system &&
+                  WidgetsBinding
+                          .instance.platformDispatcher.platformBrightness ==
+                      Brightness.light);
+          if (lightTheme) {
+            SystemChrome.setSystemUIOverlayStyle(
+              SystemUiOverlayStyle(
+                systemNavigationBarColor: _themeDataLight.baseColor,
+                systemNavigationBarDividerColor:
+                    _themeDataLight.defaultTextColor,
+                systemNavigationBarIconBrightness: Brightness.dark,
+                statusBarColor: _themeDataLight.baseColor,
+                statusBarBrightness: Brightness.light,
+                statusBarIconBrightness: Brightness.dark,
+              ),
+            );
+          } else {
+            SystemChrome.setSystemUIOverlayStyle(
+              SystemUiOverlayStyle(
+                systemNavigationBarColor: _themeDataDark.baseColor,
+                systemNavigationBarDividerColor:
+                    _themeDataDark.defaultTextColor,
+                systemNavigationBarIconBrightness: Brightness.light,
+                statusBarColor: _themeDataDark.baseColor,
+                statusBarBrightness: Brightness.dark,
+                statusBarIconBrightness: Brightness.light,
+              ),
+            );
+          }
+        },
         buildWhen: (final a, final b) => a.themeMode != b.themeMode,
         builder: (final context, final SettingsState settings) {
           return NeumorphicApp(
