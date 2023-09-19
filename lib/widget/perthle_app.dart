@@ -26,17 +26,17 @@ class PerthleApp extends StatelessWidget {
   Widget build(final BuildContext context) {
     return MultiProvider(
       providers: _preInitProviders,
-      child: BlocConsumer<SettingsCubit, SettingsState>(
-        listenWhen: (final a, final b) => a.themeMode != b.themeMode,
-        listener: (final context, final state) {
-          final lightTheme = state.themeMode == ThemeMode.light ||
-              (state.themeMode == ThemeMode.system &&
-                  WidgetsBinding
-                          .instance.platformDispatcher.platformBrightness ==
-                      Brightness.light);
-          if (lightTheme) {
-            SystemChrome.setSystemUIOverlayStyle(
-              SystemUiOverlayStyle(
+      child: BlocBuilder<SettingsCubit, SettingsState>(
+        buildWhen: (final a, final b) => a.themeMode != b.themeMode,
+        builder: (final context, final SettingsState settings) {
+          SystemUiOverlayStyle getOverlayStyle() {
+            final lightTheme = settings.themeMode == ThemeMode.light ||
+                (settings.themeMode == ThemeMode.system &&
+                    WidgetsBinding
+                            .instance.platformDispatcher.platformBrightness ==
+                        Brightness.light);
+            if (lightTheme) {
+              return SystemUiOverlayStyle(
                 systemNavigationBarColor: _themeDataLight.baseColor,
                 systemNavigationBarDividerColor:
                     _themeDataLight.defaultTextColor,
@@ -44,11 +44,9 @@ class PerthleApp extends StatelessWidget {
                 statusBarColor: _themeDataLight.baseColor,
                 statusBarBrightness: Brightness.light,
                 statusBarIconBrightness: Brightness.dark,
-              ),
-            );
-          } else {
-            SystemChrome.setSystemUIOverlayStyle(
-              SystemUiOverlayStyle(
+              );
+            } else {
+              return SystemUiOverlayStyle(
                 systemNavigationBarColor: _themeDataDark.baseColor,
                 systemNavigationBarDividerColor:
                     _themeDataDark.defaultTextColor,
@@ -56,12 +54,10 @@ class PerthleApp extends StatelessWidget {
                 statusBarColor: _themeDataDark.baseColor,
                 statusBarBrightness: Brightness.dark,
                 statusBarIconBrightness: Brightness.light,
-              ),
-            );
+              );
+            }
           }
-        },
-        buildWhen: (final a, final b) => a.themeMode != b.themeMode,
-        builder: (final context, final SettingsState settings) {
+
           return NeumorphicApp(
             title: 'Perthle',
             themeMode: settings.themeMode,
@@ -69,21 +65,25 @@ class PerthleApp extends StatelessWidget {
             materialTheme: _materialThemeDataLight,
             darkTheme: _themeDataDark,
             materialDarkTheme: _materialThemeDataDark,
-            home: BlocBuilder<InitCubit, InitState>(
-              buildWhen: (final a, final b) => a.initialDaily != b.initialDaily,
-              builder: (final context, final initState) {
-                final dailyState = initState.initialDaily;
-                return AnimatedSwitcher(
-                  duration: const Duration(seconds: 1),
-                  child: dailyState == null
-                      ? const InitLoader()
-                      : PostInitProvider(
-                          key: const ValueKey(1),
-                          initialDaily: dailyState,
-                          child: const PerthleNavigator(),
-                        ),
-                );
-              },
+            home: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: getOverlayStyle(),
+              child: BlocBuilder<InitCubit, InitState>(
+                buildWhen: (final a, final b) =>
+                    a.initialDaily != b.initialDaily,
+                builder: (final context, final initState) {
+                  final dailyState = initState.initialDaily;
+                  return AnimatedSwitcher(
+                    duration: const Duration(seconds: 1),
+                    child: dailyState == null
+                        ? const InitLoader()
+                        : PostInitProvider(
+                            key: const ValueKey(1),
+                            initialDaily: dailyState,
+                            child: const PerthleNavigator(),
+                          ),
+                  );
+                },
+              ),
             ),
           );
         },
