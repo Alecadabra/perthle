@@ -43,7 +43,8 @@ class InitCubit extends Cubit<InitState> {
       final appCheck = FirebaseAppCheck.instanceFor(
         app: _environment.firebaseApp,
       );
-      await appCheck.activate(webRecaptchaSiteKey: appCheckKey);
+      final webProvider = ReCaptchaV3Provider(appCheckKey);
+      await appCheck.activate(webProvider: webProvider);
     }
 
     emit(InitState.login);
