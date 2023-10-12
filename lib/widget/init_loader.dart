@@ -16,8 +16,10 @@ class InitLoader extends StatelessWidget {
       appBar: NeumorphicAppBar(
         centerTitle: true,
         title: Shimmer.fromColors(
-          baseColor: NeumorphicTheme.defaultTextColor(context),
-          highlightColor: NeumorphicTheme.disabledColor(context),
+          baseColor:
+              NeumorphicTheme.of(context)!.current!.shadowLightColorEmboss,
+          highlightColor:
+              NeumorphicTheme.of(context)!.current!.shadowLightColor,
           child: Container(
             decoration: BoxDecoration(
               color: NeumorphicTheme.baseColor(context),

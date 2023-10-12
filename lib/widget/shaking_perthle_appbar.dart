@@ -10,8 +10,14 @@ import 'package:perthle/model/messenger_state.dart';
 import 'package:perthle/widget/perthle_appbar.dart';
 
 /// A perthle app bar that shakes in response to the messenger cubit.
-class ShakingPerthleAppbar extends StatefulWidget {
+class ShakingPerthleAppbar extends StatefulWidget
+    implements PreferredSizeWidget {
   const ShakingPerthleAppbar({super.key});
+
+  @override
+  Size get preferredSize {
+    return const Size.fromHeight(PerthleAppbar.preferredHeight);
+  }
 
   @override
   State<ShakingPerthleAppbar> createState() => _ShakingPerthleAppbarState();
