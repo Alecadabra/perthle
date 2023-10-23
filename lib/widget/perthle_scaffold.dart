@@ -8,14 +8,16 @@ class PerthleScaffold extends StatelessWidget {
     required this.body,
   });
 
-  final PreferredSizeWidget appBar;
+  final Widget appBar;
   final Widget body;
 
   @override
   Widget build(final BuildContext context) {
-    return Scaffold(
-      appBar: appBar,
-      body: body,
+    return Column(
+      children: [
+        Expanded(child: appBar),
+        Expanded(flex: 11, child: body),
+      ],
     );
   }
 }

@@ -4,39 +4,9 @@ import 'package:perthle/bloc/init_cubit.dart';
 import 'package:perthle/model/character_state.dart';
 import 'package:perthle/model/init_state.dart';
 import 'package:perthle/widget/board_tile.dart';
-import 'package:perthle/widget/perthle_scaffold.dart';
-import 'package:shimmer/shimmer.dart';
 
 class InitLoader extends StatelessWidget {
   const InitLoader({super.key});
-
-  @override
-  Widget build(final BuildContext context) {
-    return PerthleScaffold(
-      appBar: NeumorphicAppBar(
-        centerTitle: true,
-        title: Shimmer.fromColors(
-          baseColor:
-              NeumorphicTheme.of(context)!.current!.shadowLightColorEmboss,
-          highlightColor:
-              NeumorphicTheme.of(context)!.current!.shadowLightColor,
-          child: Container(
-            decoration: BoxDecoration(
-              color: NeumorphicTheme.baseColor(context),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            height: 40,
-            width: 180,
-          ),
-        ),
-      ),
-      body: const _InitLoadStage(),
-    );
-  }
-}
-
-class _InitLoadStage extends StatelessWidget {
-  const _InitLoadStage();
 
   @override
   Widget build(final BuildContext context) {

@@ -1,7 +1,7 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 /// The appbar that shows a title string for use within a perthle scaffold.
-class PerthleAppbar extends StatelessWidget implements PreferredSizeWidget {
+class PerthleAppbar extends StatelessWidget {
   const PerthleAppbar({
     super.key,
     required this.title,
@@ -10,13 +10,6 @@ class PerthleAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   final String title;
   final LightSource lightSource;
-
-  static const preferredHeight = kToolbarHeight + 16;
-
-  @override
-  Size get preferredSize {
-    return const Size.fromHeight(preferredHeight);
-  }
 
   @override
   Widget build(final BuildContext context) {

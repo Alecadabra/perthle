@@ -29,7 +29,6 @@ dependencies:
   firebase_app_check: ^0.1.5
   cloud_firestore: ^4.9.1
   dartx: ^1.2.0
-  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
