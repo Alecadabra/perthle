@@ -36,55 +36,25 @@ class PerthleApp extends StatelessWidget {
             materialTheme: _materialThemeDataLight,
             darkTheme: _themeDataDark,
             materialDarkTheme: _materialThemeDataDark,
-            home: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: getOverlayStyle(settings),
-              child: BlocBuilder<InitCubit, InitState>(
-                buildWhen: (final a, final b) =>
-                    a.initialDaily != b.initialDaily,
-                builder: (final context, final initState) {
-                  final dailyState = initState.initialDaily;
-                  return AnimatedSwitcher(
-                    duration: const Duration(seconds: 1),
-                    child: dailyState == null
-                        ? const InitLoader()
-                        : PostInitProvider(
-                            key: const ValueKey(1),
-                            initialDaily: dailyState,
-                            child: const PerthleNavigator(),
-                          ),
-                  );
-                },
-              ),
+            home: BlocBuilder<InitCubit, InitState>(
+              buildWhen: (final a, final b) => a.initialDaily != b.initialDaily,
+              builder: (final context, final initState) {
+                final dailyState = initState.initialDaily;
+                return AnimatedSwitcher(
+                  duration: const Duration(seconds: 1),
+                  child: dailyState == null
+                      ? const InitLoader()
+                      : PostInitProvider(
+                          key: const ValueKey(1),
+                          initialDaily: dailyState,
+                          child: const PerthleNavigator(),
+                        ),
+                );
+              },
             ),
           );
         },
       ),
-    );
-  }
-}
-
-SystemUiOverlayStyle getOverlayStyle(final settings) {
-  final lightTheme = settings.themeMode == ThemeMode.light ||
-      (settings.themeMode == ThemeMode.system &&
-          WidgetsBinding.instance.platformDispatcher.platformBrightness ==
-              Brightness.light);
-  if (lightTheme) {
-    return SystemUiOverlayStyle(
-      systemNavigationBarColor: _themeDataLight.baseColor,
-      systemNavigationBarDividerColor: _themeDataLight.defaultTextColor,
-      systemNavigationBarIconBrightness: Brightness.dark,
-      statusBarColor: _themeDataLight.baseColor,
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark,
-    );
-  } else {
-    return SystemUiOverlayStyle(
-      systemNavigationBarColor: _themeDataDark.baseColor,
-      systemNavigationBarDividerColor: _themeDataDark.defaultTextColor,
-      systemNavigationBarIconBrightness: Brightness.light,
-      statusBarColor: _themeDataDark.baseColor,
-      statusBarBrightness: Brightness.dark,
-      statusBarIconBrightness: Brightness.light,
     );
   }
 }
