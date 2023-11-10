@@ -29,7 +29,7 @@ class _PerthleNavigatorState extends State<PerthleNavigator> {
     controller = PageController(initialPage: 1);
     // Go to page one after a delay if they haven't played before
     WidgetsBinding.instance.addPostFrameCallback(
-      (final _) => Future.delayed(const Duration(milliseconds: 500)).then(
+      (final _) => Future.delayed(const Duration(seconds: 1)).then(
         (final _) {
           final history = HistoryCubit.of(context).state;
           final game = GameBloc.of(context).state;

@@ -18,8 +18,8 @@ import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
 import 'package:provider/provider.dart';
 
-class PerthleProvider extends StatelessWidget {
-  const PerthleProvider({
+class PostInitProvider extends StatelessWidget {
+  const PostInitProvider({
     super.key,
     required this.initialDaily,
     required this.child,
