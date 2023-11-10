@@ -51,16 +51,13 @@
       }
     }
     function lightMode() {
-      setThemeColorTo('#DDE6E8');
+      setBackgroundColourTo('#DDE6E8');
     }
     function darkMode() {
-      setThemeColorTo('#32353A');
+      setBackgroundColourTo('#32353A');
     }
-    function setThemeColorTo(colour) {
+    function setBackgroundColourTo(colour) {
       document.body.style.backgroundColor = colour;
-      document
-        .querySelector('meta[name="theme-color"]')
-        .setAttribute('content',  colour);
     }
     window.addEventListener('load', () => {
       let settings = localStorage.getItem('settings.json');

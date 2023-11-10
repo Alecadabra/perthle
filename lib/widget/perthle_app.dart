@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/bloc/init_cubit.dart';
@@ -32,26 +33,58 @@ class PerthleApp extends StatelessWidget {
             title: 'Perthle',
             themeMode: settings.themeMode,
             theme: _themeDataLight,
+            materialTheme: _materialThemeDataLight,
             darkTheme: _themeDataDark,
-            home: BlocBuilder<InitCubit, InitState>(
-              buildWhen: (final a, final b) => a.initialDaily != b.initialDaily,
-              builder: (final context, final initState) {
-                final dailyState = initState.initialDaily;
-                return AnimatedSwitcher(
-                  duration: const Duration(seconds: 1),
-                  child: dailyState == null
-                      ? const InitLoader()
-                      : PostInitProvider(
-                          key: const ValueKey(1),
-                          initialDaily: dailyState,
-                          child: const PerthleNavigator(),
-                        ),
-                );
-              },
+            materialDarkTheme: _materialThemeDataDark,
+            home: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: getOverlayStyle(settings),
+              child: BlocBuilder<InitCubit, InitState>(
+                buildWhen: (final a, final b) =>
+                    a.initialDaily != b.initialDaily,
+                builder: (final context, final initState) {
+                  final dailyState = initState.initialDaily;
+                  return AnimatedSwitcher(
+                    duration: const Duration(seconds: 1),
+                    child: dailyState == null
+                        ? const InitLoader()
+                        : PostInitProvider(
+                            key: const ValueKey(1),
+                            initialDaily: dailyState,
+                            child: const PerthleNavigator(),
+                          ),
+                  );
+                },
+              ),
             ),
           );
         },
       ),
+    );
+  }
+}
+
+SystemUiOverlayStyle getOverlayStyle(final settings) {
+  final lightTheme = settings.themeMode == ThemeMode.light ||
+      (settings.themeMode == ThemeMode.system &&
+          WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+              Brightness.light);
+  if (lightTheme) {
+    return SystemUiOverlayStyle(
+      systemNavigationBarColor: _themeDataLight.baseColor,
+      systemNavigationBarDividerColor: _themeDataLight.defaultTextColor,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: _themeDataLight.baseColor,
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
+    );
+  } else {
+    return SystemUiOverlayStyle(
+      systemNavigationBarColor: _themeDataDark.baseColor,
+      systemNavigationBarDividerColor: _themeDataDark.defaultTextColor,
+      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarColor: _themeDataDark.baseColor,
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.light,
     );
   }
 }
@@ -76,6 +109,24 @@ final _themeDataLight = NeumorphicThemeData(
   intensity: 0.65,
 );
 
+final _materialThemeDataLight = ThemeData(
+  primaryColor: _themeDataLight.baseColor,
+  iconTheme: _themeDataLight.iconTheme,
+  brightness: Brightness.light,
+  textTheme: _themeDataLight.textTheme,
+  scaffoldBackgroundColor: _themeDataLight.baseColor,
+  appBarTheme: AppBarTheme(
+    systemOverlayStyle: SystemUiOverlayStyle(
+      systemNavigationBarColor: _themeDataLight.baseColor,
+      systemNavigationBarDividerColor: _themeDataLight.defaultTextColor,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: _themeDataLight.baseColor,
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  ),
+);
+
 final _themeDataDark = NeumorphicThemeData.dark(
   textTheme: Typography.blackMountainView.apply(
     fontFamily: 'Poppins',
@@ -92,6 +143,24 @@ final _themeDataDark = NeumorphicThemeData.dark(
   variantColor: _missYellow,
   depth: 3,
   intensity: 0.35,
+);
+
+final _materialThemeDataDark = ThemeData(
+  primaryColor: _themeDataDark.baseColor,
+  iconTheme: _themeDataDark.iconTheme,
+  brightness: Brightness.dark,
+  textTheme: _themeDataDark.textTheme,
+  scaffoldBackgroundColor: _themeDataDark.baseColor,
+  appBarTheme: AppBarTheme(
+    systemOverlayStyle: SystemUiOverlayStyle(
+      systemNavigationBarColor: _themeDataDark.baseColor,
+      systemNavigationBarDividerColor: _themeDataDark.defaultTextColor,
+      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarColor: _themeDataDark.baseColor,
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.light,
+    ),
+  ),
 );
 
 final _preInitProviders = [
