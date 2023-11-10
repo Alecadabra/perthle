@@ -1,31 +1,22 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/bloc/init_cubit.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
-import 'package:perthle/model/environment_state.dart';
 import 'package:perthle/model/init_state.dart';
 import 'package:perthle/model/settings_state.dart';
-import 'package:perthle/repository/daily_storage_repository.dart';
-import 'package:perthle/repository/local_storage_repository.dart';
-import 'package:perthle/repository/mutable_storage_repository.dart';
-import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
 import 'package:perthle/widget/init_loader.dart';
 import 'package:perthle/widget/perthle_navigator.dart';
-import 'package:perthle/widget/perthle_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:perthle/widget/post_init_provider.dart';
+import 'package:perthle/widget/pre_init_provider.dart';
 
 @immutable
 class PerthleApp extends StatelessWidget {
   const PerthleApp({super.key});
 
-  // Build
-
   @override
   Widget build(final BuildContext context) {
-    return MultiProvider(
-      providers: _preInitProviders,
+    return PreInitProvider(
       child: BlocBuilder<SettingsCubit, SettingsState>(
         buildWhen: (final a, final b) => a.themeMode != b.themeMode,
         builder: (final context, final SettingsState settings) {
@@ -132,35 +123,3 @@ final _materialThemeDataDark = ThemeData(
     ),
   ),
 );
-
-final _preInitProviders = [
-  Provider.value(value: EnvironmentState.fromEnvVars()),
-  BlocProvider(
-    create: (final context) => InitCubit(
-      environment: EnvironmentState.fromEnvVars(),
-    ),
-    lazy: false,
-  ),
-  RepositoryProvider<MutableStorageRepository>(
-    create: (final context) => LocalStorageRepository(),
-  ),
-  BlocProvider(
-    create: (final context) => SettingsCubit(
-      storage: MutableStorageRepository.of(context),
-    ),
-  ),
-  RepositoryProvider(
-    create: (final context) => DailyStorageRepository(
-      firebaseFirestore: FirebaseFirestore.instanceFor(
-        app: EnvironmentState.of(context).firebaseApp,
-      ),
-    ),
-  ),
-  RepositoryProvider(
-    create: (final context) => RemoteDictionaryStorageRepository(
-      firebaseFirestore: FirebaseFirestore.instanceFor(
-        app: EnvironmentState.of(context).firebaseApp,
-      ),
-    ),
-  ),
-];
