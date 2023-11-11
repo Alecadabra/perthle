@@ -17,6 +17,7 @@ jobs:
       uses: subosito/flutter-action@v2.12.0
       with:
           flutter-version: ${{ steps.get-flutter-version.outputs.version }}
+          channel: 'stable'
     - run: flutter pub get
     - name: Build for prod
       run: flutter build web --dart-define=ENV=prod
