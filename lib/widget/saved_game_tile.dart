@@ -91,7 +91,7 @@ class SavedGameTile extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

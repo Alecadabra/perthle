@@ -164,7 +164,7 @@ class _BoardRow extends StatelessWidget {
                   0,
                 ),
               ),
-            )
+            ),
         ],
       ),
     );

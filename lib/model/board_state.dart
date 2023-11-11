@@ -105,7 +105,7 @@ class BoardState extends Equatable {
           [
             for (TileMatchState match in row) match.index,
           ],
-      ]
+      ],
     };
   }
 

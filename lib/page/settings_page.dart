@@ -125,6 +125,7 @@ class SettingsPage extends StatelessWidget {
               builder: (final context, final game) {
                 return BlocBuilder<SettingsCubit, SettingsState>(
                   builder: (final context, final settings) {
+                    final depth = NeumorphicTheme.depth(context) ?? 0;
                     return _SettingsRow(
                       name: 'Hard mode',
                       description: game.canToggleHardMode
@@ -133,9 +134,7 @@ class SettingsPage extends StatelessWidget {
                       child: NeumorphicSwitch(
                         curve: Curves.easeInOutCubicEmphasized,
                         style: NeumorphicSwitchStyle(
-                          thumbDepth: game.canToggleHardMode
-                              ? NeumorphicTheme.depth(context)
-                              : -NeumorphicTheme.depth(context)!,
+                          thumbDepth: game.canToggleHardMode ? depth : -depth,
                           lightSource: lightSource,
                         ),
                         value: settings.hardMode,
@@ -271,6 +270,10 @@ class _SettingsRow extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final description = this.description;
+    final child = this.child;
+    final builder = this.builder;
+    final buildWhen = this.buildWhen;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 23),
       child: Row(
@@ -283,7 +286,7 @@ class _SettingsRow extends StatelessWidget {
                 Text(name),
                 if (description != null)
                   Text(
-                    description!,
+                    description,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
               ],
@@ -291,11 +294,11 @@ class _SettingsRow extends StatelessWidget {
           ),
           const SizedBox(width: 20),
           if (child != null)
-            child!
-          else
+            child
+          else if (builder != null)
             BlocBuilder<SettingsCubit, SettingsState>(
-              builder: builder!,
-              buildWhen: buildWhen!,
+              builder: builder,
+              buildWhen: buildWhen,
             ),
         ],
       ),
@@ -308,28 +311,23 @@ class _PerthleLicensePage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final neuTheme = NeumorphicTheme.of(context)!.current!;
+    final neuThemeInherited = NeumorphicTheme.of(context)!;
+    final neuThemeData = neuThemeInherited.current!;
     return Theme(
-      data: ThemeData(
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: MaterialColor(
-            neuTheme.accentColor.value,
-            {
-              50: neuTheme.accentColor,
-              for (int i = 100; i <= 900; i += 100) i: neuTheme.accentColor,
-            },
-          ),
-          brightness: NeumorphicTheme.isUsingDark(context)
-              ? Brightness.dark
-              : Brightness.light,
-          cardColor: neuTheme.baseColor,
-          primaryColorDark: neuTheme.accentColor,
-          backgroundColor: neuTheme.baseColor,
-        ),
-        textTheme: neuTheme.textTheme,
-      ),
+      data: neuThemeInherited.isUsingDark
+          ? ThemeData.dark().copyWith(
+              primaryColor: neuThemeData.baseColor,
+              colorScheme: const ColorScheme.dark().copyWith(
+                primary: neuThemeData.baseColor,
+              ),
+            )
+          : ThemeData.light().copyWith(
+              primaryColor: neuThemeData.baseColor,
+              colorScheme: const ColorScheme.light().copyWith(
+                primary: neuThemeData.baseColor,
+              ),
+            ),
       child: const LicensePage(
-        applicationName: 'Perthle',
         applicationLegalese: 'Perthle by Alec Maughan, an homage to Wordle '
             'by Josh Wardle',
       ),

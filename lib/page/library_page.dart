@@ -46,7 +46,7 @@ class LibraryPage extends StatelessWidget {
                 return Text(
                   [
                     for (final key in library.words.keys)
-                      '${key.gameModeString}: ${library.words[key]!.length}'
+                      '${key.gameModeString}: ${library.words[key]!.length}',
                   ].join('\n'),
                 );
               },
@@ -94,7 +94,7 @@ class LibraryPage extends StatelessWidget {
                           value: oneOff,
                           onChanged: (final value) =>
                               setState(() => oneOff = value),
-                        )
+                        ),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -144,7 +144,7 @@ class LibraryPage extends StatelessWidget {
                                   textController.text = '';
                                 },
                           child: const Text('Submit'),
-                        )
+                        ),
                       ],
                     ),
                   ],
@@ -226,7 +226,7 @@ class _LibraryList extends StatelessWidget {
                             Icons.close_rounded,
                             color: NeumorphicTheme.defaultTextColor(context),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   const Divider(),
