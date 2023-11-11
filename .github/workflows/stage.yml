@@ -10,6 +10,8 @@ jobs:
     - name: Get Flutter version
       id: get-flutter-version
       uses: zgosalvez/github-actions-get-flutter-version-env@v2
+    - name: Test connection
+      run: curl "https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json"
     - name: Setup flutter environment
       uses: subosito/flutter-action@v2.12.0
       with:
