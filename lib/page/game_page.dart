@@ -88,7 +88,7 @@ class GamePage extends StatelessWidget {
                                   const Expanded(
                                     flex: 3,
                                     child: DailyCountdown(),
-                                  )
+                                  ),
                                 ],
                               ),
                             ),

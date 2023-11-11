@@ -22,6 +22,7 @@ class KeyboardButton extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final onPressed = this.onPressed;
     return Expanded(
       flex: flex,
       child: Stack(
@@ -34,17 +35,16 @@ class KeyboardButton extends StatelessWidget {
               onPressed: enableFeedback && onPressed != null
                   ? () {
                       HapticFeedback.mediumImpact();
-                      onPressed!();
+                      onPressed();
                     }
                   : onPressed,
               child: IgnorePointer(
-                ignoringSemantics: true,
                 child: Visibility(
                   visible: false,
                   maintainSize: true,
                   maintainAnimation: true,
                   maintainState: true,
-                  child: child,
+                  child: ExcludeSemantics(child: child),
                 ),
               ),
             ),
