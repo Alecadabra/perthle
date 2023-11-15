@@ -18,10 +18,6 @@ class InitLoader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              ' ',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
             SizedBox(
               height: 80,
               child: Row(
