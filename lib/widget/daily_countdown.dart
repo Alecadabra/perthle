@@ -87,9 +87,8 @@ class _DailyCountdownState extends State<DailyCountdown> {
                   flex: 1,
                   child: NeumorphicProgress(
                     percent: percent,
-                    style: ProgressStyle(
+                    style: const ProgressStyle(
                       depth: -4,
-                      accent: NeumorphicTheme.accentColor(context),
                     ),
                   ),
                 ),
