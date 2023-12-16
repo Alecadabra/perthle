@@ -19,7 +19,7 @@ jobs:
     - name: Build for stage
       run: flutter build web --dart-define=ENV=stage
     - name: Archive Production Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: web-build
         path: build/web
