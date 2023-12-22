@@ -76,6 +76,7 @@ final _materialThemeDataLight = ThemeData(
   brightness: Brightness.light,
   textTheme: _themeDataLight.textTheme,
   scaffoldBackgroundColor: _themeDataLight.baseColor,
+  useMaterial3: false,
   appBarTheme: AppBarTheme(
     systemOverlayStyle: SystemUiOverlayStyle(
       systemNavigationBarColor: _themeDataLight.baseColor,
@@ -112,6 +113,7 @@ final _materialThemeDataDark = ThemeData(
   brightness: Brightness.dark,
   textTheme: _themeDataDark.textTheme,
   scaffoldBackgroundColor: _themeDataDark.baseColor,
+  useMaterial3: false,
   appBarTheme: AppBarTheme(
     systemOverlayStyle: SystemUiOverlayStyle(
       systemNavigationBarColor: _themeDataDark.baseColor,
