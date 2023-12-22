@@ -70,9 +70,9 @@ class SavedGameState extends Equatable {
             (final TileMatchState match) {
               switch (match) {
                 case TileMatchState.match:
-                  return '🟩';
+                  return gameNum == 666 ? '😈' : '🟩';
                 case TileMatchState.miss:
-                  return '🟨';
+                  return gameNum == 666 ? '👿' : '🟨';
                 case TileMatchState.wrong:
                   return lightEmojis ? '⬜' : '⬛';
                 case TileMatchState.revealed:
