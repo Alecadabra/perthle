@@ -7,8 +7,35 @@ import 'package:perthle/model/character_state.dart';
 class LetterState extends CharacterState {
   // Constructor
 
-  LetterState(this.letterString)
-      : assert(isValid(letterString)),
+  const LetterState(this.letterString)
+      : assert(
+          letterString == 'A' ||
+              letterString == 'B' ||
+              letterString == 'C' ||
+              letterString == 'D' ||
+              letterString == 'E' ||
+              letterString == 'F' ||
+              letterString == 'G' ||
+              letterString == 'H' ||
+              letterString == 'I' ||
+              letterString == 'J' ||
+              letterString == 'K' ||
+              letterString == 'L' ||
+              letterString == 'M' ||
+              letterString == 'N' ||
+              letterString == 'O' ||
+              letterString == 'P' ||
+              letterString == 'Q' ||
+              letterString == 'R' ||
+              letterString == 'S' ||
+              letterString == 'T' ||
+              letterString == 'U' ||
+              letterString == 'V' ||
+              letterString == 'W' ||
+              letterString == 'X' ||
+              letterString == 'Y' ||
+              letterString == 'Z',
+        ),
         super(letterString);
 
   /// The single letter in A-Z
@@ -17,7 +44,7 @@ class LetterState extends CharacterState {
   /// If the given letter string can make a valid letter state, i.e. is a
   /// capital letter between A and Z.
   static bool isValid(final String letterString) {
-    return letterString.length == 1 && _alphabet.contains(letterString);
+    return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.characters.contains(letterString);
   }
 }
 
@@ -34,5 +61,3 @@ extension LetterStateCharacters on String {
         : null;
   }
 }
-
-const _alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
