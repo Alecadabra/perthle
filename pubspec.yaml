@@ -22,7 +22,7 @@ dependencies:
   share_plus: ^7.2.2
   flutter_bloc: ^8.1.4
   equatable: ^2.0.3
-  url_launcher: ^6.2.4
+  url_launcher: ^6.2.5
   provider: ^6.1.1
   firebase_auth: ^4.17.4
   firebase_core: ^2.24.0
