@@ -11,7 +11,7 @@ jobs:
       id: get-flutter-version
       uses: zgosalvez/github-actions-get-flutter-version-env@v3.0.3
     - name: Setup flutter environment
-      uses: subosito/flutter-action@v2.12.0
+      uses: subosito/flutter-action@v2.13.0
       with:
           flutter-version: ${{ steps.get-flutter-version.outputs.version }}
           channel: 'stable'
