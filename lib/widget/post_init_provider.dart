@@ -14,6 +14,7 @@ import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/model/perthle_user_state.dart';
 import 'package:perthle/repository/daily_storage_repository.dart';
+import 'package:perthle/repository/library_storage_repository.dart';
 import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +76,7 @@ class PostInitProvider extends StatelessWidget {
           return perthleUser.isAuthor
               ? BlocProvider(
                   create: (final context) => LibraryCubit(
-                    storage: MutableStorageRepository.of(context),
+                    storage: LibraryStorageRepository.of(context),
                     dailyCubit: DailyCubit.of(context),
                     dictStorageRepo: RemoteDictionaryStorageRepository.of(
                       context,

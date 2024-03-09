@@ -5,6 +5,7 @@ import 'package:perthle/bloc/init_cubit.dart';
 import 'package:perthle/bloc/settings_cubit.dart';
 import 'package:perthle/model/environment_state.dart';
 import 'package:perthle/repository/daily_storage_repository.dart';
+import 'package:perthle/repository/library_storage_repository.dart';
 import 'package:perthle/repository/local_storage_repository.dart';
 import 'package:perthle/repository/mutable_storage_repository.dart';
 import 'package:perthle/repository/remote_dictionary_storage_repository.dart';
@@ -47,6 +48,9 @@ class PreInitProvider extends StatelessWidget {
               app: EnvironmentState.of(context).firebaseApp,
             ),
           ),
+        ),
+        RepositoryProvider(
+          create: (final context) => LibraryStorageRepository(),
         ),
       ],
       child: child,
