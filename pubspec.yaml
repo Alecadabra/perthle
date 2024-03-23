@@ -19,7 +19,7 @@ dependencies:
   flutter_neumorphic: #^3.2.0 #fork to update for Flutter 3.10.0 due to deprecations
     git:
       url: https://github.com/lorriman/Flutter-Neumorphic_Flutter_3.10
-  share_plus: ^7.2.2
+  share_plus: ^8.0.2
   flutter_bloc: ^8.1.4
   equatable: ^2.0.3
   url_launcher: ^6.2.5
