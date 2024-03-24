@@ -21,6 +21,7 @@ class LibraryState extends Equatable {
         );
 
   final Map<GameModeState, List<LibraryWordState>> _words;
+  final List<LibraryWordState> _wordsList;
 
   UnmodifiableMapView<GameModeState, UnmodifiableListView<LibraryWordState>>
       get words {
