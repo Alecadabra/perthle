@@ -1,6 +1,5 @@
 import 'dart:convert';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html';
+import 'package:web/web.dart';
 
 import 'package:perthle/repository/mutable_storage_repository.dart';
 
@@ -16,7 +15,7 @@ class LocalStorageRepository extends MutableStorageRepository {
 
   @override
   Future<void> delete(final String key) async {
-    window.localStorage.remove(key);
+    window.localStorage.removeItem(key);
   }
 
   @override
