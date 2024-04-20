@@ -24,7 +24,7 @@ dependencies:
   equatable: ^2.0.3
   url_launcher: ^6.2.5
   provider: ^6.1.2
-  firebase_auth: ^4.17.9
+  firebase_auth: ^4.19.2
   firebase_core: ^2.27.2
   firebase_app_check: ^0.2.0
   cloud_firestore: ^4.15.9
