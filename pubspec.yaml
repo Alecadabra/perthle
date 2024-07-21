@@ -29,6 +29,7 @@ dependencies:
   firebase_app_check: ^0.2.0
   cloud_firestore: ^4.15.9
   dartx: ^1.2.0
+  file_picker: ^8.0.5
 
 dev_dependencies:
   flutter_test:
