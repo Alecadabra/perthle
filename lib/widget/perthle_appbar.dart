@@ -130,7 +130,7 @@ class PerthleAppbar extends StatelessWidget {
                       },
                     );
 
-                    await Share.share(stringified, subject: 'saved_games.json');
+                    // await Share.share(stringified, subject: 'saved_games.json');
 
                     ScaffoldMessenger.of(context).clearMaterialBanners();
                   },
