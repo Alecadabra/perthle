@@ -7,7 +7,7 @@ import 'package:perthle/model/library_word_state.dart';
 class LibraryState extends Equatable {
   const LibraryState({
     required final Map<GameModeState, List<LibraryWordState>> words,
-  }) : _words = words;
+  }) : _oldWordsMap = words;
 
   LibraryState.fromJson(final Map<String, dynamic> json)
       : this(
@@ -20,14 +20,14 @@ class LibraryState extends Equatable {
           },
         );
 
-  final Map<GameModeState, List<LibraryWordState>> _words;
-  final List<LibraryWordState> _wordsList;
+  final Map<GameModeState, List<LibraryWordState>> _oldWordsMap;
+  final List<LibraryWordState> _words;
 
   UnmodifiableMapView<GameModeState, UnmodifiableListView<LibraryWordState>>
       get words {
     return UnmodifiableMapView(
       {
-        for (final entry in _words.entries)
+        for (final entry in _oldWordsMap.entries)
           entry.key: UnmodifiableListView(entry.value),
       },
     );
@@ -36,7 +36,7 @@ class LibraryState extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       for (MapEntry<GameModeState, List<LibraryWordState>> entry
-          in _words.entries)
+          in _oldWordsMap.entries)
         '${entry.key.index}':
             entry.value.map((final word) => word.toJson()).toList(),
     };
@@ -57,14 +57,16 @@ class LibraryState extends Equatable {
   }) {
     return LibraryState(
       words: {
-        GameModeState.perthle: perthle ?? this._words[GameModeState.perthle]!,
+        GameModeState.perthle:
+            perthle ?? this._oldWordsMap[GameModeState.perthle]!,
         GameModeState.perthlonger:
-            perthlonger ?? this._words[GameModeState.perthlonger]!,
-        GameModeState.special: special ?? this._words[GameModeState.special]!,
+            perthlonger ?? this._oldWordsMap[GameModeState.perthlonger]!,
+        GameModeState.special:
+            special ?? this._oldWordsMap[GameModeState.special]!,
         GameModeState.perthshorter:
-            perthshorter ?? this._words[GameModeState.perthshorter]!,
+            perthshorter ?? this._oldWordsMap[GameModeState.perthshorter]!,
         GameModeState.martoperthle:
-            martoperthle ?? this._words[GameModeState.martoperthle]!,
+            martoperthle ?? this._oldWordsMap[GameModeState.martoperthle]!,
       },
     );
   }

@@ -21,10 +21,11 @@ class LibraryWordState extends Equatable {
     final GameModeState? gameMode,
   }) {
     return LibraryWordState(
-        word: word ?? this.word,
-        lastUsed: lastUsed ?? this.lastUsed,
-        oneOff: oneOff ?? this.oneOff,
-        gameMode: gameMode ?? this.gameMode);
+      word: word ?? this.word,
+      lastUsed: lastUsed ?? this.lastUsed,
+      oneOff: oneOff ?? this.oneOff,
+      gameMode: gameMode ?? this.gameMode,
+    );
   }
 
   @override
