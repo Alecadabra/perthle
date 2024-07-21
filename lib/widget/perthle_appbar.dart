@@ -118,6 +118,18 @@ class PerthleAppbar extends StatelessWidget {
                         const JsonEncoder.withIndent('  ').convert(json);
                     messenger.sendMessage('Sharing');
 
+                    showDialog(
+                      context: context,
+                      builder: (final BuildContext context) {
+                        return Dialog(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SelectableText(stringified),
+                          ),
+                        );
+                      },
+                    );
+
                     await Share.share(stringified, subject: 'saved_games.json');
 
                     ScaffoldMessenger.of(context).clearMaterialBanners();
