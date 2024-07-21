@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/bloc/history_cubit.dart';
+import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/model/history_state.dart';
 import 'package:perthle/model/saved_game_state.dart';
 import 'package:share_plus/share_plus.dart';
@@ -105,10 +106,17 @@ class PerthleAppbar extends StatelessWidget {
                 TextButton(
                   child: const Text('EXPORT'),
                   onPressed: () async {
+                    final messenger = MessengerCubit.of(context);
+
+                    messenger.sendMessage('Exporting');
                     final history = HistoryCubit.of(context);
+                    messenger.sendMessage('Jsoning');
                     final json = history.toJson(history.state);
+
+                    messenger.sendMessage('Stringing');
                     final stringified =
                         const JsonEncoder.withIndent('  ').convert(json);
+                    messenger.sendMessage('Sharing');
 
                     await Share.share(stringified, subject: 'saved_games.json');
 
