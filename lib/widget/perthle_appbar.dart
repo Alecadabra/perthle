@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
@@ -106,17 +107,12 @@ class PerthleAppbar extends StatelessWidget {
                 TextButton(
                   child: const Text('EXPORT'),
                   onPressed: () async {
-                    final messenger = MessengerCubit.of(context);
-
-                    messenger.sendMessage('Exporting');
                     final history = HistoryCubit.of(context);
-                    messenger.sendMessage('Jsoning');
                     final json = history.toJson(history.state);
 
-                    messenger.sendMessage('Stringing');
-                    final stringified =
-                        const JsonEncoder.withIndent('  ').convert(json);
-                    messenger.sendMessage('Sharing');
+                    final stringified = const JsonEncoder().convert(json);
+
+                    await Clipboard.setData(ClipboardData(text: stringified));
 
                     showDialog(
                       context: context,
@@ -129,8 +125,6 @@ class PerthleAppbar extends StatelessWidget {
                         );
                       },
                     );
-
-                    // await Share.share(stringified, subject: 'saved_games.json');
 
                     ScaffoldMessenger.of(context).clearMaterialBanners();
                   },
