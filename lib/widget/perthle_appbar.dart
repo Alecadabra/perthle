@@ -1,12 +1,10 @@
 // ignore_for_file: avoid_web_libraries_in_flutter
 
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:perthle/bloc/history_cubit.dart';
 import 'package:perthle/bloc/messenger_cubit.dart';
 import 'package:perthle/model/history_state.dart';
@@ -23,16 +21,6 @@ class PerthleAppbar extends StatelessWidget {
 
   final String title;
   final LightSource lightSource;
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/saved_games.json');
-  }
 
   @override
   Widget build(final BuildContext context) {
