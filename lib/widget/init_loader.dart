@@ -19,7 +19,7 @@ class InitLoader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: 80,
+              height: 64,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,7 +34,7 @@ class InitLoader extends StatelessWidget {
                       ),
                       child: BoardTile(
                         match: loadStage.matches[i],
-                        scale: 5,
+                        scale: 8,
                         letter: CharacterState(loadStage.word[i]),
                         lightSource: LightSource(
                           1 - loadStage.index / InitStateEnum.values.length * 2,
