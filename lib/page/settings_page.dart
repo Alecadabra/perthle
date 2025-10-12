@@ -140,6 +140,7 @@ class SettingsPage extends StatelessWidget {
                         value: settings.hardMode,
                         onChanged: (final bool newValue) {
                           if (game.canToggleHardMode) {
+                            HapticFeedback.heavyImpact();
                             SettingsCubit.of(context).edit(hardMode: newValue);
                           }
                         },
@@ -166,6 +167,7 @@ class SettingsPage extends StatelessWidget {
                     lightSource: lightSource,
                   ),
                   onChanged: (final bool newValue) {
+                    HapticFeedback.heavyImpact();
                     SettingsCubit.of(context).edit(historyShowWords: newValue);
                   },
                 );
