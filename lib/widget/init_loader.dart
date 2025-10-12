@@ -34,7 +34,7 @@ class InitLoader extends StatelessWidget {
                       ),
                       child: BoardTile(
                         match: loadStage.matches[i],
-                        scale: 4,
+                        scale: 6,
                         letter: CharacterState(loadStage.word[i]),
                         lightSource: LightSource(
                           1 - loadStage.index / InitStateEnum.values.length * 2,
